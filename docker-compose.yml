@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:latest
+    container_name: postgres_bachelor_poc
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: bachelor_poc
+    ports:
+      - '5432:5432' # Postgres port
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  blob:
+    image: mcr.microsoft.com/azure-storage/azurite:latest
+    container_name: azurite_bachelor_poc
+    restart: unless-stopped
+    ports:
+      - '10000:10000' # Only need blob storage port
+    command: azurite --blobHost 0.0.0.0 --blobPort 10000
+    volumes:
+      - azurite_data:/data
+
+  mail-testing:
+    image: axllent/mailpit:latest
+    container_name: mailpit_bachelor_poc
+    restart: unless-stopped
+    volumes:
+      - ./data:/data
+    ports:
+      - 1025:1025 # SMTP port
+      - 8025:8025 # Web UI port
+    environment:
+      MP_MAX_MESSAGES: 5000
+      MP_DATABASE: /maildata/mailpit.db
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+
+volumes:
+  postgres_data:
+  azurite_data:
