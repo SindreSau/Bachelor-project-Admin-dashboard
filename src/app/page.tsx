@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 
-export default function Home() {
+const Home = () => {
   return (
     <div>
       <h1>Hello world!</h1>
@@ -28,4 +28,6 @@ export default function Home() {
       </Card>
     </div>
   );
-}
+};
+
+export default Home;

@@ -14,7 +14,7 @@ import { Separator } from '@radix-ui/react-separator';
 import { navigationLinks } from '@/lib/navigationlinks';
 import Link from 'next/link';
 
-export function AppSidebar() {
+export const AppSidebar = () => {
   const { setOpenMobile, isMobile } = useSidebar(); // Use setOpen instead of setIsOpen
 
   const handleCloseSidebar = () => {
@@ -27,7 +27,7 @@ export function AppSidebar() {
     <Sidebar variant='sidebar' collapsible='icon' className='py-1'>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className='text-base font-bold'>Bachelor POC</SidebarGroupLabel>
+          <SidebarGroupLabel className='text-base font-bold'>Bachelor Admin</SidebarGroupLabel>
           <Separator className='my-1' />
           <SidebarGroupContent>
             <SidebarMenu>
@@ -47,4 +47,4 @@ export function AppSidebar() {
       </SidebarContent>
     </Sidebar>
   );
-}
+};
