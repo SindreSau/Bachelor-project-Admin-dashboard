@@ -1,0 +1,10 @@
+{
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always",
+  },
+  "editor.tabSize": 2,
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
+}
