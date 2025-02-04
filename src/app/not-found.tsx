@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function NotFoundPage() {
   return (
-    <main className='flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center'>
+    <main className='flex min-h-[calc(100vh-150px)] flex-col items-center justify-center'>
       <div className='container flex max-w-md flex-col items-center text-center'>
         <div className='duration-150 animate-in slide-in-from-top-5'>
           <h1 className='bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-8xl font-bold text-transparent'>
