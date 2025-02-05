@@ -47,6 +47,6 @@ next-env.d.ts
 *.db-shm
 *.db-wal
 .DS_Store
-test-page/page.tsx
+src/app/test-page/page.tsx
 
 # IDE Specific
