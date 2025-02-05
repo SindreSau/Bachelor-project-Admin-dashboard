@@ -8,98 +8,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
 import { Card, CardTitle, CardHeader, CardContent } from '@/components/ui/card';
 import { useRouter } from 'next/navigation';
+import { ApplicationTableProps } from '@/types/application';
 
-// Sample data
-const sampleGroups: Group[] = [
-  {
-    groupId: 'G001',
-    school: 'University of Technology',
-    students: [
-      {
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john.doe@uot.edu',
-      },
-      {
-        firstName: 'Jane',
-        lastName: 'Smith',
-        email: 'jane.smith@uot.edu',
-      },
-      {
-        firstName: 'Mike',
-        lastName: 'Johnson',
-        email: 'mike.j@uot.edu',
-      },
-    ],
-    appliedAt: new Date('2024-02-01'),
-  },
-  {
-    groupId: 'G002',
-    school: 'State Technical College',
-    students: [
-      {
-        firstName: 'Sarah',
-        lastName: 'Wilson',
-        email: 'sarah.w@stc.edu',
-      },
-      {
-        firstName: 'Tom',
-        lastName: 'Brown',
-        email: 'tom.b@stc.edu',
-      },
-      {
-        firstName: 'Lisa',
-        lastName: 'Anderson',
-        email: 'lisa.a@stc.edu',
-      },
-    ],
-    appliedAt: new Date('2024-02-03'),
-  },
-  {
-    groupId: 'G003',
-    school: 'Innovation Institute',
-    students: [
-      {
-        firstName: 'Alex',
-        lastName: 'Martinez',
-        email: 'alex.m@ii.edu',
-      },
-      {
-        firstName: 'Emily',
-        lastName: 'Taylor',
-        email: 'emily.t@ii.edu',
-      },
-      {
-        firstName: 'David',
-        lastName: 'Lee',
-        email: 'david.l@ii.edu',
-      },
-    ],
-    appliedAt: new Date('2024-02-04'),
-  },
-];
-
-interface ApplicationTableProps {
-  groups: Group[];
-}
-
-type Student = {
-  firstName: string;
-  lastName: string;
-  email: string;
-};
-
-type Group = {
-  groupId: string;
-  school: string;
-  students: Student[];
-  appliedAt?: Date;
-};
-
-const ApplicationTable = ({ groups }: ApplicationTableProps) => {
+const ApplicationTable = ({ applications }: ApplicationTableProps) => {
   const router = useRouter();
 
   const handleRowClick = (groupId: string) => {
@@ -122,15 +35,15 @@ const ApplicationTable = ({ groups }: ApplicationTableProps) => {
           </TableHeader>
 
           <TableBody>
-            {groups.map((group) => (
+            {applications.map((application) => (
               <TableRow
-                key={group.groupId}
+                key={application.groupId}
                 className='cursor-pointer hover:bg-muted/50'
-                onClick={() => handleRowClick(group.groupId)}
+                onClick={() => handleRowClick(application.groupId)}
               >
-                <TableCell className='text-primary'>{group.groupId}</TableCell>
-                <TableCell>{group.school}</TableCell>
-                <TableCell>{group.appliedAt?.toLocaleDateString()}</TableCell>
+                <TableCell className='text-primary'>{application.groupId}</TableCell>
+                <TableCell>{application.school}</TableCell>
+                <TableCell>{application.appliedAt?.toLocaleDateString()}</TableCell>
               </TableRow>
             ))}
           </TableBody>
