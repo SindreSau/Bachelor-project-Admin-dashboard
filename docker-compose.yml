@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   db:
     image: postgres:latest
@@ -22,22 +20,7 @@ services:
       - '10000:10000' # Only need blob storage port
     command: azurite --blobHost 0.0.0.0 --blobPort 10000
     volumes:
-      - azurite_data:/data
-
-  mail-testing:
-    image: axllent/mailpit:latest
-    container_name: mailpit_bachelor
-    restart: unless-stopped
-    volumes:
-      - ./data:/data
-    ports:
-      - 1025:1025 # SMTP port
-      - 8025:8025 # Web UI port
-    environment:
-      MP_MAX_MESSAGES: 5000
-      MP_DATABASE: /maildata/mailpit.db
-      MP_SMTP_AUTH_ACCEPT_ANY: 1
-      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+      - azurite_data:/azurite-data
 
 volumes:
   postgres_data:

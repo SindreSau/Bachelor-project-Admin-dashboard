@@ -3,4 +3,5 @@ node_modules
 .prettierignore
 .stylelintignore
 .eslintignore
+data/
 *.log

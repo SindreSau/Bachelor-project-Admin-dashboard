@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Student {
+  id            Int           @id @default(autoincrement())
+  email         String        @unique
+  firstName     String
+  lastName      String
+  applicationId Int?
+  fileIds       Int[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  applications  Application[] @relation("StudentToApplication")
+  files         File[]
+}
+
+model File {
+  id            Int         @id @default(autoincrement())
+  applicationId Int
+  studentId     Int
+  documentType  String
+  storageUrl    String
+  fileName      String
+  uploadedAt    DateTime    @default(now())
+  student       Student     @relation(fields: [studentId], references: [id])
+  application   Application @relation(fields: [applicationId], references: [id])
+}
+
+model Application {
+  id              Int       @id @default(autoincrement())
+  coverLetterText String
+  school          String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  files           File[]
+  students        Student[] @relation("StudentToApplication")
+  tasks           Task[]    @relation("ApplicationToTask")
+}
+
+model Task {
+  id              Int           @id @default(autoincrement())
+  taskName        String
+  taskDescription String
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  applications    Application[] @relation("ApplicationToTask")
+  priority        Int
+}
