@@ -1,9 +1,10 @@
 import { Application } from '../types/application';
 
-export const sampleApplications : Application[] =[
+export const sampleApplications: Application[] = [
   {
     groupId: 'G001',
-    coverLetter: 'We are a group at the University of Technology and I am interested in your program.',
+    coverLetter:
+      'We are a group at the University of Technology and I am interested in your program.',
     school: 'University of Technology',
     students: [
       {
@@ -32,7 +33,8 @@ export const sampleApplications : Application[] =[
   },
   {
     groupId: 'G002',
-    coverLetter: 'We are a group at the State Technical College and I am interested in your program.',
+    coverLetter:
+      'We are a group at the State Technical College and I am interested in your program.',
     school: 'State Technical College',
     students: [
       {

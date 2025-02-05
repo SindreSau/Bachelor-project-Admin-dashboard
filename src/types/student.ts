@@ -5,4 +5,4 @@ export type Student = {
   // Optional for now:
   cv?: File;
   grades?: File;
-}
+};
