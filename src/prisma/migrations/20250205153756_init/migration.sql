@@ -17,7 +17,7 @@ CREATE TABLE "File" (
     "id" SERIAL NOT NULL,
     "applicationId" INTEGER NOT NULL,
     "studentId" INTEGER NOT NULL,
-    "documentType" TEXT NOT NULL,
+    "documentType" TEXT,
     "storageUrl" TEXT NOT NULL,
     "fileName" TEXT NOT NULL,
     "uploadedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -28,8 +28,8 @@ CREATE TABLE "File" (
 -- CreateTable
 CREATE TABLE "Application" (
     "id" SERIAL NOT NULL,
-    "coverLetterText" TEXT NOT NULL,
-    "school" TEXT NOT NULL,
+    "coverLetterText" TEXT NOT NULL DEFAULT '',
+    "school" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -40,10 +40,9 @@ CREATE TABLE "Application" (
 CREATE TABLE "Task" (
     "id" SERIAL NOT NULL,
     "taskName" TEXT NOT NULL,
-    "taskDescription" TEXT NOT NULL,
+    "taskDescription" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "priority" INTEGER NOT NULL,
 
     CONSTRAINT "Task_pkey" PRIMARY KEY ("id")
 );

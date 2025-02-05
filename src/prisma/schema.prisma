@@ -30,7 +30,7 @@ model File {
   id            Int         @id @default(autoincrement())
   applicationId Int
   studentId     Int
-  documentType  String
+  documentType  String?
   storageUrl    String
   fileName      String
   uploadedAt    DateTime    @default(now())
@@ -40,8 +40,8 @@ model File {
 
 model Application {
   id              Int       @id @default(autoincrement())
-  coverLetterText String
-  school          String
+  coverLetterText String    @default("")
+  school          String?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   files           File[]
@@ -52,9 +52,8 @@ model Application {
 model Task {
   id              Int           @id @default(autoincrement())
   taskName        String
-  taskDescription String
+  taskDescription String?
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
   applications    Application[] @relation("ApplicationToTask")
-  priority        Int
 }
