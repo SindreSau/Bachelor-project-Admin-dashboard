@@ -128,7 +128,7 @@ const ApplicationTable = ({ groups }: ApplicationTableProps) => {
                 className='cursor-pointer hover:bg-muted/50'
                 onClick={() => handleRowClick(group.groupId)}
               >
-                <TableCell>{group.groupId}</TableCell>
+                <TableCell className='text-primary'>{group.groupId}</TableCell>
                 <TableCell>{group.school}</TableCell>
                 <TableCell>{group.appliedAt?.toLocaleDateString()}</TableCell>
               </TableRow>
