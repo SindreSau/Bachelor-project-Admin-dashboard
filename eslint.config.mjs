@@ -28,7 +28,6 @@ const eslintConfig = [
           semi: true,
           bracketSpacing: true,
           arrowParens: 'always',
-          endOfLine: 'lf',
           bracketSameLine: false,
           quoteProps: 'as-needed',
         },
