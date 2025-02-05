@@ -3,6 +3,7 @@
   - lib:
     - constants.ts
     - navigationlinks.ts
+  - utils:
     - utils.ts
     <!-- Additionally also add domain/utility.ts; eg. conversion/bytes.ts conversion/date-to-string.ts ... -->
   - components:
@@ -14,9 +15,15 @@
     - use-mobile.ts:
 
 - Files
+
   - .gitignore
   - docker-compose.yml
   - Dockerfile
   - .env
   - .env.example
   - globals.css
+
+- Projects
+  - Ny issue: assign -> ny sub-issue -> staus=in progress -> current iteration
+  - Ferdig: status=done
+  - Dashboard grid og placeholder sections??

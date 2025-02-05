@@ -3,7 +3,7 @@ version: '3.8'
 services:
   db:
     image: postgres:latest
-    container_name: postgres_bachelor_poc
+    container_name: postgres_bachelor
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
@@ -16,7 +16,7 @@ services:
 
   blob:
     image: mcr.microsoft.com/azure-storage/azurite:latest
-    container_name: azurite_bachelor_poc
+    container_name: azurite_bachelor
     restart: unless-stopped
     ports:
       - '10000:10000' # Only need blob storage port
@@ -26,7 +26,7 @@ services:
 
   mail-testing:
     image: axllent/mailpit:latest
-    container_name: mailpit_bachelor_poc
+    container_name: mailpit_bachelor
     restart: unless-stopped
     volumes:
       - ./data:/data
