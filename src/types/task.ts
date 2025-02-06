@@ -1,4 +1,5 @@
 export type Task = {
+  id: number;
   taskName: string;
   taskDescription: string | null;
   createdAt: Date;

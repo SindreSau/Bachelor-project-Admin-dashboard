@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Card,
   CardContent,
@@ -7,15 +9,24 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Task } from "@/types/task"
+import { Button } from "../ui/button";
+import { Trash2 } from 'lucide-react';
+import { deleteTask } from "@/actions/tasks/delete-task";
 
 const TaskCard = ({ task }: { task: Task }) => {
+
+  const handleDelete = async (id: number) => {
+    await deleteTask(id);
+  }
+
   return (
-    <Card>
+    <Card className="relative">
+      <Button onClick={() => handleDelete(task.id)} className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 py-1 px-2 "><Trash2 /></Button>
       <CardHeader>
         <CardTitle>{task.taskName}</CardTitle>
       </CardHeader>
       <CardContent>
-        <CardDescription>{task.taskDescription}</CardDescription>
+        <CardDescription className="whitespace-pre-wrap">{task.taskDescription}</CardDescription>
       </CardContent>
       <CardFooter className="flex flex-col space-y-2 items-start">
         <p className="text-muted-foreground">Opprettet: {task.createdAt.toLocaleDateString()}</p>
