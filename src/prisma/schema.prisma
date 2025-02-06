@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,46 +8,69 @@ datasource db {
 }
 
 model Student {
-  id            Int           @id @default(autoincrement())
-  email         String        @unique
-  firstName     String
-  lastName      String
-  applicationId Int?
-  fileIds       Int[]
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  applications  Application[] @relation("StudentToApplication")
-  files         File[]
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
+  firstName    String
+  lastName     String
+  fileIds      Int[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  applications Application[] @relation("StudentToApplication")
+  files        File[]
+  Application  Application[]
+}
+
+enum DocumentType {
+  CV
+  GRADES
 }
 
 model File {
-  id            Int         @id @default(autoincrement())
-  applicationId Int
-  studentId     Int
-  documentType  String?
-  storageUrl    String
-  fileName      String
-  uploadedAt    DateTime    @default(now())
-  student       Student     @relation(fields: [studentId], references: [id])
-  application   Application @relation(fields: [applicationId], references: [id])
+  id           Int          @id @default(autoincrement())
+  studentId    Int
+  documentType DocumentType
+  storageUrl   String
+  fileName     String
+  uploadedAt   DateTime     @default(now())
+  student      Student      @relation(fields: [studentId], references: [id])
 }
 
 model Application {
-  id              Int       @id @default(autoincrement())
-  coverLetterText String    @default("")
-  school          String?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  files           File[]
-  students        Student[] @relation("StudentToApplication")
-  tasks           Task[]    @relation("ApplicationToTask")
+  id                      Int       @id @default(autoincrement())
+  coverLetterText         String    @default("")
+  school                  String?
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+  students                Student[] @relation("StudentToApplication")
+  tasks                   Task[]    @relation("ApplicationToTask")
+  Review                  Review[]
+  studentRepresentative   Student?  @relation(fields: [studentRepresentativeId], references: [id])
+  studentRepresentativeId Int?
 }
 
 model Task {
   id              Int           @id @default(autoincrement())
   taskName        String
   taskDescription String?
+  published       Boolean       @default(false)
+  minStudents     Int           @default(3)
+  maxStudents     Int           @default(5)
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
   applications    Application[] @relation("ApplicationToTask")
+}
+
+enum ReviewStatus {
+  THUMBS_DOWN @map("0")
+  THUMBS_UP   @map("1")
+  STAR        @map("2")
+}
+
+model Review {
+  id            Int           @id @default(autoincrement())
+  applicationId Int
+  review        ReviewStatus?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  application   Application   @relation(fields: [applicationId], references: [id])
 }
