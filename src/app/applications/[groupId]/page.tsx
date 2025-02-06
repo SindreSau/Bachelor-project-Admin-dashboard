@@ -15,7 +15,7 @@ const ApplicationView = () => {
   }
 
   return (
-    <div className='flex flex-col gap-2 p-2'>
+    <div className='flex h-full flex-col gap-2 p-2'>
       {/* Main Info Card */}
       <Card>
         <CardHeader className='grid grid-cols-1 pb-2'>
@@ -61,13 +61,13 @@ const ApplicationView = () => {
       </Card>
 
       {/* Cover Letter Card */}
-      <Card>
+      <Card className='grow'>
         <CardHeader>
           <CardTitle>Cover Letter</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className='max-h-[400px] overflow-y-auto whitespace-pre-wrap'>
-            <ScrollArea className='h-72 p-1'>
+          <p className='overflow-y-auto whitespace-pre-wrap'>
+            <ScrollArea className='p-1'>
               {application.coverLetter || 'No cover letter provided'}
             </ScrollArea>
           </p>
