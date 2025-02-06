@@ -61,7 +61,7 @@ async function main() {
   ]);
 
   // Create application connected to task
-  const application = await prisma.application.upsert({
+  await prisma.application.upsert({
     where: { id: 1 },
     update: {},
     create: {
