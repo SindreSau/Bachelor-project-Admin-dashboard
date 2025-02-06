@@ -15,7 +15,7 @@
     "db:studio": "prisma studio"
   },
   "prisma": {
-    "schema": "prisma/schema.prisma"
+    "schema": "src/prisma/schema.prisma"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

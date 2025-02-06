@@ -1,6 +1,6 @@
 'use server'
 
-import { prisma } from "@/lib/prisma";
+import { db } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
 export async function createTask(formData: FormData) {
@@ -11,7 +11,7 @@ export async function createTask(formData: FormData) {
     throw new Error('Task name and description are required.');
   }
 
-  await prisma.task.create({
+  await db.task.create({
     data: {
       taskName,
       taskDescription,

@@ -1,10 +1,10 @@
 import { TaskListProps } from "@/types/task";
 import TaskCard from "./task-card";
-import { prisma } from "@/lib/prisma";
+import { db } from "@/lib/prisma";
 
 const TaskList = async () => {
 
-  const tasks = await prisma.task.findMany();
+  const tasks = await db.task.findMany();
 
   return (
     <div className="rounded-lg border bg-card my-6 px-6 py-6 text-card-foreground shadow-sm">
