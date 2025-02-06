@@ -1,6 +1,8 @@
 export type Task = {
-  title: string;
-  description: string;
+  taskName: string;
+  taskDescription: string | null;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type TaskListProps = {

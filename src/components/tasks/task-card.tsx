@@ -12,11 +12,15 @@ const TaskCard = ({ task }: { task: Task }) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{task.title}</CardTitle>
+        <CardTitle>{task.taskName}</CardTitle>
       </CardHeader>
       <CardContent>
-        <CardDescription>{task.description}</CardDescription>
+        <CardDescription>{task.taskDescription}</CardDescription>
       </CardContent>
+      <CardFooter className="flex flex-col space-y-2 items-start">
+        <p className="text-muted-foreground">Opprettet: {task.createdAt.toLocaleDateString()}</p>
+        <p className="text-muted-foreground">Oppdatert: {task.updatedAt.toLocaleDateString()}</p>
+      </CardFooter>
     </Card>
   )
 }

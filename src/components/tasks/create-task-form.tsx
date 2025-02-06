@@ -15,12 +15,13 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "../ui/textarea";
+import { createTask } from "@/actions/tasks/create-task";
 
 const formSchema = z.object({
-  title: z.string().min(2, {
+  taskName: z.string().min(2, {
     message: "Tittel må være minst 2 tegn",
   }),
-  description: z.string().min(2, {
+  taskDescription: z.string().min(2, {
     message: "Beskrivelse må være minst 2 tegn",
   }),
 })
@@ -28,21 +29,25 @@ const formSchema = z.object({
 const CreateTaskForm = () => {
   const form = useForm({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      taskName: "",
+      taskDescription: "",
+    },
   })
 
   return (
     <div className='rounded-lg border bg-card my-6 px-6 py-6 text-card-foreground shadow-sm'>
       <h2 className="text-xl font-bold mb-4">Legg til en oppgave</h2>
       <Form {...form}>
-        <form className="space-y-8 pt-4">
+        <form action={createTask} className="space-y-8 pt-4">
           <FormField
             control={form.control}
-            name="title"
+            name="taskName"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Tittel</FormLabel>
                 <FormControl>
-                  <Input placeholder="Tittel" {...field} />
+                  <Input placeholder="Tittel" {...field} value={field.value || ""} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -50,12 +55,12 @@ const CreateTaskForm = () => {
           />
           <FormField
             control={form.control}
-            name="description"
+            name="taskDescription"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Beskrivelse</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="Beskrivelse" {...field} />
+                  <Textarea placeholder="Beskrivelse" {...field} value={field.value || ""} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
