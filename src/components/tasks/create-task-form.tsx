@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -14,6 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "../ui/textarea";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -54,7 +55,7 @@ const CreateTaskForm = () => {
               <FormItem>
                 <FormLabel>Beskrivelse</FormLabel>
                 <FormControl>
-                  <Input placeholder="Beskrivelse" {...field} />
+                  <Textarea placeholder="Beskrivelse" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

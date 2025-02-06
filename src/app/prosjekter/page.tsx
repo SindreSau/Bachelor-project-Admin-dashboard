@@ -4,8 +4,8 @@ import TaskList from "@/components/tasks/task-list";
 
 const Page = () => {
   return (
-    <div>
-      <TaskList />
+    <div >
+      <TaskList tasks={tasks} />
       <CreateTaskForm />
     </div>
   )

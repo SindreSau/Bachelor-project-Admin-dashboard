@@ -1,11 +1,15 @@
+import { TaskListProps } from "@/types/task";
 import TaskCard from "./task-card";
 
-const TaskList = () => {
-
+const TaskList = ({ tasks = [] }: TaskListProps) => {
   return (
-    <div>
-      <h1>Task List</h1>
-      <TaskCard />
+    <div className="rounded-lg border bg-card my-6 px-6 py-6 text-card-foreground shadow-sm">
+      <h2 className="text-xl font-bold mb-4">Oppgaveliste</h2>
+      {tasks.length > 0 ? (
+        tasks.map((task) => <TaskCard task={task} />)
+      ) : (
+        <p className="text-muted-foreground">Ingen oppgaver å vise.</p>
+      )}
     </div>
   );
 };

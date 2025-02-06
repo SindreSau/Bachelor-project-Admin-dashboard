@@ -6,17 +6,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { Task } from "@/types/task"
 
-const TaskCard = ({ }) => {
+const TaskCard = ({ task }: { task: Task }) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>title</CardTitle>
+        <CardTitle>{task.title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <CardDescription>desc</CardDescription>
+        <CardDescription>{task.description}</CardDescription>
       </CardContent>
-      <CardFooter>status</CardFooter>
     </Card>
   )
 }
