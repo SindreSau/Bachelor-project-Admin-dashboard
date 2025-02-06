@@ -58,6 +58,17 @@ pnpm db:migrate
 pnpm db:studio
 ```
 
+## Using prisma against the database
+
+- Rather than importing prisma client itself, i have set up a global prisma object in lib/prisma.ts
+- Rather than using PrismaClient, import db from lib/prisma.ts and use db to interact with the database
+
+```typescript
+import { db } from '@/lib/prisma';
+
+const users = await db.user.findMany();
+```
+
 ### Other things related to Prisma
 
 - I have made changes to the schema.prisma file - rerun migrations and give the migration a suitable name
