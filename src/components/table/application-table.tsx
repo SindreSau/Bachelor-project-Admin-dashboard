@@ -11,13 +11,25 @@ import {
 import { Card, CardTitle, CardHeader, CardContent } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useRouter } from 'next/navigation';
-import { ApplicationTableProps } from '@/types/application';
+import { Application } from '@prisma/client';
 
+interface ApplicationTableProps {
+  applications: Application[];
+}
+
+const columnWidths = {
+  // For ensuring that header and body cells align
+  groupId: 'w-[100px]',
+  school: 'w-[100px]',
+  status: 'w-[120px]',
+  createdAt: 'w-[150px]',
+  updatedAt: 'w-[150px]',
+};
 const ApplicationTable = ({ applications }: ApplicationTableProps) => {
   const router = useRouter();
 
-  const handleRowClick = (groupId: string) => {
-    router.push(`/applications/${groupId}`);
+  const handleRowClick = (applicationId: string) => {
+    router.push(`/applications/${applicationId}`);
   };
 
   return (
@@ -32,11 +44,11 @@ const ApplicationTable = ({ applications }: ApplicationTableProps) => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Group ID</TableHead>
-                  <TableHead>School</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Applied At</TableHead>
-                  <TableHead>Updated At</TableHead>
+                  <TableHead className={columnWidths.groupId}>Group ID</TableHead>
+                  <TableHead className={columnWidths.school}>School</TableHead>
+                  <TableHead className={columnWidths.status}>Status</TableHead>
+                  <TableHead className={columnWidths.createdAt}>Created At</TableHead>
+                  <TableHead className={columnWidths.updatedAt}>Updated At</TableHead>
                 </TableRow>
               </TableHeader>
             </Table>
@@ -47,15 +59,19 @@ const ApplicationTable = ({ applications }: ApplicationTableProps) => {
               <TableBody>
                 {applications.map((application) => (
                   <TableRow
-                    key={application.groupId}
+                    key={application.id}
                     className='cursor-pointer hover:bg-muted/50'
-                    onClick={() => handleRowClick(application.groupId)}
+                    onClick={() => handleRowClick(application.id.toString())}
                   >
-                    <TableCell className='text-primary'>{application.groupId}</TableCell>
-                    <TableCell>{application.school}</TableCell>
-                    <TableCell></TableCell>
-                    <TableCell>{application.appliedAt?.toLocaleDateString()}</TableCell>
-                    <TableCell></TableCell>
+                    <TableCell className={columnWidths.groupId}>{application.id}</TableCell>
+                    <TableCell className={columnWidths.school}>{application.school}</TableCell>
+                    <TableCell className={columnWidths.status}>In Progress</TableCell>
+                    <TableCell className={columnWidths.createdAt}>
+                      {application.createdAt?.toLocaleDateString('nb-NO')}
+                    </TableCell>
+                    <TableCell className={columnWidths.updatedAt}>
+                      {application.updatedAt?.toLocaleDateString('nb-NO')}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

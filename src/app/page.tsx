@@ -1,12 +1,21 @@
 import ApplicationTable from '@/components/table/application-table';
-import { sampleApplications } from '@/lib/sample-group-data';
+import { db } from '@/lib/prisma';
+import { Application } from '@prisma/client';
 
-const Home = () => {
+async function getApplications(): Promise<Application[]> {
+  try {
+    const applications = await db.application.findMany();
+    return applications;
+  } catch (error) {
+    console.error('Error finding apps', error);
+    return [];
+  }
+}
+export default async function Home() {
+  const applications = await getApplications();
   return (
     <div>
-      <ApplicationTable applications={sampleApplications} />
+      <ApplicationTable applications={applications} />
     </div>
   );
-};
-
-export default Home;
+}
