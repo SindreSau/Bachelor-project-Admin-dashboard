@@ -13,9 +13,13 @@ const TaskList = async () => {
   return (
     <div className="rounded-lg border bg-card my-6 px-6 py-6 text-card-foreground shadow-sm">
       <h2 className="text-xl font-bold mb-4">Oppgaveliste</h2>
-      <div className="flex space-x-4 overflow-x-auto">
+      <div className="flex sflex-wrap gap-4">
         {tasks.length > 0 ? (
-          tasks.map((task) => <TaskCard key={task.id} task={task} />)
+          tasks.map((task) => (
+            <div key={task.id} className="flex-1 min-w-[250px]">
+              <TaskCard task={task} />
+            </div>
+          ))
         ) : (
           <p className="text-muted-foreground">Ingen oppgaver å vise.</p>
         )}

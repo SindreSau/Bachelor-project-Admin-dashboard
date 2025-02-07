@@ -20,7 +20,7 @@ const TaskCard = ({ task }: { task: Task }) => {
   }
 
   return (
-    <Card className="relative">
+    <Card className="relative h-full">
       <Button onClick={() => handleDelete(task.id)} className="absolute top-2 right-2 bg-red-600 hover:bg-red-700 py-1 px-2 "><Trash2 /></Button>
       <CardHeader>
         <CardTitle>{task.taskName}</CardTitle>
