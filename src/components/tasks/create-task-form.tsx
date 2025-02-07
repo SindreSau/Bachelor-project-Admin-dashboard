@@ -39,7 +39,11 @@ const CreateTaskForm = () => {
     <div className='rounded-lg border bg-card my-6 px-6 py-6 text-card-foreground shadow-sm'>
       <h2 className="text-xl font-bold mb-4">Legg til en oppgave</h2>
       <Form {...form}>
-        <form action={createTask} className="space-y-8 pt-4">
+        <form action={createTask}
+          onSubmit={(e) => {
+            form.reset();
+          }}
+          className="space-y-8 pt-4">
           <FormField
             control={form.control}
             name="taskName"
