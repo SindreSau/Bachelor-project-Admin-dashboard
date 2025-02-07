@@ -12,7 +12,7 @@ model Student {
   email        String        @unique
   firstName    String
   lastName     String
-  fileIds      Int[]
+  // fileIds      Int[] // Do we need this? We can get the files from the File model which has a studentId field
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   applications Application[] @relation("StudentToApplication")
