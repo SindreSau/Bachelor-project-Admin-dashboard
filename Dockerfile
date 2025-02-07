@@ -43,6 +43,11 @@ COPY --from=builder /app ./
 # Install only production dependencies
 RUN pnpm install --prod
 
+# Run migrations and seed
+RUN pnpm prisma generate && \
+    pnpm prisma migrate deploy && \
+    pnpm prisma db seed
+
 # Expose the port the app runs on
 EXPOSE 3000
 

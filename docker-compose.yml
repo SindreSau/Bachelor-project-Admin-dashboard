@@ -6,7 +6,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: bachelor_poc
+      POSTGRES_DB: bachelor_dashboard
     ports:
       - '5432:5432' # Postgres port
     volumes:
