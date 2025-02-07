@@ -16,6 +16,9 @@ RUN pnpm install
 # Copy the rest of the application code
 COPY . .
 
+# Generate Prisma Client
+RUN pnpm prisma generate
+
 # Run the prebuild script to run eslint and prettier
 RUN pnpm run prebuild
 

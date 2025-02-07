@@ -1,19 +1,23 @@
 'use client';
 
-import { useParams } from 'next/navigation';
 import { Card, CardTitle, CardHeader, CardContent } from '@/components/ui/card';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { sampleApplications } from '@/lib/sample-group-data';
+import { Student, File, Application } from '@prisma/client';
 
-const ApplicationView = () => {
-  const params = useParams();
+type StudentWithFiles = Student & {
+  files: File[];
+};
 
-  const application = sampleApplications.find((app) => app.groupId === params.groupId);
+type ApplicationWithStudentAndFiles = Application & {
+  students: StudentWithFiles[];
+  studentRepresentative: Student | null;
+};
 
-  if (!application) {
-    return <div className='text-lg font-bold'>No application for {params.groupId} found :(</div>;
-  }
+interface ApplicationViewProps {
+  application: ApplicationWithStudentAndFiles;
+}
 
+const ApplicationView = ({ application }: ApplicationViewProps) => {
   return (
     <div className='flex h-full flex-col gap-2 p-2'>
       {/* Main Info Card */}
@@ -26,7 +30,7 @@ const ApplicationView = () => {
             <div className='grid min-w-[500px] grid-cols-6'>
               <div className='space-y-0.5'>
                 <p className='text-sm font-medium text-muted-foreground'>Group ID</p>
-                <p className='text-sm'>{application.groupId}</p>
+                <p className='text-sm'>{application.id}</p>
               </div>
               <div className='space-y-0.5'>
                 <p className='text-sm font-medium text-muted-foreground'>School</p>
@@ -35,7 +39,7 @@ const ApplicationView = () => {
               <div className='space-y-0.5'>
                 <p className='text-sm font-medium text-muted-foreground'>Applied At</p>
                 <p className='text-sm'>
-                  {application.appliedAt?.toLocaleDateString('nb-NO', {
+                  {application.createdAt?.toLocaleDateString('nb-NO', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',
@@ -44,7 +48,13 @@ const ApplicationView = () => {
               </div>
               <div className='space-y-0.5'>
                 <p className='text-sm font-medium text-muted-foreground'>Updated At</p>
-                {/* <p className='text-sm'>{application.updatedAt?.toLocaleDateString()}</p> */}
+                <p className='text-sm'>
+                  {application.updatedAt?.toLocaleDateString('nb-NO', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </p>
               </div>
               <div className='space-y-0.5'>
                 <p className='text-sm font-medium text-muted-foreground'>Status</p>
@@ -66,11 +76,11 @@ const ApplicationView = () => {
           <CardTitle>Cover Letter</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className='overflow-y-auto whitespace-pre-wrap'>
+          <div className='overflow-y-auto whitespace-pre-wrap'>
             <ScrollArea className='p-1'>
-              {application.coverLetter || 'No cover letter provided'}
+              {application.coverLetterText || 'No cover letter provided'}
             </ScrollArea>
-          </p>
+          </div>
         </CardContent>
       </Card>
 
@@ -92,17 +102,25 @@ const ApplicationView = () => {
                     <div className='flex gap-2'>
                       <span
                         className={`rounded px-2 py-1 text-xs ${
-                          student.cv ? 'bg-primary/50 text-inherit' : 'bg-red-500/70 text-white'
+                          student.files.some((file) => file.documentType === 'CV')
+                            ? 'bg-primary/50 text-inherit'
+                            : 'bg-red-500/70 text-white'
                         }`}
                       >
-                        {student.cv ? 'CV Attached' : 'Missing CV'}
+                        {student.files.some((file) => file.documentType === 'CV')
+                          ? 'CV Attached'
+                          : 'Missing CV'}
                       </span>
                       <span
                         className={`rounded px-2 py-1 text-xs ${
-                          student.grades ? 'bg-primary/50 text-inherit' : 'bg-red-500/70 text-white'
+                          student.files.some((file) => file.documentType === 'GRADES')
+                            ? 'bg-primary/50 text-inherit'
+                            : 'bg-red-500/70 text-white'
                         }`}
                       >
-                        {student.grades ? 'Grades Attached' : 'Missing Grades'}
+                        {student.files.some((file) => file.documentType === 'GRADES')
+                          ? 'Grades Attached'
+                          : 'Missing Grades'}
                       </span>
                     </div>
                   </div>
