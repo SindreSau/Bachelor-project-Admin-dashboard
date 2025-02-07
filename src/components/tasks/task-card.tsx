@@ -31,6 +31,8 @@ const TaskCard = ({ task }: { task: Task }) => {
       <CardFooter className="flex flex-col space-y-2 items-start">
         <p className="text-muted-foreground">Opprettet: {task.createdAt.toLocaleDateString()}</p>
         <p className="text-muted-foreground">Oppdatert: {task.updatedAt.toLocaleDateString()}</p>
+        <p className="text-muted-foreground">Antall søknader: {task.applications.length}</p>
+        <p className="text-muted-foreground">Publisert: {task.published ? 'Ja' : 'Nei'}</p>
       </CardFooter>
     </Card>
   )

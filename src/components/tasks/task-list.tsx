@@ -4,7 +4,11 @@ import { db } from "@/lib/prisma";
 
 const TaskList = async () => {
 
-  const tasks = await db.task.findMany();
+  const tasks = await db.task.findMany({
+    include: {
+      applications: true,
+    },
+  });
 
   return (
     <div className="rounded-lg border bg-card my-6 px-6 py-6 text-card-foreground shadow-sm">

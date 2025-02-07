@@ -16,11 +16,12 @@
     "buggybastard": "rm -rf node_modules .next && pnpm install"
   },
   "prisma": {
-    "schema": "src/prisma/schema.prisma"
+    "schema": "src/prisma/schema.prisma",
+    "seed": "tsx src/prisma/seed.ts"
   },
   "dependencies": {
-    "@hookform/resolvers": "^3.10.0",
     "@azure/storage-blob": "^12.26.0",
+    "@hookform/resolvers": "^3.10.0",
     "@prisma/client": "6.3.1",
     "@radix-ui/react-avatar": "^1.1.2",
     "@radix-ui/react-dialog": "^1.1.5",
@@ -44,7 +45,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
-    "@types/node": "^20",
+    "@types/node": "^20.17.17",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
@@ -56,6 +57,7 @@
     "prettier-plugin-tailwindcss": "^0.6.11",
     "prisma": "^6.3.1",
     "tailwindcss": "^3.4.1",
+    "ts-node": "^10.9.2",
     "tsx": "^4.19.2",
     "typescript": "^5"
   }
