@@ -1,7 +1,7 @@
-'use server'
+'use server';
 
-import { db } from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
+import { db } from '@/lib/prisma';
+import { revalidatePath } from 'next/cache';
 
 export async function createTask(formData: FormData) {
   const taskName = formData.get('taskName') as string;
@@ -19,4 +19,4 @@ export async function createTask(formData: FormData) {
   });
 
   revalidatePath('/prosjekter');
-} 
+}
