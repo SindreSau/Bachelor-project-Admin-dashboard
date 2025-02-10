@@ -52,6 +52,7 @@ model Task {
   id              Int           @id @default(autoincrement())
   taskName        String
   taskDescription String?
+  deadline        DateTime?
   published       Boolean       @default(false)
   minStudents     Int           @default(3)
   maxStudents     Int           @default(5)
