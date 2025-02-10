@@ -14,8 +14,8 @@ async function getApplications(): Promise<Application[]> {
 export default async function Home() {
   const applications = await getApplications();
   return (
-    <div>
+    <>
       <ApplicationTable applications={applications} />
-    </div>
+    </>
   );
 }
