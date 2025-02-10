@@ -1,55 +1,52 @@
-# Use the official Node.js image as the base image
-FROM node:20-alpine AS builder
+FROM node:18-alpine AS base
 
-# Set the working directory
+# Install dependencies only when needed
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
-
-# Copy package.json and pnpm-lock.yaml
-COPY package.json pnpm-lock.yaml ./
-
-# Install pnpm
-RUN npm install -g pnpm
 
 # Install dependencies
+COPY package.json pnpm-lock.yaml* ./
+RUN npm install -g pnpm
+# Remove --frozen-lockfile to allow fresh install
 RUN pnpm install
 
-# Copy the rest of the application code
+# Rebuild the source code only when needed
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Generate Prisma Client
-RUN pnpm prisma generate
+# Generate Prisma Client for the correct platform
+RUN npx prisma generate
 
-# Run the prebuild script to run eslint and prettier
-RUN pnpm run prebuild
+# Build Next.js
+RUN npm install -g pnpm && pnpm run build
 
-# Build the Next.js application
-RUN pnpm run build
-
-# Clean up node_modules to reduce image size
-RUN rm -rf node_modules
-
-# Use a smaller base image for the final stage
-FROM node:20-alpine
-
-# Set the working directory
+# Production image, copy all the files and run next
+FROM base AS runner
 WORKDIR /app
 
-# Install pnpm
-RUN npm install -g pnpm
+ENV NODE_ENV=production
 
-# Copy the built application from the builder stage
-COPY --from=builder /app ./
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
-# Install only production dependencies
-RUN pnpm install --prod
+COPY --from=builder /app/public ./public
 
-# Run migrations and seed
-RUN pnpm prisma generate && \
-    pnpm prisma migrate deploy && \
-    pnpm prisma db seed
+# Set the correct permission for prerender cache
+RUN mkdir .next
+RUN chown nextjs:nodejs .next
 
-# Expose the port the app runs on
+# Automatically leverage output traces to reduce image size
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+
 EXPOSE 3000
 
-# Start the Next.js application
-CMD ["pnpm", "start"]
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+CMD ["node", "server.js"]
