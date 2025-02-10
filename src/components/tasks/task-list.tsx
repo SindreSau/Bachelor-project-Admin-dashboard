@@ -7,6 +7,9 @@ const TaskList = async () => {
     include: {
       applications: true,
     },
+    orderBy: {
+      createdAt: 'desc',
+    },
   });
 
   return (
