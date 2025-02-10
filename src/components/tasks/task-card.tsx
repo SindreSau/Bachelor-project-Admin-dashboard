@@ -13,6 +13,7 @@ import { Button } from '../ui/button';
 import { Pencil, Trash2 } from 'lucide-react';
 import { deleteTask } from '@/actions/tasks/delete-task';
 import { useRouter } from 'next/navigation';
+import { changePublishStatus } from '@/actions/tasks/change-publish-status';
 
 const TaskCard = ({ task }: { task: Task }) => {
   const handleDelete = async (id: number) => {
@@ -52,6 +53,11 @@ const TaskCard = ({ task }: { task: Task }) => {
         <p className='text-muted-foreground'>Oppdatert: {task.updatedAt.toLocaleDateString()}</p>
         <p className='text-muted-foreground'>Antall søknader: {task.applications.length}</p>
         <p className='text-muted-foreground'>Publisert: {task.published ? 'Ja' : 'Nei'}</p>
+        <div className='flex w-full justify-end'>
+          <Button onClick={() => changePublishStatus(task)} className=''>
+            {task.published ? 'Avpubliser' : 'Publiser'}
+          </Button>
+        </div>
       </CardFooter>
     </Card>
   );
