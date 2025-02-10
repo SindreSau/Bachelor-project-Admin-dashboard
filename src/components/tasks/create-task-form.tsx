@@ -72,7 +72,7 @@ const CreateTaskForm = () => {
               </FormItem>
             )}
           />
-          <Button type='submit'>Publiser</Button>
+          <Button type='submit'>Lagre</Button>
         </form>
       </Form>
     </div>

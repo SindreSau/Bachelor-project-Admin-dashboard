@@ -19,6 +19,7 @@ import { Textarea } from '../ui/textarea';
 import { Task } from '@/types/task';
 import { updateTask } from '@/actions/tasks/update-task';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const formSchema = z.object({
   taskName: z.string().min(2, {
@@ -76,7 +77,12 @@ const EditTaskForm = ({ task }: { task: Task }) => {
               </FormItem>
             )}
           />
-          <Button type='submit'>Lagre</Button>
+          <div className='flex space-x-4'>
+            <Button type='submit'>Lagre</Button>
+            <Link href='/prosjekter'>
+              <Button>Avbryt</Button>
+            </Link>
+          </div>
         </form>
       </Form>
     </div>
