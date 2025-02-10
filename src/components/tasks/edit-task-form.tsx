@@ -1,4 +1,5 @@
 'use client';
+import React from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -15,7 +16,10 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '../ui/textarea';
-import { createTask } from '@/actions/tasks/create-task';
+import { Task } from '@/types/task';
+import { updateTask } from '@/actions/tasks/update-task';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const formSchema = z.object({
   taskName: z.string().min(2, {
@@ -26,26 +30,27 @@ const formSchema = z.object({
   }),
 });
 
-const CreateTaskForm = () => {
+const EditTaskForm = ({ task }: { task: Task }) => {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      taskName: '',
-      taskDescription: '',
+      taskName: task.taskName,
+      taskDescription: task.taskDescription || '',
     },
   });
 
+  const router = useRouter();
+
+  const onSubmit = async (data: { taskName: string; taskDescription: string }) => {
+    await updateTask(task.id, data);
+    router.push('/prosjekter');
+  };
+
   return (
     <div className='my-6 rounded-lg border bg-card px-6 py-6 text-card-foreground shadow-sm'>
-      <h2 className='mb-4 text-xl font-bold'>Legg til en oppgave</h2>
+      <h2 className='mb-4 text-xl font-bold'>Rediger oppgave</h2>
       <Form {...form}>
-        <form
-          action={createTask}
-          onSubmit={() => {
-            form.reset();
-          }}
-          className='space-y-8 pt-4'
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8 pt-4'>
           <FormField
             control={form.control}
             name='taskName'
@@ -72,11 +77,16 @@ const CreateTaskForm = () => {
               </FormItem>
             )}
           />
-          <Button type='submit'>Lagre</Button>
+          <div className='flex space-x-4'>
+            <Button type='submit'>Lagre</Button>
+            <Link href='/prosjekter'>
+              <Button>Avbryt</Button>
+            </Link>
+          </div>
         </form>
       </Form>
     </div>
   );
 };
 
-export default CreateTaskForm;
+export default EditTaskForm;
