@@ -12,7 +12,6 @@ import { Card, CardTitle, CardHeader, CardContent } from '@/components/ui/card';
 // import { ScrollArea } from '@/components/ui/scroll-area';
 import { useRouter } from 'next/navigation';
 import { Application } from '@prisma/client';
-// import IconExternalLink from '../icons/external-link';
 import { ExternalLink } from 'lucide-react';
 
 interface ApplicationTableProps {
@@ -64,7 +63,7 @@ const ApplicationTable = ({ applications }: ApplicationTableProps) => {
                 </TableCell>
                 <TableCell
                   onClick={() => handleClick(application.id.toString())}
-                  className='cursor-pointer border hover:text-primary'
+                  className='flex cursor-pointer items-center justify-center border hover:text-primary'
                 >
                   <ExternalLink />
                 </TableCell>
