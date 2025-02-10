@@ -49,8 +49,22 @@ const TaskCard = ({ task }: { task: Task }) => {
         <CardDescription className='whitespace-pre-wrap'>{task.taskDescription}</CardDescription>
       </CardContent>
       <CardFooter className='flex flex-col items-start space-y-2'>
-        <p className='text-muted-foreground'>Opprettet: {task.createdAt.toLocaleDateString()}</p>
-        <p className='text-muted-foreground'>Oppdatert: {task.updatedAt.toLocaleDateString()}</p>
+        <p className='text-muted-foreground'>
+          Opprettet:{' '}
+          {task.createdAt.toLocaleDateString('no-NO', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric',
+          })}
+        </p>
+        <p className='text-muted-foreground'>
+          Oppdatert:{' '}
+          {task.updatedAt.toLocaleDateString('no-NO', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric',
+          })}
+        </p>
         <p className='text-muted-foreground'>Antall søknader: {task.applications.length}</p>
         <p className='text-muted-foreground'>Publisert: {task.published ? 'Ja' : 'Nei'}</p>
         <div className='flex w-full justify-end'>
