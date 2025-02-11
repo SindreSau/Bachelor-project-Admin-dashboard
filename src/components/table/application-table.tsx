@@ -9,33 +9,19 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Card, CardTitle, CardHeader, CardContent } from '@/components/ui/card';
-// import { ScrollArea } from '@/components/ui/scroll-area';
-import { useRouter } from 'next/navigation';
 import { Application } from '@prisma/client';
 import { ExternalLink } from 'lucide-react';
+import Link from 'next/link';
 
-interface ApplicationTableProps {
-  applications: Application[];
-}
-
-const ApplicationTable = ({ applications }: ApplicationTableProps) => {
-  const router = useRouter();
-
-  const handleClick = (applicationId: string) => {
-    router.push(`/applications/${applicationId}`);
-  };
-
+const ApplicationTable = ({ applications }: { applications: Application[] }) => {
   return (
-    // <ScrollArea className='h-full'>
     <Card className='h-full flex-col'>
       <CardHeader>
         <CardTitle>Applications</CardTitle>
       </CardHeader>
       <CardContent className=''>
-        {/* <div> */}
         {/* Fixed Header */}
         <Table className='sticky top-0 z-10 bg-background'>
-          {/* <ScrollArea className='sticky top-0 z-10 bg-background'> */}
           <TableHeader>
             <TableRow>
               <TableHead className='border'>Gruppenavn</TableHead>
@@ -46,11 +32,10 @@ const ApplicationTable = ({ applications }: ApplicationTableProps) => {
               <TableHead className='border'></TableHead>
             </TableRow>
           </TableHeader>
-          {/* </ScrollArea> */}
+
           {/* Scrollable Body */}
-          {/* <ScrollArea className='h-full'> */}
           <TableBody>
-            {applications.map((application) => (
+            {applications?.map((application) => (
               <TableRow key={application.id}>
                 <TableCell className='border'>{application.id}</TableCell>
                 <TableCell className='border'>{application.school}</TableCell>
@@ -61,21 +46,20 @@ const ApplicationTable = ({ applications }: ApplicationTableProps) => {
                 <TableCell className='border'>
                   {application.updatedAt?.toLocaleDateString('nb-NO')}
                 </TableCell>
-                <TableCell
-                  onClick={() => handleClick(application.id.toString())}
-                  className='flex cursor-pointer items-center justify-center border hover:text-primary'
-                >
-                  <ExternalLink />
+                <TableCell className='border'>
+                  <Link
+                    href={`/applications/${application.id.toString()}`}
+                    className='flex cursor-pointer items-center justify-center hover:text-primary'
+                  >
+                    <ExternalLink />
+                  </Link>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
-          {/* </ScrollArea> */}
         </Table>
-        {/* </div> */}
       </CardContent>
     </Card>
-    // </ScrollArea>
   );
 };
 

@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '5mb', // Allow up to 5MB request body size for server actions
     },
   },
+  output: 'standalone',
 };
 
 export default nextConfig;
