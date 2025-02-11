@@ -9,12 +9,13 @@ import { getBlobPdf } from '@/utils/blobstorage/get-files';
 import { Star, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { useState } from 'react';
 import { submitReview } from '@/actions/applications/submit-review';
+import getApplicationStatus from '@/utils/applications/get-application-status';
 
 type StudentWithFiles = Student & {
   files: File[];
 };
 
-type ApplicationWithNecessaryTypes = Application & {
+type ApplicationViewTypes = Application & {
   students: StudentWithFiles[];
   studentRepresentative: Student | null;
   Review: Review[];
@@ -22,7 +23,7 @@ type ApplicationWithNecessaryTypes = Application & {
 };
 
 interface ApplicationViewProps {
-  application: ApplicationWithNecessaryTypes;
+  application: ApplicationViewTypes;
   currentUserId: string;
   currentUserReview: Review | null;
 }
@@ -103,7 +104,11 @@ const ApplicationView = ({
                 </div>
                 <div className='space-y-0.5'>
                   <p className='text-sm font-medium text-muted-foreground'>Status</p>
-                  <p className='text-sm'>Pågående</p>
+                  <p
+                    className={`text-sm font-medium ${getApplicationStatus(application.Review).className}`}
+                  >
+                    {getApplicationStatus(application.Review).text}
+                  </p>
                 </div>
                 <div className='space-y-0.5'>
                   <p className='text-sm font-medium text-muted-foreground'>Vurdering</p>

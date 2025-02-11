@@ -14,6 +14,8 @@ import { ExternalLink } from 'lucide-react';
 import { concatGroupName } from '@/lib/utils';
 import Link from 'next/link';
 
+// TODO Status updated based on reviews
+
 type ApplicationWithStudents = Application & {
   students: Student[];
 };
