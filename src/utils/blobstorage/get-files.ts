@@ -8,9 +8,7 @@ export async function getBlobPdf(blobUrl: string): Promise<File> {
   const containerName = blobUrl.split('/')[4];
   const blobName = decodeURIComponent(blobUrl.split('/')[5]);
 
-  console.log('Attempting to access:');
-  console.log('containerName: ', containerName);
-  console.log('blobName: ', blobName);
+  console.log('Accessing:', blobName);
 
   const containerClient = blobServiceClient.getContainerClient(containerName);
 
