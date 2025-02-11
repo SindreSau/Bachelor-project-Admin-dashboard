@@ -68,6 +68,7 @@ async function main() {
       taskName: 'Bachelor application management system',
       taskDescription:
         'Build a system for managing applications for bachelor programs for Accenture. The system should allow students to apply for a program, and for the student representative to manage the applications. The system should also allow the student representative to review and approve applications.',
+      published: true,
     },
   });
   console.log('Upserted task 1.');
@@ -75,8 +76,10 @@ async function main() {
   // Create one more task with realistic content using faker
   const task2 = await prisma.task.create({
     data: {
-      taskName: faker.company.catchPhrase(),
-      taskDescription: faker.lorem.paragraphs(2),
+      taskName: 'Automated Library Management System',
+      taskDescription:
+        'Build a system for managing a library. The system should allow librarians to manage books, patrons, and loans. The system should also allow patrons to search for books, check out books, and return books. The system should also allow librarians to generate reports on books, patrons, and loans.',
+      published: true,
     },
   });
   console.log('Created task 2.');
@@ -168,7 +171,7 @@ async function main() {
     await prisma.application.create({
       data: {
         school: faker.helpers.arrayElement(['OsloMet', 'Høyskolen Kristiania']),
-        coverLetterText: faker.lorem.paragraphs(2),
+        coverLetterText: faker.lorem.words(faker.number.int({ min: 10, max: 100 })),
         students: {
           connect: selectedStudents.map((student) => ({ id: student.id })),
         },
