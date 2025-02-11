@@ -120,8 +120,8 @@ async function main() {
       prisma.student.create({
         data: {
           email: faker.internet.email(),
-          firstName: faker.name.firstName(),
-          lastName: faker.name.lastName(),
+          firstName: faker.person.firstName(),
+          lastName: faker.person.lastName(),
         },
       })
     );
