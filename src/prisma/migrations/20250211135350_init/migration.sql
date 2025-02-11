@@ -58,6 +58,7 @@ CREATE TABLE "Task" (
 CREATE TABLE "Review" (
     "id" SERIAL NOT NULL,
     "applicationId" INTEGER NOT NULL,
+    "userId" TEXT NOT NULL,
     "review" "ReviewStatus",
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -83,6 +84,9 @@ CREATE TABLE "_ApplicationToTask" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Student_email_key" ON "Student"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Review_applicationId_userId_key" ON "Review"("applicationId", "userId");
 
 -- CreateIndex
 CREATE INDEX "_StudentToApplication_B_index" ON "_StudentToApplication"("B");
