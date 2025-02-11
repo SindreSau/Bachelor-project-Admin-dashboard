@@ -68,8 +68,8 @@ const ApplicationView = ({ application }: ApplicationViewProps) => {
                 key={student.id}
                 className={`${student.id === application.studentRepresentative?.id ? 'border border-primary' : ''}`}
               >
-                <CardContent className='pt-4'>
-                  <div className='space-y-2'>
+                <CardContent className='flex h-full flex-col gap-1 pt-4'>
+                  <div className='flex flex-col gap-2'>
                     <h3 className='font-medium'>
                       {student.firstName} {student.lastName}
                     </h3>
@@ -80,43 +80,44 @@ const ApplicationView = ({ application }: ApplicationViewProps) => {
                       </div>
                     )}
                     <p className='text-sm text-muted-foreground'>{student.email}</p>
-                    <div className='flex gap-2'>
-                      {student.files.map((file) => {
-                        const handleClick = async (e: React.MouseEvent) => {
-                          e.preventDefault();
-                          try {
-                            const pdfFile = await getBlobPdf(file.storageUrl);
-                            const arrayBuffer = await pdfFile.arrayBuffer();
-                            const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
-                            const url = window.URL.createObjectURL(blob);
-                            window.open(url, '_blank');
-                            setTimeout(() => window.URL.revokeObjectURL(url), 1000);
-                          } catch (error) {
-                            console.error('Error opening file:', error);
-                          }
-                        };
+                  </div>
+                  {/* File buttons container with margin-top auto */}
+                  <div className='mt-auto flex items-end gap-2'>
+                    {student.files.map((file) => {
+                      const handleClick = async (e: React.MouseEvent) => {
+                        e.preventDefault();
+                        try {
+                          const pdfFile = await getBlobPdf(file.storageUrl);
+                          const arrayBuffer = await pdfFile.arrayBuffer();
+                          const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
+                          const url = window.URL.createObjectURL(blob);
+                          window.open(url, '_blank');
+                          setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+                        } catch (error) {
+                          console.error('Error opening file:', error);
+                        }
+                      };
 
-                        return (
-                          <button
-                            key={file.id}
-                            onClick={handleClick}
-                            className='rounded bg-primary/50 px-2 py-1 text-xs text-inherit transition-colors hover:bg-primary/70'
-                          >
-                            {file.documentType === 'CV' ? 'Vis CV' : 'Vis Karakterer'}
-                          </button>
-                        );
-                      })}
-                      {!student.files.some((file) => file.documentType === 'CV') && (
-                        <span className='rounded bg-red-500/70 px-2 py-1 text-xs text-white'>
-                          Mangler CV
-                        </span>
-                      )}
-                      {!student.files.some((file) => file.documentType === 'GRADES') && (
-                        <span className='rounded bg-red-500/70 px-2 py-1 text-xs text-white'>
-                          Mangler Karakterer
-                        </span>
-                      )}
-                    </div>
+                      return (
+                        <button
+                          key={file.id}
+                          onClick={handleClick}
+                          className='rounded bg-primary/50 px-2 py-1 text-xs text-inherit transition-colors hover:bg-primary/70'
+                        >
+                          {file.documentType === 'CV' ? 'Vis CV' : 'Vis Karakterer'}
+                        </button>
+                      );
+                    })}
+                    {!student.files.some((file) => file.documentType === 'CV') && (
+                      <span className='rounded bg-red-500/70 px-2 py-1 text-xs text-white'>
+                        Mangler CV
+                      </span>
+                    )}
+                    {!student.files.some((file) => file.documentType === 'GRADES') && (
+                      <span className='rounded bg-red-500/70 px-2 py-1 text-xs text-white'>
+                        Mangler Karakterer
+                      </span>
+                    )}
                   </div>
                 </CardContent>
               </Card>
