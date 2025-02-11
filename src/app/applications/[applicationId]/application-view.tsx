@@ -216,7 +216,7 @@ const ApplicationView = ({
                       <p className='text-sm text-muted-foreground'>{student.email}</p>
                     </div>
                     <div className='mt-auto flex items-end gap-2'>
-                      {student.files.map((file) => {
+                      {student.files.map((file: File) => {
                         const handleClick = async (e: React.MouseEvent) => {
                           e.preventDefault();
                           try {
@@ -224,7 +224,10 @@ const ApplicationView = ({
                             const arrayBuffer = await pdfFile.arrayBuffer();
                             const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
                             const url = window.URL.createObjectURL(blob);
+
                             window.open(url, '_blank');
+
+                            // Clean up the URL after opening
                             setTimeout(() => window.URL.revokeObjectURL(url), 1000);
                           } catch (error) {
                             console.error('Error opening file:', error);
@@ -241,12 +244,12 @@ const ApplicationView = ({
                           </button>
                         );
                       })}
-                      {!student.files.some((file) => file.documentType === 'CV') && (
+                      {!student.files.some((file: File) => file.documentType === 'CV') && (
                         <span className='rounded bg-red-500/70 px-2 py-1 text-xs text-white'>
                           Mangler CV
                         </span>
                       )}
-                      {!student.files.some((file) => file.documentType === 'GRADES') && (
+                      {!student.files.some((file: File) => file.documentType === 'GRADES') && (
                         <span className='rounded bg-red-500/70 px-2 py-1 text-xs text-white'>
                           Mangler Karakterer
                         </span>

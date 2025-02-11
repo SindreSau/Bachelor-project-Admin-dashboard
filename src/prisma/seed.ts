@@ -178,9 +178,15 @@ async function main() {
   // For each student (both fixed and additional), create file records if they don't exist.
   // Use "example.pdf" for both CV and Grades.
   const allStudents = [...fixedStudents, ...additionalStudents];
+  const fileSamples = ['example-1.pdf', 'example-2.pdf', 'example-3.pdf'];
   for (const student of allStudents) {
     const cvFileName = `${student.firstName.toLowerCase()}-cv.pdf`;
     const gradesFileName = `${student.firstName.toLowerCase()}-kar.pdf`;
+
+    // Randomly choose a sample for CV and a different one for Grades
+    const cvSample = faker.helpers.arrayElement(fileSamples);
+    const remainingSamples = fileSamples.filter((sample) => sample !== cvSample);
+    const gradesSample = faker.helpers.arrayElement(remainingSamples);
 
     const existingFiles = await prisma.file.findMany({
       where: {
@@ -190,7 +196,7 @@ async function main() {
     });
 
     if (!existingFiles.some((file) => file.fileName === cvFileName)) {
-      const cvUrl = await uploadFileFromPublic('example.pdf');
+      const cvUrl = await uploadFileFromPublic(cvSample);
       await prisma.file.create({
         data: {
           studentId: student.id,
@@ -205,7 +211,7 @@ async function main() {
     }
 
     if (!existingFiles.some((file) => file.fileName === gradesFileName)) {
-      const gradesUrl = await uploadFileFromPublic('example.pdf');
+      const gradesUrl = await uploadFileFromPublic(gradesSample);
       await prisma.file.create({
         data: {
           studentId: student.id,
