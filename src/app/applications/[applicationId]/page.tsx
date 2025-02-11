@@ -7,12 +7,13 @@ export default async function ApplicationPage({
   params: Promise<{ applicationId: string }>;
 }) {
   // Await the params
-  const resolvedParams = await params;
-  const applicationId = parseInt(resolvedParams.applicationId, 10);
+  const { applicationId } = await params;
+  const parsedApplicationId = parseInt(applicationId, 10);
 
   // Fetch data on the server
+  // TODO: Move this to server-actions
   const applicationData = await db.application.findUnique({
-    where: { id: applicationId },
+    where: { id: parsedApplicationId },
     include: {
       students: {
         include: {
