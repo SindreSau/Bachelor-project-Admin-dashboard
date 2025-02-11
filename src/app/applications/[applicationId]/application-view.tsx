@@ -3,6 +3,8 @@
 import { Card, CardTitle, CardHeader, CardContent } from '@/components/ui/card';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Student, File, Application } from '@prisma/client';
+import { getBlobPdf } from '@/utils/blobstorage/get-files';
+import { Star } from 'lucide-react';
 
 type StudentWithFiles = Student & {
   files: File[];
@@ -18,53 +20,23 @@ interface ApplicationViewProps {
 }
 
 const ApplicationView = ({ application }: ApplicationViewProps) => {
+  // Sort students so that the representative always appears first
+  const sortedStudents = [...application.students].sort((a, b) => {
+    if (a.id === application.studentRepresentative?.id) return -1;
+    if (b.id === application.studentRepresentative?.id) return 1;
+    return 0;
+  });
+
   return (
     <div className='flex h-full flex-col gap-2 p-2'>
       {/* Main Info Card */}
       <Card>
         <CardHeader className='grid grid-cols-1 pb-2'>
-          <CardTitle>Application Details</CardTitle>
+          <CardTitle>Søknadsdetaljer</CardTitle>
         </CardHeader>
         <CardContent className='py-2'>
           <ScrollArea className='w-full'>
-            <div className='grid min-w-[500px] grid-cols-6'>
-              <div className='space-y-0.5'>
-                <p className='text-sm font-medium text-muted-foreground'>Group ID</p>
-                <p className='text-sm'>{application.id}</p>
-              </div>
-              <div className='space-y-0.5'>
-                <p className='text-sm font-medium text-muted-foreground'>School</p>
-                <p className='text-sm'>{application.school}</p>
-              </div>
-              <div className='space-y-0.5'>
-                <p className='text-sm font-medium text-muted-foreground'>Applied At</p>
-                <p className='text-sm'>
-                  {application.createdAt?.toLocaleDateString('nb-NO', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })}
-                </p>
-              </div>
-              <div className='space-y-0.5'>
-                <p className='text-sm font-medium text-muted-foreground'>Updated At</p>
-                <p className='text-sm'>
-                  {application.updatedAt?.toLocaleDateString('nb-NO', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })}
-                </p>
-              </div>
-              <div className='space-y-0.5'>
-                <p className='text-sm font-medium text-muted-foreground'>Status</p>
-                <p className='text-sm'>In Review</p>
-              </div>
-              <div className='space-y-0.5'>
-                <p className='text-sm font-medium text-muted-foreground'>Ratings</p>
-                <p></p>
-              </div>
-            </div>
+            <div className='grid min-w-[500px] grid-cols-6'>{/* your info blocks */}</div>
             <ScrollBar orientation='horizontal' />
           </ScrollArea>
         </CardContent>
@@ -73,7 +45,7 @@ const ApplicationView = ({ application }: ApplicationViewProps) => {
       {/* Cover Letter Card */}
       <Card className='grow'>
         <CardHeader>
-          <CardTitle>Cover Letter</CardTitle>
+          <CardTitle>Søknad</CardTitle>
         </CardHeader>
         <CardContent>
           <div className='overflow-y-auto whitespace-pre-wrap'>
@@ -87,42 +59,65 @@ const ApplicationView = ({ application }: ApplicationViewProps) => {
       {/* Students Grid */}
       <Card>
         <CardHeader>
-          <CardTitle>Students</CardTitle>
+          <CardTitle>Studenter</CardTitle>
         </CardHeader>
         <CardContent>
           <div className='grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3'>
-            {application.students.map((student, index) => (
-              <Card key={index}>
-                <CardContent className='pt-4'>
-                  <div className='space-y-2'>
+            {sortedStudents.map((student) => (
+              <Card
+                key={student.id}
+                className={`${student.id === application.studentRepresentative?.id ? 'border border-primary' : ''}`}
+              >
+                <CardContent className='flex h-full flex-col gap-1 pt-4'>
+                  <div className='flex flex-col gap-2'>
                     <h3 className='font-medium'>
                       {student.firstName} {student.lastName}
                     </h3>
+                    {student.id === application.studentRepresentativeId && (
+                      <div className='flex items-center gap-1 text-xs text-primary'>
+                        <Star size={16} className='text-primary' />
+                        <span className='text-muted-foreground'>Gruppeansvarlig</span>
+                      </div>
+                    )}
                     <p className='text-sm text-muted-foreground'>{student.email}</p>
-                    <div className='flex gap-2'>
-                      <span
-                        className={`rounded px-2 py-1 text-xs ${
-                          student.files.some((file) => file.documentType === 'CV')
-                            ? 'bg-primary/50 text-inherit'
-                            : 'bg-red-500/70 text-white'
-                        }`}
-                      >
-                        {student.files.some((file) => file.documentType === 'CV')
-                          ? 'CV Attached'
-                          : 'Missing CV'}
+                  </div>
+                  {/* File buttons container with margin-top auto */}
+                  <div className='mt-auto flex items-end gap-2'>
+                    {student.files.map((file) => {
+                      const handleClick = async (e: React.MouseEvent) => {
+                        e.preventDefault();
+                        try {
+                          const pdfFile = await getBlobPdf(file.storageUrl);
+                          const arrayBuffer = await pdfFile.arrayBuffer();
+                          const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
+                          const url = window.URL.createObjectURL(blob);
+                          window.open(url, '_blank');
+                          setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+                        } catch (error) {
+                          console.error('Error opening file:', error);
+                        }
+                      };
+
+                      return (
+                        <button
+                          key={file.id}
+                          onClick={handleClick}
+                          className='rounded bg-primary/50 px-2 py-1 text-xs text-inherit transition-colors hover:bg-primary/70'
+                        >
+                          {file.documentType === 'CV' ? 'Vis CV' : 'Vis Karakterer'}
+                        </button>
+                      );
+                    })}
+                    {!student.files.some((file) => file.documentType === 'CV') && (
+                      <span className='rounded bg-red-500/70 px-2 py-1 text-xs text-white'>
+                        Mangler CV
                       </span>
-                      <span
-                        className={`rounded px-2 py-1 text-xs ${
-                          student.files.some((file) => file.documentType === 'GRADES')
-                            ? 'bg-primary/50 text-inherit'
-                            : 'bg-red-500/70 text-white'
-                        }`}
-                      >
-                        {student.files.some((file) => file.documentType === 'GRADES')
-                          ? 'Grades Attached'
-                          : 'Missing Grades'}
+                    )}
+                    {!student.files.some((file) => file.documentType === 'GRADES') && (
+                      <span className='rounded bg-red-500/70 px-2 py-1 text-xs text-white'>
+                        Mangler Karakterer
                       </span>
-                    </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>

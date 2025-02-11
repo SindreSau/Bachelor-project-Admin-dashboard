@@ -1,21 +1,16 @@
+import getAllApplicationsForTableView from '@/actions/applications/get-applications';
 import ApplicationTable from '@/components/table/application-table';
-import { db } from '@/lib/prisma';
-import { Application } from '@prisma/client';
 
-async function getApplications(): Promise<Application[]> {
-  try {
-    const applications = await db.application.findMany();
-    return applications;
-  } catch (error) {
-    console.error('Error finding apps', error);
-    return [];
-  }
-}
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
-  const applications = await getApplications();
+  const applications = await getAllApplicationsForTableView();
+
+  // TODO: import function concatinateNames from '@/utils/strings/concatinate-names';
+
   return (
-    <div>
+    <>
       <ApplicationTable applications={applications} />
-    </div>
+    </>
   );
 }

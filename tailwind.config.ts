@@ -66,6 +66,15 @@ export default {
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
       },
+      container: {
+        screens: {
+          sm: '40rem',
+          md: '48rem',
+          lg: '64rem',
+          xl: '1440px',
+          '2xl': '2000px',
+        },
+      },
     },
   },
   // eslint-disable-next-line @typescript-eslint/no-require-imports

@@ -23,6 +23,7 @@
 # misc
 .DS_Store
 *.pem
+.package-lock.json
 
 # debug
 npm-debug.log*
@@ -48,5 +49,6 @@ next-env.d.ts
 *.db-wal
 .DS_Store
 src/app/test-page/page.tsx
+azurite/
 
 # IDE Specific
