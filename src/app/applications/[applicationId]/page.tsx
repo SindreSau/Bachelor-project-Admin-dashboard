@@ -20,7 +20,7 @@ export default async function ApplicationPage({
           files: true,
         },
         orderBy: {
-          firstName: 'desc',
+          firstName: 'asc',
         },
       },
       studentRepresentative: true,
