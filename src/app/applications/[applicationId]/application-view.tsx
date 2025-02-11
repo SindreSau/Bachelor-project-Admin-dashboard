@@ -10,6 +10,7 @@ import { Star, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { useState } from 'react';
 import { submitReview } from '@/actions/applications/submit-review';
 import getApplicationStatus from '@/utils/applications/get-application-status';
+import { cn } from '@/lib/utils';
 
 type StudentWithFiles = Student & {
   files: File[];
@@ -105,7 +106,9 @@ const ApplicationView = ({
                 <div className='space-y-0.5'>
                   <p className='text-sm font-medium text-muted-foreground'>Status</p>
                   <p
-                    className={`text-sm font-medium ${getApplicationStatus(application.Review).className}`}
+                    className={cn(
+                      'text-sm font-medium ' + getApplicationStatus(application.Review).className
+                    )}
                   >
                     {getApplicationStatus(application.Review).text}
                   </p>
@@ -152,10 +155,10 @@ const ApplicationView = ({
         <Card className='grow'>
           <CardHeader>
             <CardTitle>
-              <div className='pb-2'>Søknad</div>
-              <div className='flex flex-col gap-4'>
-                {/* Tasks Section */}
-                <div>
+              <div className='items-start justify-between lg:flex'>
+                <div className='pb-2'>Søknad</div>
+                <div className='gap-4 lg:flex'>
+                  {/* Tasks Section */}
                   <h3 className='mb-2 text-sm font-medium text-muted-foreground'>
                     Oppgaver søkt på:
                   </h3>
