@@ -3,6 +3,7 @@
 import { Card, CardTitle, CardHeader, CardContent } from '@/components/ui/card';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Student, File, Application } from '@prisma/client';
+import { concatGroupName } from '@/lib/utils';
 
 type StudentWithFiles = Student & {
   files: File[];
@@ -30,7 +31,7 @@ const ApplicationView = ({ application }: ApplicationViewProps) => {
             <div className='grid min-w-[500px] grid-cols-6'>
               <div className='space-y-0.5'>
                 <p className='text-sm font-medium text-muted-foreground'>Gruppenavn</p>
-                <p className='text-sm'>{application.id}</p>
+                <p className='text-sm'>{concatGroupName(application.students)}</p>
               </div>
               <div className='space-y-0.5'>
                 <p className='text-sm font-medium text-muted-foreground'>Skole</p>
