@@ -28,7 +28,9 @@ async function uploadPdf(file: File) {
 
   await blockBlobClient.upload(buffer, buffer.length);
 
-  return blockBlobClient.url;
+  // Instead of returning blockBlobClient.url, construct the URL:
+  const baseUrl = process.env.BLOB_BASE_URL || 'http://127.0.0.1:10000';
+  return `${baseUrl}/devstoreaccount1/${containerName}/${blobName}`;
 }
 
 async function uploadFileFromPublic(fileName: string): Promise<string> {

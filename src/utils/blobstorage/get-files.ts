@@ -1,34 +1,31 @@
 'use server';
 import { BlobServiceClient } from '@azure/storage-blob';
 
-export async function getBlobPdf(blobUrl: string): Promise<File> {
-  console.log('Full blob URL:', blobUrl); // Add this line
+export async function getBlobPdf(blobUrl: string, containerName: string = 'pdf'): Promise<File> {
+  console.log('Full blob URL:', blobUrl);
 
   const connectionString = process.env.AZURITE_CONNECTION_STRING || '';
   const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
 
-  // Add error checking for the URL
   if (!blobUrl) {
     throw new Error('Blob URL is undefined or empty');
   }
 
   try {
-    // Parse URL more safely
-    const urlParts = blobUrl.split('/').filter(Boolean);
-    console.log('URL parts:', urlParts); // Add this line
+    // Parse URL
+    const url = new URL(blobUrl);
+    const pathParts = url.pathname.split('/').filter(Boolean);
 
-    if (urlParts.length < 2) {
-      throw new Error('Invalid blob URL format');
-    }
+    // Use the provided containerName or default to 'pdf'
+    const container = containerName || 'pdf';
 
-    // Get the last two parts of the URL
-    const containerName = urlParts[urlParts.length - 2];
-    const blobName = decodeURIComponent(urlParts[urlParts.length - 1]);
+    // Get the filename (last part of the URL)
+    const blobName = pathParts[pathParts.length - 1];
 
-    console.log('Container:', containerName); // Add this line
-    console.log('Blob name:', blobName); // Add this line
+    console.log('Container:', container);
+    console.log('Blob name:', blobName);
 
-    const containerClient = blobServiceClient.getContainerClient(containerName);
+    const containerClient = blobServiceClient.getContainerClient(container);
     const blobClient = containerClient.getBlobClient(blobName);
 
     const downloadBlockBlobResponse = await blobClient.download();
