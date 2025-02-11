@@ -6,12 +6,9 @@ export default async function ApplicationPage({
 }: {
   params: Promise<{ applicationId: string }>;
 }) {
-  // Await the params
   const { applicationId } = await params;
   const parsedApplicationId = parseInt(applicationId, 10);
 
-  // Fetch data on the server
-  // TODO: Move this to server-actions
   const applicationData = await db.application.findUnique({
     where: { id: parsedApplicationId },
     include: {
@@ -24,6 +21,7 @@ export default async function ApplicationPage({
         },
       },
       studentRepresentative: true,
+      Review: true,
     },
   });
 
@@ -31,6 +29,19 @@ export default async function ApplicationPage({
     return <div className='text-lg font-bold'>No application found.</div>;
   }
 
-  // Pass the data to the client component
-  return <ApplicationView application={applicationData} />;
+  // For now, we'll hardcode a userId (later this will come from auth)
+  const currentUserId = 'user1';
+
+  // Find the current user's review if it exists
+  const currentUserReview = applicationData.Review.find(
+    (review) => review.userId === currentUserId
+  );
+
+  return (
+    <ApplicationView
+      application={applicationData}
+      currentUserId={currentUserId}
+      currentUserReview={currentUserReview || null}
+    />
+  );
 }
