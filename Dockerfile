@@ -67,11 +67,8 @@ COPY --chown=nextjs:nodejs <<'EOF' /app/start.sh
 #!/bin/sh
 cd /app
 
-echo "Running database migrations..."
-npx prisma migrate deploy
-
-echo "Running database seed..."
-npx prisma db seed
+echo "Resetting database..."
+npx prisma migrate reset --force  # This will drop the DB, run migrations, and seed
 
 echo "Starting Next.js application..."
 exec node server.js
