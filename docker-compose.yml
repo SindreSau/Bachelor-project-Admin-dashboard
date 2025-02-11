@@ -8,20 +8,19 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: bachelor_dashboard
     ports:
-      - '5432:5432' # Postgres port
+      - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
-
+  
   blob:
     image: mcr.microsoft.com/azure-storage/azurite:latest
     container_name: azurite_bachelor
     restart: unless-stopped
     ports:
-      - '10000:10000' # Only need blob storage port
-    command: azurite --blobHost 0.0.0.0 --blobPort 10000
+      - '10000:10000'
+    command: azurite --blobHost 0.0.0.0 --blobPort 10000 --location /data
     volumes:
-      - azurite_data:/azurite-data
-
+      - ./azurite:/data # Changed to use a local directory for better persistence
+    
 volumes:
   postgres_data:
-  azurite_data:
