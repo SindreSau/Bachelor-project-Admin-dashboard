@@ -3,6 +3,7 @@
 import { Card, CardTitle, CardHeader, CardContent } from '@/components/ui/card';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Student, File, Application } from '@prisma/client';
+import { concatGroupName } from '@/lib/utils';
 import { getBlobPdf } from '@/utils/blobstorage/get-files';
 import { Star } from 'lucide-react';
 
@@ -36,7 +37,44 @@ const ApplicationView = ({ application }: ApplicationViewProps) => {
         </CardHeader>
         <CardContent className='py-2'>
           <ScrollArea className='w-full'>
-            <div className='grid min-w-[500px] grid-cols-6'>{/* your info blocks */}</div>
+            <div className='grid min-w-[500px] grid-cols-6'>
+              <div className='space-y-0.5'>
+                <p className='text-sm font-medium text-muted-foreground'>Gruppenavn</p>
+                <p className='text-sm'>{concatGroupName(application.students)}</p>
+              </div>
+              <div className='space-y-0.5'>
+                <p className='text-sm font-medium text-muted-foreground'>Skole</p>
+                <p className='text-sm'>{application.school}</p>
+              </div>
+              <div className='space-y-0.5'>
+                <p className='text-sm font-medium text-muted-foreground'>Søknadsdato</p>
+                <p className='text-sm'>
+                  {application.createdAt?.toLocaleDateString('nb-NO', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </p>
+              </div>
+              <div className='space-y-0.5'>
+                <p className='text-sm font-medium text-muted-foreground'>Sist Oppdatert</p>
+                <p className='text-sm'>
+                  {application.updatedAt?.toLocaleDateString('nb-NO', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </p>
+              </div>
+              <div className='space-y-0.5'>
+                <p className='text-sm font-medium text-muted-foreground'>Status</p>
+                <p className='text-sm'>Pågående</p>
+              </div>
+              <div className='space-y-0.5'>
+                <p className='text-sm font-medium text-muted-foreground'>Vurdering</p>
+                <p></p>
+              </div>
+            </div>
             <ScrollBar orientation='horizontal' />
           </ScrollArea>
         </CardContent>
