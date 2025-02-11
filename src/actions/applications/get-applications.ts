@@ -1,9 +1,12 @@
-// actions/applications/get-applications.ts
+'use server';
 import { db } from '@/lib/prisma';
 
 export default async function getAllApplicationsForTableView() {
   try {
     const applications = await db.application.findMany({
+      include: {
+        students: true,
+      },
       orderBy: {
         createdAt: 'desc',
       },

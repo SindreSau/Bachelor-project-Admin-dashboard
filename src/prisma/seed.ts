@@ -102,15 +102,25 @@ async function main() {
     },
   });
 
-  // Upload files for each student
+  // Upload files for each student - with better duplicate checking
   for (const student of students) {
+    // Define file names
     const cvFileName = `${student.firstName.toLowerCase()}-cv.pdf`;
     const gradesFileName = `${student.firstName.toLowerCase()}-kar.pdf`;
 
+    // Check for existing files with both fileName AND studentId
     const existingFiles = await prisma.file.findMany({
-      where: { studentId: student.id },
+      where: {
+        AND: [
+          { studentId: student.id },
+          {
+            OR: [{ fileName: cvFileName }, { fileName: gradesFileName }],
+          },
+        ],
+      },
     });
 
+    // Create CV if it doesn't exist for this student
     if (!existingFiles.some((file) => file.fileName === cvFileName)) {
       const cvUrl = await uploadFileFromPublic(cvFileName);
       await prisma.file.create({
@@ -121,8 +131,12 @@ async function main() {
           storageUrl: cvUrl,
         },
       });
+      console.log(`Created CV file for ${student.firstName}`);
+    } else {
+      console.log(`CV already exists for ${student.firstName}`);
     }
 
+    // Create grades if they don't exist for this student
     if (!existingFiles.some((file) => file.fileName === gradesFileName)) {
       const gradesUrl = await uploadFileFromPublic(gradesFileName);
       await prisma.file.create({
@@ -133,6 +147,9 @@ async function main() {
           storageUrl: gradesUrl,
         },
       });
+      console.log(`Created grades file for ${student.firstName}`);
+    } else {
+      console.log(`Grades already exist for ${student.firstName}`);
     }
   }
 }

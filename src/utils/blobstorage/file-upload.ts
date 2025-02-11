@@ -6,20 +6,43 @@ export async function uploadPdf(file: File) {
     throw new Error('Please provide a valid PDF file');
   }
 
-  const connectionString = process.env.AZURITE_CONNECTION_STRING || '';
-  const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
+  try {
+    const connectionString = process.env.AZURITE_CONNECTION_STRING || '';
+    const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
 
-  const containerName = 'pdf';
-  const containerClient = blobServiceClient.getContainerClient(containerName);
-  await containerClient.createIfNotExists();
+    const containerName = 'pdf';
+    const containerClient = blobServiceClient.getContainerClient(containerName);
 
-  const blobName = `${Date.now()}-${file.name}`;
-  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+    // Create container with public access
+    await containerClient.createIfNotExists({
+      access: 'blob', // Makes blobs publicly readable
+    });
 
-  const arrayBuffer = await file.arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
+    const blobName = `${Date.now()}-${file.name}`;
+    const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
-  await blockBlobClient.upload(buffer, buffer.length);
+    // Log the upload attempt
+    console.log('Attempting to upload blob:', {
+      containerName,
+      blobName,
+      fileSize: file.size,
+      fileType: file.type,
+    });
 
-  return blockBlobClient.url;
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    await blockBlobClient.upload(buffer, buffer.length, {
+      blobHTTPHeaders: {
+        blobContentType: 'application/pdf',
+      },
+    });
+
+    console.log('Upload successful. Blob URL:', blockBlobClient.url);
+
+    return blockBlobClient.url;
+  } catch (error) {
+    console.error('Error uploading file:', error);
+    throw error;
+  }
 }
