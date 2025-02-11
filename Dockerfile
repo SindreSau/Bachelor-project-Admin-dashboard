@@ -22,7 +22,7 @@ RUN npm install -g pnpm prisma
 RUN cd src && npx prisma generate
 
 # Build Next.js
-RUN pnpm prebuild && pnpm run build
+RUN pnpm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
