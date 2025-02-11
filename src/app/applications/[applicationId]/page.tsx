@@ -22,6 +22,7 @@ export default async function ApplicationPage({
       },
       studentRepresentative: true,
       Review: true,
+      tasks: true,
     },
   });
 

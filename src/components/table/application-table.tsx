@@ -28,44 +28,42 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
       <CardHeader>
         <CardTitle>Søknader</CardTitle>
       </CardHeader>
-      <CardContent className=''>
-        <Table className='sticky top-0 z-10 bg-background'>
-          <TableHeader>
-            <TableRow>
-              <TableHead className='border'>Gruppenavn</TableHead>
-              <TableHead className='border'>Skole</TableHead>
-              <TableHead className='border'>Status</TableHead>
-              <TableHead className='border'>Søknadsdato</TableHead>
-              <TableHead className='border'>Sist Oppdatert</TableHead>
-              <TableHead className='border'></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {applications.map((application) => {
-              return (
-                <TableRow key={application.id}>
-                  <TableCell className='border'>{concatGroupName(application.students)}</TableCell>
-                  <TableCell className='border'>{application.school}</TableCell>
-                  <TableCell className='border'>Pågående</TableCell>
-                  <TableCell className='border'>
-                    {application.createdAt?.toLocaleDateString('nb-NO')}
-                  </TableCell>
-                  <TableCell className='border'>
-                    {application.updatedAt?.toLocaleDateString('nb-NO')}
-                  </TableCell>
-                  <TableCell className='border'>
-                    <Link
-                      href={`/applications/${application.id.toString()}`}
-                      className='flex cursor-pointer items-center justify-center hover:text-primary'
-                    >
-                      <ExternalLink />
-                    </Link>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
+      <CardContent>
+        <div className='rounded border'>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Gruppenavn</TableHead>
+                <TableHead>Skole</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Søknadsdato</TableHead>
+                <TableHead>Sist Oppdatert</TableHead>
+                <TableHead></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {applications.map((application) => {
+                return (
+                  <TableRow key={application.id}>
+                    <TableCell>{concatGroupName(application.students)}</TableCell>
+                    <TableCell>{application.school}</TableCell>
+                    <TableCell>Pågående</TableCell>
+                    <TableCell>{application.createdAt?.toLocaleDateString('nb-NO')}</TableCell>
+                    <TableCell>{application.updatedAt?.toLocaleDateString('nb-NO')}</TableCell>
+                    <TableCell>
+                      <Link
+                        href={`/applications/${application.id.toString()}`}
+                        className='flex cursor-pointer items-center justify-center hover:text-primary'
+                      >
+                        <ExternalLink />
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </div>
       </CardContent>
     </Card>
   );

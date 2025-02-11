@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "Review" ALTER COLUMN "userId" SET DATA TYPE TEXT;

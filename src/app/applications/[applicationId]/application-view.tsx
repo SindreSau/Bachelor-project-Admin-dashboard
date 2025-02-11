@@ -3,7 +3,7 @@
 import { Card, CardTitle, CardHeader, CardContent } from '@/components/ui/card';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
-import { Student, File, Application, ReviewStatus, Review } from '@prisma/client';
+import { Student, File, Application, ReviewStatus, Review, Task } from '@prisma/client';
 import { concatGroupName } from '@/lib/utils';
 import { getBlobPdf } from '@/utils/blobstorage/get-files';
 import { Star, ThumbsUp, ThumbsDown } from 'lucide-react';
@@ -14,14 +14,15 @@ type StudentWithFiles = Student & {
   files: File[];
 };
 
-type ApplicationWithStudentAndFilesAndReviews = Application & {
+type ApplicationWithNecessaryTypes = Application & {
   students: StudentWithFiles[];
   studentRepresentative: Student | null;
   Review: Review[];
+  tasks: Task[];
 };
 
 interface ApplicationViewProps {
-  application: ApplicationWithStudentAndFilesAndReviews;
+  application: ApplicationWithNecessaryTypes;
   currentUserId: string;
   currentUserReview: Review | null;
 }
@@ -62,7 +63,7 @@ const ApplicationView = ({
   });
 
   return (
-    <div className='flex h-full gap-4 p-2'>
+    <div className='flex h-full p-2'>
       <div className='flex flex-1 flex-col gap-2'>
         {/* Main Info Card */}
         <Card>
@@ -70,8 +71,8 @@ const ApplicationView = ({
             <CardTitle>Søknadsdetaljer</CardTitle>
           </CardHeader>
           <CardContent className='py-2'>
-            <ScrollArea className='w-full'>
-              <div className='grid min-w-[500px] grid-cols-6'>
+            <ScrollArea>
+              <div className='grid grid-cols-6 gap-2'>
                 <div className='space-y-0.5'>
                   <p className='text-sm font-medium text-muted-foreground'>Gruppenavn</p>
                   <p className='text-sm'>{concatGroupName(application.students)}</p>
@@ -145,9 +146,34 @@ const ApplicationView = ({
         {/* Cover Letter Card */}
         <Card className='grow'>
           <CardHeader>
-            <CardTitle>Søknad</CardTitle>
+            <CardTitle>
+              <div className='pb-2'>Søknad</div>
+              <div className='flex flex-col gap-4'>
+                {/* Tasks Section */}
+                <div>
+                  <h3 className='mb-2 text-sm font-medium text-muted-foreground'>
+                    Oppgaver søkt på:
+                  </h3>
+                  <div className='flex flex-wrap gap-2'>
+                    {application.tasks.length > 0 ? (
+                      application.tasks.map((task) => (
+                        <div key={task.id} className='rounded-md bg-secondary px-3 py-1 text-sm'>
+                          {task.taskName}
+                        </div>
+                      ))
+                    ) : (
+                      <p className='text-sm text-muted-foreground'>Ingen oppgaver valgt</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </CardTitle>
           </CardHeader>
           <CardContent>
+            {/* Divider */}
+            <div className='h-px bg-border' />
+
+            {/* Cover Letter Section */}
             <div className='overflow-y-auto whitespace-pre-wrap'>
               <ScrollArea className='p-1'>
                 {application.coverLetterText || 'No cover letter provided'}
