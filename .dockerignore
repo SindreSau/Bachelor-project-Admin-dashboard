@@ -1,6 +1,6 @@
-Dockerfile
-.dockerignore
-node-modules
-README.md
-.next
+**/node_modules
+**/.next
 .git
+Dockerfile
+docker-compose.yml
+*.md

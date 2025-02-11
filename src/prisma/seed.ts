@@ -11,39 +11,24 @@ async function uploadPdf(file: File) {
     throw new Error('Please provide a valid PDF file');
   }
 
-  const connectionString = process.env.AZURITE_CONNECTION_STRING;
-  console.log('Connection string:', connectionString); // Debug connection string
+  const connectionString = process.env.AZURITE_CONNECTION_STRING || '';
+  console.log('using connectionString: ' + connectionString);
 
-  if (!connectionString) {
-    throw new Error('No valid connection string provided');
-  }
+  const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
 
-  try {
-    const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
-    console.log('Successfully created blob service client'); // Debug client creation
+  const containerName = 'pdf';
+  const containerClient = blobServiceClient.getContainerClient(containerName);
+  await containerClient.createIfNotExists();
 
-    const containerName = 'pdf';
-    const containerClient = blobServiceClient.getContainerClient(containerName);
-    console.log('Got container client'); // Debug container client
+  const blobName = `${Date.now()}-${file.name}`;
+  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
-    await containerClient.createIfNotExists();
-    console.log('Container exists or was created'); // Debug container creation
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
 
-    const blobName = `${Date.now()}-${file.name}`;
-    const blockBlobClient = containerClient.getBlockBlobClient(blobName);
-    console.log('Created block blob client'); // Debug blob client
+  await blockBlobClient.upload(buffer, buffer.length);
 
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-
-    await blockBlobClient.upload(buffer, buffer.length);
-    console.log('Successfully uploaded blob'); // Debug upload
-
-    return blockBlobClient.url;
-  } catch (error) {
-    console.error('Detailed error in uploadPdf:', error);
-    throw error;
-  }
+  return blockBlobClient.url;
 }
 
 async function uploadFileFromPublic(fileName: string): Promise<string> {
