@@ -4,6 +4,7 @@ import { Card, CardTitle, CardHeader, CardContent } from '@/components/ui/card';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Student, File, Application } from '@prisma/client';
 import { concatGroupName } from '@/lib/utils';
+import { Star } from 'lucide-react';
 
 type StudentWithFiles = Student & {
   files: File[];
@@ -93,12 +94,21 @@ const ApplicationView = ({ application }: ApplicationViewProps) => {
         <CardContent>
           <div className='grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3'>
             {application.students.map((student, index) => (
-              <Card key={index}>
+              <Card
+                key={index}
+                className={`${student.id === application.studentRepresentative?.id ? 'border border-primary' : ''}`}
+              >
                 <CardContent className='pt-4'>
                   <div className='space-y-2'>
                     <h3 className='font-medium'>
                       {student.firstName} {student.lastName}
                     </h3>
+                    {student.id === application.studentRepresentativeId && (
+                      <div className='flex items-center gap-1 text-xs text-primary'>
+                        <Star size={16} className='text-primary' />
+                        <span className='text-muted-foreground'>Gruppeansvarlig</span>
+                      </div>
+                    )}
                     <p className='text-sm text-muted-foreground'>{student.email}</p>
                     <div className='flex gap-2'>
                       <span
