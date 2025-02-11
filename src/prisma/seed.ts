@@ -11,7 +11,7 @@ async function uploadPdf(file: File) {
     throw new Error('Please provide a valid PDF file');
   }
 
-  const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
+  const connectionString = process.env.AZURITE_CONNECTION_STRING;
   console.log('Connection string:', connectionString); // Debug connection string
 
   if (!connectionString) {
