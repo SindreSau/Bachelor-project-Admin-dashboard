@@ -19,6 +19,9 @@ export default async function ApplicationPage({
         include: {
           files: true,
         },
+        orderBy: {
+          firstName: 'desc',
+        },
       },
       studentRepresentative: true,
     },
