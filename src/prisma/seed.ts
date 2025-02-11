@@ -2,7 +2,7 @@ import { BlobServiceClient } from '@azure/storage-blob';
 import { PrismaClient, DocumentType } from '@prisma/client';
 import fs from 'fs/promises';
 import path from 'path';
-import { faker } from '@faker-js/faker';
+import { fakerNB_NO as faker } from '@faker-js/faker';
 
 const prisma = new PrismaClient();
 
@@ -11,22 +11,39 @@ async function uploadPdf(file: File) {
     throw new Error('Please provide a valid PDF file');
   }
 
-  const connectionString = process.env.AZURITE_CONNECTION_STRING || '';
-  const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
+  const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
+  console.log('Connection string:', connectionString); // Debug connection string
 
-  const containerName = 'pdf';
-  const containerClient = blobServiceClient.getContainerClient(containerName);
-  await containerClient.createIfNotExists();
+  if (!connectionString) {
+    throw new Error('No valid connection string provided');
+  }
 
-  const blobName = `${Date.now()}-${file.name}`;
-  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+  try {
+    const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
+    console.log('Successfully created blob service client'); // Debug client creation
 
-  const arrayBuffer = await file.arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
+    const containerName = 'pdf';
+    const containerClient = blobServiceClient.getContainerClient(containerName);
+    console.log('Got container client'); // Debug container client
 
-  await blockBlobClient.upload(buffer, buffer.length);
+    await containerClient.createIfNotExists();
+    console.log('Container exists or was created'); // Debug container creation
 
-  return blockBlobClient.url;
+    const blobName = `${Date.now()}-${file.name}`;
+    const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+    console.log('Created block blob client'); // Debug blob client
+
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    await blockBlobClient.upload(buffer, buffer.length);
+    console.log('Successfully uploaded blob'); // Debug upload
+
+    return blockBlobClient.url;
+  } catch (error) {
+    console.error('Detailed error in uploadPdf:', error);
+    throw error;
+  }
 }
 
 async function uploadFileFromPublic(fileName: string): Promise<string> {
