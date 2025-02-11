@@ -4,6 +4,7 @@ import { Card, CardTitle, CardHeader, CardContent } from '@/components/ui/card';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Student, File, Application } from '@prisma/client';
 import { concatGroupName } from '@/lib/utils';
+import { getBlobPdf } from '@/utils/blobstorage/get-files';
 import { Star } from 'lucide-react';
 
 type StudentWithFiles = Student & {
@@ -111,28 +112,51 @@ const ApplicationView = ({ application }: ApplicationViewProps) => {
                     )}
                     <p className='text-sm text-muted-foreground'>{student.email}</p>
                     <div className='flex gap-2'>
-                      <span
-                        className={`rounded px-2 py-1 text-xs ${
-                          student.files.some((file) => file.documentType === 'CV')
-                            ? 'bg-primary/50 text-inherit'
-                            : 'bg-red-500/70 text-white'
-                        }`}
-                      >
-                        {student.files.some((file) => file.documentType === 'CV')
-                          ? 'Vis CV'
-                          : 'Mangler CV'}
-                      </span>
-                      <span
-                        className={`rounded px-2 py-1 text-xs ${
-                          student.files.some((file) => file.documentType === 'GRADES')
-                            ? 'bg-primary/50 text-inherit'
-                            : 'bg-red-500/70 text-white'
-                        }`}
-                      >
-                        {student.files.some((file) => file.documentType === 'GRADES')
-                          ? 'Vis Karakterer'
-                          : 'Mangler Karakterer'}
-                      </span>
+                      {student.files.map((file) => {
+                        const handleClick = async (e: React.MouseEvent) => {
+                          e.preventDefault();
+                          try {
+                            const pdfFile = await getBlobPdf(file.storageUrl);
+
+                            // Convert the File to an ArrayBuffer
+                            const arrayBuffer = await pdfFile.arrayBuffer();
+
+                            // Create a Blob from the ArrayBuffer
+                            const blob = new Blob([arrayBuffer], { type: 'application/pdf' });
+
+                            // Create a data URL from the Blob
+                            const url = window.URL.createObjectURL(blob);
+
+                            // Open in new tab
+                            window.open(url, '_blank');
+
+                            // Clean up
+                            setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+                          } catch (error) {
+                            console.error('Error opening file:', error);
+                          }
+                        };
+
+                        return (
+                          <button
+                            key={file.id}
+                            onClick={handleClick}
+                            className='rounded bg-primary/50 px-2 py-1 text-xs text-inherit transition-colors hover:bg-primary/70'
+                          >
+                            {file.documentType === 'CV' ? 'Vis CV' : 'Vis Karakterer'}
+                          </button>
+                        );
+                      })}
+                      {!student.files.some((file) => file.documentType === 'CV') && (
+                        <span className='rounded bg-red-500/70 px-2 py-1 text-xs text-white'>
+                          Mangler CV
+                        </span>
+                      )}
+                      {!student.files.some((file) => file.documentType === 'GRADES') && (
+                        <span className='rounded bg-red-500/70 px-2 py-1 text-xs text-white'>
+                          Mangler Karakterer
+                        </span>
+                      )}
                     </div>
                   </div>
                 </CardContent>

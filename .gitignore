@@ -49,5 +49,6 @@ next-env.d.ts
 *.db-wal
 .DS_Store
 src/app/test-page/page.tsx
+azurite/
 
 # IDE Specific

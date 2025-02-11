@@ -13,6 +13,7 @@
     "db:migrate": "prisma migrate dev",
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
+    "db:cleanup": "tsx src/prisma/cleanup.ts",
     "buggybastard": "rm -rf node_modules .next && pnpm install"
   },
   "prisma": {
