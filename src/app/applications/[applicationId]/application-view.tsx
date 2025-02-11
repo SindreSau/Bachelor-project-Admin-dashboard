@@ -23,21 +23,21 @@ const ApplicationView = ({ application }: ApplicationViewProps) => {
       {/* Main Info Card */}
       <Card>
         <CardHeader className='grid grid-cols-1 pb-2'>
-          <CardTitle>Application Details</CardTitle>
+          <CardTitle>Søknadsdetaljer</CardTitle>
         </CardHeader>
         <CardContent className='py-2'>
           <ScrollArea className='w-full'>
             <div className='grid min-w-[500px] grid-cols-6'>
               <div className='space-y-0.5'>
-                <p className='text-sm font-medium text-muted-foreground'>Group ID</p>
+                <p className='text-sm font-medium text-muted-foreground'>Gruppenavn</p>
                 <p className='text-sm'>{application.id}</p>
               </div>
               <div className='space-y-0.5'>
-                <p className='text-sm font-medium text-muted-foreground'>School</p>
+                <p className='text-sm font-medium text-muted-foreground'>Skole</p>
                 <p className='text-sm'>{application.school}</p>
               </div>
               <div className='space-y-0.5'>
-                <p className='text-sm font-medium text-muted-foreground'>Applied At</p>
+                <p className='text-sm font-medium text-muted-foreground'>Søknadsdato</p>
                 <p className='text-sm'>
                   {application.createdAt?.toLocaleDateString('nb-NO', {
                     year: 'numeric',
@@ -47,7 +47,7 @@ const ApplicationView = ({ application }: ApplicationViewProps) => {
                 </p>
               </div>
               <div className='space-y-0.5'>
-                <p className='text-sm font-medium text-muted-foreground'>Updated At</p>
+                <p className='text-sm font-medium text-muted-foreground'>Sist Oppdatert</p>
                 <p className='text-sm'>
                   {application.updatedAt?.toLocaleDateString('nb-NO', {
                     year: 'numeric',
@@ -58,10 +58,10 @@ const ApplicationView = ({ application }: ApplicationViewProps) => {
               </div>
               <div className='space-y-0.5'>
                 <p className='text-sm font-medium text-muted-foreground'>Status</p>
-                <p className='text-sm'>In Review</p>
+                <p className='text-sm'>Pågående</p>
               </div>
               <div className='space-y-0.5'>
-                <p className='text-sm font-medium text-muted-foreground'>Ratings</p>
+                <p className='text-sm font-medium text-muted-foreground'>Vurdering</p>
                 <p></p>
               </div>
             </div>
@@ -73,7 +73,7 @@ const ApplicationView = ({ application }: ApplicationViewProps) => {
       {/* Cover Letter Card */}
       <Card className='grow'>
         <CardHeader>
-          <CardTitle>Cover Letter</CardTitle>
+          <CardTitle>Søknad</CardTitle>
         </CardHeader>
         <CardContent>
           <div className='overflow-y-auto whitespace-pre-wrap'>
@@ -87,7 +87,7 @@ const ApplicationView = ({ application }: ApplicationViewProps) => {
       {/* Students Grid */}
       <Card>
         <CardHeader>
-          <CardTitle>Students</CardTitle>
+          <CardTitle>Studenter</CardTitle>
         </CardHeader>
         <CardContent>
           <div className='grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3'>
@@ -108,8 +108,8 @@ const ApplicationView = ({ application }: ApplicationViewProps) => {
                         }`}
                       >
                         {student.files.some((file) => file.documentType === 'CV')
-                          ? 'CV Attached'
-                          : 'Missing CV'}
+                          ? 'Vis CV'
+                          : 'Mangler CV'}
                       </span>
                       <span
                         className={`rounded px-2 py-1 text-xs ${
@@ -119,8 +119,8 @@ const ApplicationView = ({ application }: ApplicationViewProps) => {
                         }`}
                       >
                         {student.files.some((file) => file.documentType === 'GRADES')
-                          ? 'Grades Attached'
-                          : 'Missing Grades'}
+                          ? 'Vis Karakterer'
+                          : 'Mangler Karakterer'}
                       </span>
                     </div>
                   </div>

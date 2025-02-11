@@ -17,7 +17,7 @@ const ApplicationTable = ({ applications }: { applications: Application[] }) => 
   return (
     <Card className='h-full flex-col'>
       <CardHeader>
-        <CardTitle>Applications</CardTitle>
+        <CardTitle>Søknader</CardTitle>
       </CardHeader>
       <CardContent className=''>
         {/* Fixed Header */}
@@ -39,7 +39,7 @@ const ApplicationTable = ({ applications }: { applications: Application[] }) => 
               <TableRow key={application.id}>
                 <TableCell className='border'>{application.id}</TableCell>
                 <TableCell className='border'>{application.school}</TableCell>
-                <TableCell className='border'>In Progress</TableCell>
+                <TableCell className='border'>Pågående</TableCell>
                 <TableCell className='border'>
                   {application.createdAt?.toLocaleDateString('nb-NO')}
                 </TableCell>
