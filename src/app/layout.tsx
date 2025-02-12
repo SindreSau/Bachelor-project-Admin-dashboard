@@ -18,6 +18,12 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'Admin Dashboard',
   description: 'Admin Dashboard',
+  robots: {
+    notranslate: true,
+    googleBot: 'noindex, nofollow',
+    index: false,
+    follow: false,
+  },
 };
 
 const RootLayout = ({
