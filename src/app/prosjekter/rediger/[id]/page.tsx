@@ -1,20 +1,26 @@
 import EditTaskForm from '@/components/tasks/edit-task-form';
 import React from 'react';
 import { getTask } from '@/actions/tasks/get-task';
+import { notFound } from 'next/navigation';
 
-export default async function Page({ params }: { params: { id: string } }) {
-  console.log('params.taskId:', params.id); // Debugging output
-  const taskId = Number(params.id);
-  console.log('Converted taskId:', taskId); // Debugging output
+// Use the correct type from Next.js
+type Props = {
+  params: Promise<{
+    id: string;
+  }>;
+};
 
-  if (!taskId || isNaN(taskId)) {
-    return <div>Invalid task ID</div>;
+export default async function Page({ params }: Props) {
+  const { id } = await params;
+  const taskId = Number(id);
+
+  if (isNaN(taskId)) {
+    notFound();
   }
-
   const task = await getTask(taskId);
 
   if (!task) {
-    return <div>Task not found</div>;
+    notFound();
   }
 
   return <EditTaskForm task={task} />;

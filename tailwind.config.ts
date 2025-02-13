@@ -10,6 +10,9 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Custom added
+        'green-foreground': 'hsl(var(--green-foreground))',
+        // Rest
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {
@@ -65,6 +68,15 @@ export default {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
+      },
+      container: {
+        screens: {
+          sm: '40rem',
+          md: '48rem',
+          lg: '64rem',
+          xl: '1440px',
+          '2xl': '2000px',
+        },
       },
     },
   },

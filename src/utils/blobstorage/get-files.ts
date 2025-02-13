@@ -1,27 +1,47 @@
 'use server';
 import { BlobServiceClient } from '@azure/storage-blob';
 
-export async function getBlobPdf(blobUrl: string): Promise<File> {
+export async function getBlobPdf(blobUrl: string, containerName: string = 'pdf'): Promise<File> {
+  console.log('Full blob URL:', blobUrl);
+
   const connectionString = process.env.AZURITE_CONNECTION_STRING || '';
   const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
 
-  const containerName = blobUrl.split('/')[4];
-  const blobName = blobUrl.split('/')[5];
-  console.log('containerName: ', containerName);
-  console.log('blobName: ', blobName);
-
-  const containerClient = blobServiceClient.getContainerClient(containerName);
-  const blobClient = containerClient.getBlobClient(blobName);
-  const downloadBlockBlobResponse = await blobClient.download();
-
-  if (!downloadBlockBlobResponse.readableStreamBody) {
-    throw new Error('Failed to download blob: readableStreamBody is undefined');
+  if (!blobUrl) {
+    throw new Error('Blob URL is undefined or empty');
   }
-  const blobData = await streamToBuffer(downloadBlockBlobResponse.readableStreamBody);
-  const file = new File([blobData], blobName, { type: 'application/pdf' });
-  console.log(file);
 
-  return file;
+  try {
+    // Parse URL
+    const url = new URL(blobUrl);
+    const pathParts = url.pathname.split('/').filter(Boolean);
+
+    // Use the provided containerName or default to 'pdf'
+    const container = containerName || 'pdf';
+
+    // Get the filename (last part of the URL)
+    const blobName = pathParts[pathParts.length - 1];
+
+    console.log('Container:', container);
+    console.log('Blob name:', blobName);
+
+    const containerClient = blobServiceClient.getContainerClient(container);
+    const blobClient = containerClient.getBlobClient(blobName);
+
+    const downloadBlockBlobResponse = await blobClient.download();
+
+    if (!downloadBlockBlobResponse.readableStreamBody) {
+      throw new Error('Failed to download blob: readableStreamBody is undefined');
+    }
+
+    const blobData = await streamToBuffer(downloadBlockBlobResponse.readableStreamBody);
+    const file = new File([blobData], blobName, { type: 'application/pdf' });
+
+    return file;
+  } catch (error) {
+    console.error('Error in getBlobPdf:', error);
+    throw error;
+  }
 }
 
 async function streamToBuffer(readableStream: NodeJS.ReadableStream): Promise<Buffer> {

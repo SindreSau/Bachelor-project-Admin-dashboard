@@ -9,74 +9,62 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Card, CardTitle, CardHeader, CardContent } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { useRouter } from 'next/navigation';
-import { Application } from '@prisma/client';
+import { Application, Student } from '@prisma/client';
+import { ExternalLink } from 'lucide-react';
+import { concatGroupName } from '@/lib/utils';
+import Link from 'next/link';
 
-interface ApplicationTableProps {
-  applications: Application[];
+// TODO Status updated based on reviews
+
+type ApplicationWithStudents = Application & {
+  students: Student[];
+};
+
+interface ApplicationViewProps {
+  applications: ApplicationWithStudents[]; // Changed from single application to array
 }
 
-const columnWidths = {
-  // For ensuring that header and body cells align
-  groupId: 'w-[100px]',
-  school: 'w-[100px]',
-  status: 'w-[120px]',
-  createdAt: 'w-[150px]',
-  updatedAt: 'w-[150px]',
-};
-const ApplicationTable = ({ applications }: ApplicationTableProps) => {
-  const router = useRouter();
-
-  const handleRowClick = (applicationId: string) => {
-    router.push(`/applications/${applicationId}`);
-  };
-
+const ApplicationTable = ({ applications }: ApplicationViewProps) => {
   return (
-    <Card className='flex h-[850px] w-full flex-col'>
+    <Card className='h-full flex-col'>
       <CardHeader>
-        <CardTitle>Applications</CardTitle>
+        <CardTitle>Søknader</CardTitle>
       </CardHeader>
-      <CardContent className='flex flex-1 flex-col overflow-hidden'>
-        <div className='relative flex-1 overflow-hidden'>
-          {/* Fixed Header */}
-          <ScrollArea className='sticky top-0 z-10 bg-background'>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className={columnWidths.groupId}>Group ID</TableHead>
-                  <TableHead className={columnWidths.school}>School</TableHead>
-                  <TableHead className={columnWidths.status}>Status</TableHead>
-                  <TableHead className={columnWidths.createdAt}>Created At</TableHead>
-                  <TableHead className={columnWidths.updatedAt}>Updated At</TableHead>
-                </TableRow>
-              </TableHeader>
-            </Table>
-          </ScrollArea>
-          {/* Scrollable Body */}
-          <ScrollArea className='h-full'>
-            <Table>
-              <TableBody>
-                {applications.map((application) => (
-                  <TableRow
-                    key={application.id}
-                    className='cursor-pointer hover:bg-muted/50'
-                    onClick={() => handleRowClick(application.id.toString())}
-                  >
-                    <TableCell className={columnWidths.groupId}>{application.id}</TableCell>
-                    <TableCell className={columnWidths.school}>{application.school}</TableCell>
-                    <TableCell className={columnWidths.status}>In Progress</TableCell>
-                    <TableCell className={columnWidths.createdAt}>
-                      {application.createdAt?.toLocaleDateString('nb-NO')}
-                    </TableCell>
-                    <TableCell className={columnWidths.updatedAt}>
-                      {application.updatedAt?.toLocaleDateString('nb-NO')}
+      <CardContent>
+        <div className='rounded border'>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Gruppenavn</TableHead>
+                <TableHead>Skole</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Søknadsdato</TableHead>
+                <TableHead>Sist Oppdatert</TableHead>
+                <TableHead></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {applications.map((application) => {
+                return (
+                  <TableRow key={application.id}>
+                    <TableCell>{concatGroupName(application.students)}</TableCell>
+                    <TableCell>{application.school}</TableCell>
+                    <TableCell>Pågående</TableCell>
+                    <TableCell>{application.createdAt?.toLocaleDateString('nb-NO')}</TableCell>
+                    <TableCell>{application.updatedAt?.toLocaleDateString('nb-NO')}</TableCell>
+                    <TableCell>
+                      <Link
+                        href={`/applications/${application.id.toString()}`}
+                        className='flex cursor-pointer items-center justify-center hover:text-primary'
+                      >
+                        <ExternalLink />
+                      </Link>
                     </TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </ScrollArea>
+                );
+              })}
+            </TableBody>
+          </Table>
         </div>
       </CardContent>
     </Card>

@@ -1,55 +1,79 @@
-# Use the official Node.js image as the base image
-FROM node:20-alpine AS builder
-
-# Set the working directory
+FROM node:20-alpine AS base
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Copy package.json and pnpm-lock.yaml
-COPY package.json pnpm-lock.yaml ./
-
-# Install pnpm
-RUN npm install -g pnpm
+# Install dependencies only when needed
+FROM base AS deps
+WORKDIR /app
 
 # Install dependencies
+COPY package.json pnpm-lock.yaml* ./
+RUN npm install -g pnpm
 RUN pnpm install
 
-# Copy the rest of the application code
+# Rebuild the source code only when needed
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Generate Prisma Client
-RUN pnpm prisma generate
+# Generate Prisma Client for the correct platform
+RUN npm install -g pnpm prisma
+RUN cd src && npx prisma generate
 
-# Run the prebuild script to run eslint and prettier
-RUN pnpm run prebuild
-
-# Build the Next.js application
+# Build Next.js
 RUN pnpm run build
 
-# Clean up node_modules to reduce image size
-RUN rm -rf node_modules
-
-# Use a smaller base image for the final stage
-FROM node:20-alpine
-
-# Set the working directory
+# Production image, copy all the files and run next
+FROM base AS runner
 WORKDIR /app
 
-# Install pnpm
-RUN npm install -g pnpm
+ENV NODE_ENV=production
 
-# Copy the built application from the builder stage
-COPY --from=builder /app ./
+# Install required tools in the runner stage
+RUN npm install -g pnpm prisma tsx
 
-# Install only production dependencies
-RUN pnpm install --prod
+# Create non-root user
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
-# Run migrations and seed
-RUN pnpm prisma generate && \
-    pnpm prisma migrate deploy && \
-    pnpm prisma db seed
+# Copy necessary files and ensure proper structure
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=builder /app/src/prisma ./src/prisma
+COPY --from=builder /app/node_modules ./node_modules
 
-# Expose the port the app runs on
+# Set the correct permission for prerender cache
+RUN mkdir .next
+RUN chown nextjs:nodejs .next
+
+# Copy built application
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+
+# Ensure proper permissions
+RUN chown -R nextjs:nodejs /app
+
+USER nextjs
+
 EXPOSE 3000
 
-# Start the Next.js application
-CMD ["pnpm", "start"]
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+# Create a startup script
+COPY --chown=nextjs:nodejs <<'EOF' /app/start.sh
+#!/bin/sh
+cd /app
+
+echo "Resetting database..."
+npx prisma migrate reset --force  # This will drop the DB, run migrations, and seed
+
+echo "Starting Next.js application..."
+exec node server.js
+EOF
+
+RUN chmod +x /app/start.sh
+
+CMD ["/app/start.sh"]

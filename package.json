@@ -13,7 +13,8 @@
     "db:migrate": "prisma migrate dev",
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
-    "buggybastard": "rm -rf node_modules .next && pnpm install"
+    "db:cleanup": "tsx src/prisma/cleanup.ts && docker compose down -v && rm -rf ./azurite/* && docker compose up -d && sleep 2 && pnpm db:migrate && pnpm db:seed",
+    "buggybastard": "rm -rf node_modules .next && pnpm install && pnpm db:migrate && pnpm db:generate"
   },
   "prisma": {
     "schema": "src/prisma/schema.prisma",
@@ -21,7 +22,9 @@
   },
   "dependencies": {
     "@azure/storage-blob": "^12.26.0",
+    "@faker-js/faker": "^9.4.0",
     "@hookform/resolvers": "^3.10.0",
+    "@next/eslint-plugin-next": "^15.1.6",
     "@prisma/client": "6.3.1",
     "@radix-ui/react-avatar": "^1.1.2",
     "@radix-ui/react-dialog": "^1.1.5",
@@ -33,6 +36,7 @@
     "@radix-ui/react-tooltip": "^1.1.7",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "eslint-plugin-react-hooks": "^5.1.0",
     "lucide-react": "^0.474.0",
     "next": "15.1.6",
     "next-themes": "^0.4.4",
