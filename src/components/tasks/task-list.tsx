@@ -5,12 +5,12 @@ const TaskList = async () => {
   const tasks = await getTasks();
 
   return (
-    <div className='flex h-full flex-col rounded-lg border px-6 py-6'>
+    <div className='flex flex-col rounded-lg border px-6 py-6'>
       <h2 className='mb-4 text-xl font-bold'>Oppgaveliste</h2>
-      <div className='flex min-h-0 flex-1 gap-6'>
+      <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4'>
         {tasks.length > 0 ? (
           tasks.map((task) => (
-            <div key={task.id} className='min-w-[350px] flex-1'>
+            <div key={task.id} className='flex-1'>
               <TaskCard task={task} />
             </div>
           ))
