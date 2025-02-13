@@ -33,13 +33,13 @@ const TaskCard = ({ task }: { task: TaskWithApplications }) => {
       <div className='absolute right-2 top-2 flex space-x-2'>
         <Button
           onClick={() => handleEditClick(task.id)}
-          className='hover:bg-action-hover bg-action px-2 py-1'
+          className='bg-action px-2 py-1 hover:bg-action-hover'
         >
           <Pencil />
         </Button>
         <Button
           onClick={() => handleDelete(task.id)}
-          className='bg-danger hover:bg-danger-hover px-2 py-1'
+          className='bg-danger px-2 py-1 hover:bg-danger-hover'
         >
           <Trash2 />
         </Button>
