@@ -244,15 +244,16 @@ const ApplicationView = ({
                           </button>
                         );
                       })}
-                      {!student.files.some((file: File) => file.documentType === 'CV') && (
-                        <span className='rounded bg-red-500/70 px-2 py-1 text-xs text-white'>
-                          Mangler CV
-                        </span>
-                      )}
-                      {!student.files.some((file: File) => file.documentType === 'GRADES') && (
-                        <span className='rounded bg-red-500/70 px-2 py-1 text-xs text-white'>
-                          Mangler Karakterer
-                        </span>
+                      {['CV', 'GRADES'].map(
+                        (type) =>
+                          !student.files.some((file: File) => file.documentType === type) && (
+                            <span
+                              key={type}
+                              className='rounded bg-destructive px-2 py-1 text-xs text-primary-foreground'
+                            >
+                              Mangler {type === 'CV' ? 'CV' : 'Karakterer'}
+                            </span>
+                          )
                       )}
                     </div>
                   </CardContent>
