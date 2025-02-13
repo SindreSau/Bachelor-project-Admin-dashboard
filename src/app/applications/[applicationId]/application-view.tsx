@@ -1,16 +1,12 @@
 'use client';
 
 import { Card, CardTitle, CardHeader, CardContent } from '@/components/ui/card';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { Button } from '@/components/ui/button';
-import { Student, File, Application, ReviewStatus, Review, Task } from '@prisma/client';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Student, File, Application, Review, Task } from '@prisma/client';
 import { concatGroupName } from '@/lib/utils';
 import { getBlobPdf } from '@/utils/blobstorage/get-files';
-import { Star, ThumbsUp, ThumbsDown } from 'lucide-react';
-import { useState } from 'react';
-import { submitReview } from '@/actions/applications/submit-review';
-import getApplicationStatus from '@/utils/applications/get-application-status';
-import { cn } from '@/lib/utils';
+import { Star } from 'lucide-react';
+import ApplicationDetailsCard from './components/application-details-card';
 
 type StudentWithFiles = Student & {
   files: File[];
@@ -19,44 +15,15 @@ type StudentWithFiles = Student & {
 type ApplicationViewTypes = Application & {
   students: StudentWithFiles[];
   studentRepresentative: Student | null;
-  Review: Review[];
   tasks: Task[];
+  reviews: Review[];
 };
 
 interface ApplicationViewProps {
   application: ApplicationViewTypes;
-  currentUserId: string;
-  currentUserReview: Review | null;
 }
 
-const ApplicationView = ({
-  application,
-  currentUserId,
-  currentUserReview,
-}: ApplicationViewProps) => {
-  const [selectedReview, setSelectedReview] = useState<ReviewStatus | null>(
-    currentUserReview?.review || null
-  );
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleReviewClick = async (review: ReviewStatus) => {
-    if (isSubmitting) return;
-
-    setIsSubmitting(true);
-    try {
-      const result = await submitReview(application.id, review, currentUserId);
-      if (result.success) {
-        setSelectedReview(review);
-      } else {
-        console.error('Failed to submit review:', result.error);
-      }
-    } catch (error) {
-      console.error('Error submitting review:', error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
+const ApplicationView = ({ application }: ApplicationViewProps) => {
   // Sort students so that the representative always appears first
   const sortedStudents = [...application.students].sort((a, b) => {
     if (a.id === application.studentRepresentative?.id) return -1;
@@ -67,90 +34,15 @@ const ApplicationView = ({
   return (
     <div className='flex h-full p-2'>
       <div className='flex flex-1 flex-col gap-2'>
-        {/* Main Info Card */}
-        <Card>
-          <CardHeader className='grid grid-cols-1 pb-2'>
-            <CardTitle>Søknadsdetaljer</CardTitle>
-          </CardHeader>
-          <CardContent className='py-2'>
-            <ScrollArea>
-              <div className='grid grid-cols-6 gap-2'>
-                <div className='space-y-0.5'>
-                  <p className='text-sm font-medium text-muted-foreground'>Gruppenavn</p>
-                  <p className='text-sm'>{concatGroupName(application.students)}</p>
-                </div>
-                <div className='space-y-0.5'>
-                  <p className='text-sm font-medium text-muted-foreground'>Skole</p>
-                  <p className='text-sm'>{application.school}</p>
-                </div>
-                <div className='space-y-0.5'>
-                  <p className='text-sm font-medium text-muted-foreground'>Søknadsdato</p>
-                  <p className='text-sm'>
-                    {application.createdAt?.toLocaleDateString('nb-NO', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
-                  </p>
-                </div>
-                <div className='space-y-0.5'>
-                  <p className='text-sm font-medium text-muted-foreground'>Sist Oppdatert</p>
-                  <p className='text-sm'>
-                    {application.updatedAt?.toLocaleDateString('nb-NO', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
-                  </p>
-                </div>
-                <div className='space-y-0.5'>
-                  <p className='text-sm font-medium text-muted-foreground'>Status</p>
-                  <p
-                    className={cn(
-                      'text-sm font-medium ' + getApplicationStatus(application.Review).className
-                    )}
-                  >
-                    {getApplicationStatus(application.Review).text}
-                  </p>
-                </div>
-                <div className='space-y-0.5'>
-                  <p className='text-sm font-medium text-muted-foreground'>Vurdering</p>
-                  <div className='flex gap-2'>
-                    <Button
-                      size='sm'
-                      variant={selectedReview === 'THUMBS_DOWN' ? 'default' : 'outline'}
-                      onClick={() => handleReviewClick('THUMBS_DOWN')}
-                      disabled={isSubmitting}
-                      className='h-8 px-2'
-                    >
-                      <ThumbsDown className='h-4 w-4' />
-                    </Button>
-                    <Button
-                      size='sm'
-                      variant={selectedReview === 'THUMBS_UP' ? 'default' : 'outline'}
-                      onClick={() => handleReviewClick('THUMBS_UP')}
-                      disabled={isSubmitting}
-                      className='h-8 px-2'
-                    >
-                      <ThumbsUp className='h-4 w-4' />
-                    </Button>
-                    <Button
-                      size='sm'
-                      variant={selectedReview === 'STAR' ? 'default' : 'outline'}
-                      onClick={() => handleReviewClick('STAR')}
-                      disabled={isSubmitting}
-                      className='h-8 px-2'
-                    >
-                      <Star className='h-4 w-4' />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-              <ScrollBar orientation='horizontal' />
-            </ScrollArea>
-          </CardContent>
-        </Card>
-
+        {/* Application Details Card */}
+        <ApplicationDetailsCard
+          applicationId={application.id}
+          groupName={concatGroupName(application.students)}
+          school={application.school}
+          createdAt={application.createdAt}
+          updatedAt={application.updatedAt}
+          applicationReviews={application.reviews}
+        />
         {/* Cover Letter Card */}
         <Card className='grow'>
           <CardHeader>

@@ -21,7 +21,7 @@ export default async function ApplicationPage({
         },
       },
       studentRepresentative: true,
-      Review: true,
+      reviews: true,
       tasks: true,
     },
   });
@@ -30,19 +30,5 @@ export default async function ApplicationPage({
     return <div className='text-lg font-bold'>No application found.</div>;
   }
 
-  // For now, we'll hardcode a userId (later this will come from auth)
-  const currentUserId = 'user1';
-
-  // Find the current user's review if it exists
-  const currentUserReview = applicationData.Review.find(
-    (review) => review.userId === currentUserId
-  );
-
-  return (
-    <ApplicationView
-      application={applicationData}
-      currentUserId={currentUserId}
-      currentUserReview={currentUserReview || null}
-    />
-  );
+  return <ApplicationView application={applicationData} />;
 }
