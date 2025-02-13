@@ -13,6 +13,7 @@ export default {
         // Custom added
         confirm: 'hsl(var(--confirm))',
         'confirm-foreground': 'hsl(var(--confirm-foreground))',
+        'background-gradient-1': 'hsl(var(--background-gradient-1))',
         // Rest
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',

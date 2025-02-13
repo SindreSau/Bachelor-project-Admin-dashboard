@@ -4,7 +4,7 @@ import ThemeSwitcher from './theme-switcher';
 
 export const Header = async () => {
   return (
-    <header className='flex items-center justify-between bg-sidebar/60 px-2 py-1'>
+    <header className='flex items-center justify-between border-b bg-card/80 px-2 py-1'>
       {/* LEFT SIDE OF HEADER */}
       <SidebarTrigger />
 

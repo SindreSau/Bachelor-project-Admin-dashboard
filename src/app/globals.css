@@ -8,7 +8,7 @@ body {
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 55 20% 97%;
     --foreground: 224 71.4% 4.1%;
     --card: 0 0% 100%;
     --card-foreground: 224 71.4% 4.1%;
@@ -52,9 +52,9 @@ body {
   }
 
   .dark {
-    --background: 224 71.4% 4.1%;
+    --background: 260 15.4% 15%;
     --foreground: 210 20% 98%;
-    --card: 224 71.4% 4.1%;
+    --card: 240 15.9% 10%;
     --card-foreground: 210 20% 98%;
     --popover: 224 71.4% 4.1%;
     --popover-foreground: 210 20% 98%;
@@ -85,6 +85,9 @@ body {
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
 
+    /* BG Gradient */
+    --backgorund-gradient-1: 278 30% 35%;
+
     /* CUSTOM ADDED */
     --confirm-foreground: 142, 77%, 65%;
     --confirm: 142, 57%, 40%;
@@ -102,7 +105,7 @@ body {
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-gradient-to-t from-primary/5 text-foreground;
   }
 
   h1 {
