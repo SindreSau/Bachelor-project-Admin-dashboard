@@ -8,14 +8,16 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Task } from '@/types/task';
+import { Application, Task } from '@prisma/client';
 import { Button } from '../ui/button';
 import { Pencil, Trash2 } from 'lucide-react';
 import { deleteTask } from '@/actions/tasks/delete-task';
 import { useRouter } from 'next/navigation';
 import { changePublishStatus } from '@/actions/tasks/change-publish-status';
 
-const TaskCard = ({ task }: { task: Task }) => {
+type TaskWithApplications = Task & { applications: Application[] };
+
+const TaskCard = ({ task }: { task: TaskWithApplications }) => {
   const handleDelete = async (id: number) => {
     await deleteTask(id);
   };
@@ -31,13 +33,13 @@ const TaskCard = ({ task }: { task: Task }) => {
       <div className='absolute right-2 top-2 flex space-x-2'>
         <Button
           onClick={() => handleEditClick(task.id)}
-          className='bg-blue-600 px-2 py-1 hover:bg-blue-700'
+          className='hover:bg-action-hover bg-action px-2 py-1'
         >
           <Pencil />
         </Button>
         <Button
           onClick={() => handleDelete(task.id)}
-          className='bg-red-600 px-2 py-1 hover:bg-red-700'
+          className='bg-danger hover:bg-danger-hover px-2 py-1'
         >
           <Trash2 />
         </Button>
@@ -64,6 +66,16 @@ const TaskCard = ({ task }: { task: Task }) => {
             month: 'long',
             year: 'numeric',
           })}
+        </p>
+        <p className='text-muted-foreground'>
+          Søknadsfrist:{' '}
+          {task.deadline
+            ? task.deadline.toLocaleDateString('no-NO', {
+              day: '2-digit',
+              month: 'long',
+              year: 'numeric',
+            })
+            : 'Ingen frist'}
         </p>
         <p className='text-muted-foreground'>Antall søknader: {task.applications.length}</p>
         <p className='text-muted-foreground'>Publisert: {task.published ? 'Ja' : 'Nei'}</p>
