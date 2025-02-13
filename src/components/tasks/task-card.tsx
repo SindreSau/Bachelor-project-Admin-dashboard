@@ -8,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Task } from '@/types/task';
 import { Button } from '../ui/button';
 import { Calendar, Pencil, Trash2, Users, Globe } from 'lucide-react';
 import { deleteTask } from '@/actions/tasks/delete-task';
@@ -16,8 +15,11 @@ import { useRouter } from 'next/navigation';
 import { changePublishStatus } from '@/actions/tasks/change-publish-status';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useState } from 'react';
+import { Task, Application } from '@prisma/client';
 
-const TaskCard = ({ task }: { task: Task }) => {
+type TaskWithApplications = Task & { applications: Application[] };
+
+const TaskCard = ({ task }: { task: TaskWithApplications }) => {
   const [isPublishing, setIsPublishing] = useState(false);
   const router = useRouter();
 
