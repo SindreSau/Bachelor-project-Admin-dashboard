@@ -1,28 +1,23 @@
+import { getTasks } from '@/actions/tasks/get-tasks';
 import TaskCard from './task-card';
-import { db } from '@/lib/prisma';
 
 const TaskList = async () => {
-  const tasks = await db.task.findMany({
-    include: {
-      applications: true,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
+  const tasks = await getTasks();
 
   return (
-    <div className='my-6 rounded-lg border bg-card px-6 py-6 text-card-foreground shadow-sm'>
+    <div className='flex h-full flex-col rounded-lg border px-6 py-6'>
       <h2 className='mb-4 text-xl font-bold'>Oppgaveliste</h2>
-      <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+      <div className='flex min-h-0 flex-1 gap-6'>
         {tasks.length > 0 ? (
           tasks.map((task) => (
-            <div key={task.id} className='flex w-full'>
+            <div key={task.id} className='min-w-[350px] flex-1'>
               <TaskCard task={task} />
             </div>
           ))
         ) : (
-          <p className='text-muted-foreground'>Ingen oppgaver å vise.</p>
+          <div className='flex flex-1 items-center justify-center'>
+            <p className='text-center text-muted-foreground'>Ingen oppgaver å vise.</p>
+          </div>
         )}
       </div>
     </div>

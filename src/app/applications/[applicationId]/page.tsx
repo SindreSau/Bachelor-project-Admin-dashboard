@@ -21,7 +21,7 @@ export default async function ApplicationPage({
         },
       },
       studentRepresentative: true,
-      Review: true,
+      reviews: true,
       tasks: true,
     },
   });
@@ -34,7 +34,7 @@ export default async function ApplicationPage({
   const currentUserId = 'user1';
 
   // Find the current user's review if it exists
-  const currentUserReview = applicationData.Review.find(
+  const currentUserReview = applicationData.reviews.find(
     (review) => review.userId === currentUserId
   );
 

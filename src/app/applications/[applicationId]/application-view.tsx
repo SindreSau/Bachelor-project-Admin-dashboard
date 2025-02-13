@@ -19,7 +19,7 @@ type StudentWithFiles = Student & {
 type ApplicationViewTypes = Application & {
   students: StudentWithFiles[];
   studentRepresentative: Student | null;
-  Review: Review[];
+  reviews: Review[];
   tasks: Task[];
 };
 
@@ -107,10 +107,10 @@ const ApplicationView = ({
                   <p className='text-sm font-medium text-muted-foreground'>Status</p>
                   <p
                     className={cn(
-                      'text-sm font-medium ' + getApplicationStatus(application.Review).className
+                      'text-sm font-medium ' + getApplicationStatus(application.reviews).className
                     )}
                   >
-                    {getApplicationStatus(application.Review).text}
+                    {getApplicationStatus(application.reviews).text}
                   </p>
                 </div>
                 <div className='space-y-0.5'>
