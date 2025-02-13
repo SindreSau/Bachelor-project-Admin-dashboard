@@ -38,11 +38,14 @@ const CreateTaskForm = () => {
     },
   });
 
-  const onSubmit = async (data: {
-    taskName: string;
-    taskDescription: string;
-    deadline: Date | null;
-  }) => {
+  const onSubmit = async (
+    data: {
+      taskName: string;
+      taskDescription: string;
+      deadline: Date | null;
+    },
+    publish: boolean
+  ) => {
     try {
       console.log(data);
       const deadline = data.deadline ? new Date(data.deadline) : null;
@@ -50,6 +53,7 @@ const CreateTaskForm = () => {
       await createTask({
         ...data,
         deadline: deadline ? deadline.toISOString() : null,
+        published: publish,
       });
       form.reset();
     } catch (error) {
@@ -57,11 +61,19 @@ const CreateTaskForm = () => {
     }
   };
 
+  const handleSaveClick = () => {
+    form.handleSubmit((data) => onSubmit(data, false))();
+  };
+
+  const handleSaveAndPublishClick = () => {
+    form.handleSubmit((data) => onSubmit(data, true))();
+  };
+
   return (
     <div className='my-6 rounded-lg border bg-card px-6 py-6 text-card-foreground shadow-sm'>
       <h2 className='mb-4 text-xl font-bold'>Legg til en oppgave</h2>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8 pt-4'>
+        <form className='space-y-8 pt-4'>
           <FormField
             control={form.control}
             name='taskName'
@@ -92,7 +104,7 @@ const CreateTaskForm = () => {
             control={form.control}
             name='deadline'
             render={({ field }) => (
-              <FormItem>
+              <FormItem className='flex flex-col'>
                 <FormLabel>Søknadsfrist</FormLabel>
                 <FormControl>
                   <DatePicker
@@ -104,7 +116,12 @@ const CreateTaskForm = () => {
               </FormItem>
             )}
           />
-          <Button type='submit'>Lagre</Button>
+          <Button type='button' onClick={handleSaveClick} className='mr-2'>
+            Lagre
+          </Button>
+          <Button type='button' onClick={handleSaveAndPublishClick}>
+            Lagre og publiser
+          </Button>
         </form>
       </Form>
     </div>

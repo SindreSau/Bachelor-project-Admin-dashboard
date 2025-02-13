@@ -7,9 +7,10 @@ interface TaskInput {
   taskName: string;
   taskDescription: string;
   deadline: string | null;
+  published?: boolean;
 }
 
-export async function createTask({ taskName, taskDescription, deadline }: TaskInput) {
+export async function createTask({ taskName, taskDescription, deadline, published }: TaskInput) {
   if (!taskName || !taskDescription) {
     throw new Error('Task name and description are required.');
   }
@@ -19,6 +20,7 @@ export async function createTask({ taskName, taskDescription, deadline }: TaskIn
       taskName,
       taskDescription,
       deadline: deadline ? new Date(deadline) : null,
+      published,
     },
   });
 
