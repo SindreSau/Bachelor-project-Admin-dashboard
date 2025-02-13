@@ -49,7 +49,7 @@ const TaskCard = ({ task }: { task: TaskWithApplications }) => {
   };
 
   return (
-    <Card className='relative flex h-full flex-col'>
+    <Card className='flex h-full w-full grow flex-col'>
       <CardHeader className='pb-4'>
         <div className='flex items-start justify-between gap-4'>
           <CardTitle className='text-xl'>{task.taskName}</CardTitle>
@@ -74,15 +74,15 @@ const TaskCard = ({ task }: { task: TaskWithApplications }) => {
         </div>
       </CardHeader>
 
-      <CardContent className='flex-grow'>
-        <ScrollArea className='h-32'>
+      <CardContent className='grow'>
+        <ScrollArea className='min-h-32'>
           <CardDescription className='whitespace-pre-wrap text-sm'>
             {task.taskDescription}
           </CardDescription>
         </ScrollArea>
       </CardContent>
 
-      <CardFooter className='mt-auto flex items-center justify-between gap-4 border-t pt-4'>
+      <CardFooter className='mt-auto flex flex-wrap items-end justify-between gap-4 border-t pt-4'>
         <div className='flex flex-wrap gap-4 text-sm text-muted-foreground'>
           <div className='flex items-center gap-1 whitespace-nowrap'>
             <Calendar className='h-3 w-3' />
