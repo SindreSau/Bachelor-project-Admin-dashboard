@@ -15,7 +15,7 @@ import { deleteTask } from '@/actions/tasks/delete-task';
 import { useRouter } from 'next/navigation';
 import { changePublishStatus } from '@/actions/tasks/change-publish-status';
 
-type TaskWithApplications = Task & { applications: Application[] };
+type TaskWithApplications = Task & { applications: Application[]; deadline?: Date };
 
 const TaskCard = ({ task }: { task: TaskWithApplications }) => {
   const handleDelete = async (id: number) => {
@@ -71,10 +71,10 @@ const TaskCard = ({ task }: { task: TaskWithApplications }) => {
           Søknadsfrist:{' '}
           {task.deadline
             ? task.deadline.toLocaleDateString('no-NO', {
-              day: '2-digit',
-              month: 'long',
-              year: 'numeric',
-            })
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric',
+              })
             : 'Ingen frist'}
         </p>
         <p className='text-muted-foreground'>Antall søknader: {task.applications.length}</p>
