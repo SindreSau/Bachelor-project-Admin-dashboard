@@ -29,7 +29,7 @@ const TaskCard = ({ task }: { task: TaskWithApplications }) => {
   };
 
   return (
-    <Card className='relative h-full'>
+    <Card className='relative h-full w-full'>
       <div className='absolute right-2 top-2 flex space-x-2'>
         <Button
           onClick={() => handleEditClick(task.id)}
