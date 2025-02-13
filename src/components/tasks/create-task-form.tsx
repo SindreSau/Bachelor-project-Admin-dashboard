@@ -116,7 +116,11 @@ const CreateTaskForm = () => {
               </FormItem>
             )}
           />
-          <Button type='button' onClick={handleSaveClick} className='mr-2'>
+          <Button
+            type='button'
+            onClick={handleSaveClick}
+            className='bg-confirm mr-2 text-foreground hover:bg-green-700'
+          >
             Lagre
           </Button>
           <Button type='button' onClick={handleSaveAndPublishClick}>

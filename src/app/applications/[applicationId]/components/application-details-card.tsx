@@ -58,80 +58,79 @@ const ApplicationDetailsCard = ({
 
   return (
     <Card>
-      <CardHeader className='grid grid-cols-1 pb-2'>
+      <CardHeader>
         <CardTitle>Søknadsdetaljer</CardTitle>
       </CardHeader>
-      <CardContent className='py-2'>
+      <CardContent>
         <ScrollArea>
-          <div className='grid grid-cols-6 gap-2'>
-            <div className='space-y-0.5'>
-              <p className='text-sm font-medium text-muted-foreground'>Gruppenavn</p>
-              <p className='text-sm'>{groupName}</p>
-            </div>
-            <div className='space-y-0.5'>
-              <p className='text-sm font-medium text-muted-foreground'>Skole</p>
-              <p className='text-sm'>{school}</p>
-            </div>
-            <div className='space-y-0.5'>
-              <p className='text-sm font-medium text-muted-foreground'>Søknadsdato</p>
-              <p className='text-sm'>
-                {createdAt?.toLocaleDateString('nb-NO', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </p>
-            </div>
-            <div className='space-y-0.5'>
-              <p className='text-sm font-medium text-muted-foreground'>Sist Oppdatert</p>
-              <p className='text-sm'>
-                {updatedAt?.toLocaleDateString('nb-NO', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </p>
-            </div>
-            <div className='space-y-0.5'>
-              <p className='text-sm font-medium text-muted-foreground'>Status</p>
-              <p
-                className={cn(
-                  'text-sm font-medium ' + getApplicationStatus(applicationReviews).className
-                )}
-              >
-                {getApplicationStatus(applicationReviews).text}
-              </p>
-            </div>
-            <div className='space-y-0.5'>
-              <p className='text-sm font-medium text-muted-foreground'>Vurdering</p>
-              <div className='flex gap-2'>
-                <Button
-                  size='sm'
-                  variant={selectedReview === 'THUMBS_DOWN' ? 'default' : 'outline'}
-                  onClick={() => handleReviewClick('THUMBS_DOWN')}
-                  disabled={isSubmitting}
-                  className='h-8 px-2'
+          <div className='grid gap-4 sm:gap-6'>
+            {/* Info Section - 2 columns on mobile, 3 on larger screens */}
+            <div className='grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6'>
+              <div>
+                <p className='text-sm font-medium text-muted-foreground'>Gruppenavn</p>
+                <p className='text-sm'>{groupName}</p>
+              </div>
+
+              <div>
+                <p className='text-sm font-medium text-muted-foreground'>Skole</p>
+                <p className='text-sm'>{school}</p>
+              </div>
+
+              <div>
+                <p className='text-sm font-medium text-muted-foreground'>Søknadsdato</p>
+                <p className='text-sm'>
+                  {createdAt?.toLocaleDateString('nb-NO', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </p>
+              </div>
+
+              <div>
+                <p className='text-sm font-medium text-muted-foreground'>Sist Oppdatert</p>
+                <p className='text-sm'>
+                  {updatedAt?.toLocaleDateString('nb-NO', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </p>
+              </div>
+
+              <div>
+                <p className='text-sm font-medium text-muted-foreground'>Status</p>
+                <p
+                  className={cn(
+                    'text-sm font-medium',
+                    getApplicationStatus(applicationReviews).className
+                  )}
                 >
-                  <ThumbsDown className='h-4 w-4' />
-                </Button>
-                <Button
-                  size='sm'
-                  variant={selectedReview === 'THUMBS_UP' ? 'default' : 'outline'}
-                  onClick={() => handleReviewClick('THUMBS_UP')}
-                  disabled={isSubmitting}
-                  className='h-8 px-2'
-                >
-                  <ThumbsUp className='h-4 w-4' />
-                </Button>
-                <Button
-                  size='sm'
-                  variant={selectedReview === 'STAR' ? 'default' : 'outline'}
-                  onClick={() => handleReviewClick('STAR')}
-                  disabled={isSubmitting}
-                  className='h-8 px-2'
-                >
-                  <Star className='h-4 w-4' />
-                </Button>
+                  {getApplicationStatus(applicationReviews).text}
+                </p>
+              </div>
+
+              {/* Review Controls */}
+              <div>
+                <p className='text-sm font-medium text-muted-foreground'>Vurdering</p>
+                <div className='flex gap-2'>
+                  {[
+                    { value: 'THUMBS_DOWN', icon: ThumbsDown },
+                    { value: 'THUMBS_UP', icon: ThumbsUp },
+                    { value: 'STAR', icon: Star },
+                  ].map(({ value, icon: Icon }) => (
+                    <Button
+                      key={value}
+                      size='sm'
+                      variant={selectedReview === value ? 'default' : 'outline'}
+                      onClick={() => handleReviewClick(value as ReviewStatus)}
+                      disabled={isSubmitting}
+                      className='h-8 w-8 p-0'
+                    >
+                      <Icon className='h-4 w-4' />
+                    </Button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

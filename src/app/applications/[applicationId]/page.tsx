@@ -3,6 +3,7 @@ import { concatGroupName } from '@/lib/utils';
 import ApplicationDetailsCard from './components/application-details-card';
 import ApplicationStudentsGrid from './components/application-students-grid';
 import ApplicationCoverLetter from './components/application-cover-letter';
+import ApplicationComments from './components/application-comments';
 
 export default async function ApplicationPage({
   params,
@@ -44,10 +45,16 @@ export default async function ApplicationPage({
         updatedAt={application.updatedAt}
         applicationReviews={application.reviews}
       />
-      {/* Cover Letter Card */}
-      <ApplicationCoverLetter coverLetter={application.coverLetterText} tasks={application.tasks} />
+      <div className='flex h-full flex-col-reverse gap-2 xl:flex-row-reverse'>
+        {/* Cover Letter Card */}
+        <ApplicationComments />
+        <ApplicationCoverLetter
+          coverLetter={application.coverLetterText}
+          tasks={application.tasks}
+        />
 
-      {/* Students Grid */}
+        {/* Students Grid */}
+      </div>
       <ApplicationStudentsGrid
         students={application.students}
         studentRepresentativeId={application.studentRepresentativeId}
