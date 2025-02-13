@@ -14,6 +14,7 @@ import { Pencil, Trash2 } from 'lucide-react';
 import { deleteTask } from '@/actions/tasks/delete-task';
 import { useRouter } from 'next/navigation';
 import { changePublishStatus } from '@/actions/tasks/change-publish-status';
+import { ScrollArea } from '@radix-ui/react-scroll-area';
 
 const TaskCard = ({ task }: { task: Task }) => {
   const handleDelete = async (id: number) => {
@@ -46,7 +47,9 @@ const TaskCard = ({ task }: { task: Task }) => {
         <CardTitle>{task.taskName}</CardTitle>
       </CardHeader>
       <CardContent>
-        <CardDescription className='whitespace-pre-wrap'>{task.taskDescription}</CardDescription>
+        <ScrollArea>
+          <CardDescription className='whitespace-pre-wrap'>{task.taskDescription}</CardDescription>
+        </ScrollArea>
       </CardContent>
       <CardFooter className='flex flex-col items-start space-y-2'>
         <p className='text-muted-foreground'>

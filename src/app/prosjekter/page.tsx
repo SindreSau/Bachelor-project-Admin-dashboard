@@ -5,9 +5,11 @@ export const dynamic = 'force-dynamic';
 
 const Page = () => {
   return (
-    <div>
-      <TaskList />
-      <CreateTaskForm />
+    <div className='container mx-auto px-4 py-8'>
+      <div className='grid grid-cols-1 gap-8 xl:grid-cols-2'>
+        <TaskList />
+        <CreateTaskForm />
+      </div>
     </div>
   );
 };

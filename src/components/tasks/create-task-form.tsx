@@ -36,24 +36,29 @@ const CreateTaskForm = () => {
   });
 
   return (
-    <div className='my-6 rounded-lg border bg-card px-6 py-6 text-card-foreground shadow-sm'>
-      <h2 className='mb-4 text-xl font-bold'>Legg til en oppgave</h2>
+    <div className='rounded-lg border bg-card p-6 shadow-sm'>
+      <h2 className='mb-6 text-2xl font-semibold'>Legg til en oppgave</h2>
       <Form {...form}>
         <form
           action={createTask}
           onSubmit={() => {
             form.reset();
           }}
-          className='space-y-8 pt-4'
+          className='space-y-6'
         >
           <FormField
             control={form.control}
             name='taskName'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Tittel</FormLabel>
+                <FormLabel className='text-base'>Tittel</FormLabel>
                 <FormControl>
-                  <Input placeholder='Tittel' {...field} value={field.value || ''} />
+                  <Input
+                    placeholder='Tittel'
+                    {...field}
+                    value={field.value || ''}
+                    className='w-full'
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -64,15 +69,22 @@ const CreateTaskForm = () => {
             name='taskDescription'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Beskrivelse</FormLabel>
+                <FormLabel className='text-base'>Beskrivelse</FormLabel>
                 <FormControl>
-                  <Textarea placeholder='Beskrivelse' {...field} value={field.value || ''} />
+                  <Textarea
+                    placeholder='Beskrivelse'
+                    {...field}
+                    value={field.value || ''}
+                    className='min-h-[100px] w-full'
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <Button type='submit'>Lagre</Button>
+          <Button type='submit' className='w-full md:w-auto'>
+            Lagre
+          </Button>
         </form>
       </Form>
     </div>
