@@ -33,13 +33,13 @@ const TaskCard = ({ task }: { task: TaskWithApplications }) => {
       <div className='absolute right-2 top-2 flex space-x-2'>
         <Button
           onClick={() => handleEditClick(task.id)}
-          className='bg-blue-600 px-2 py-1 hover:bg-blue-700'
+          className='hover:bg-action-hover bg-action px-2 py-1'
         >
           <Pencil />
         </Button>
         <Button
           onClick={() => handleDelete(task.id)}
-          className='bg-red-600 px-2 py-1 hover:bg-red-700'
+          className='bg-danger hover:bg-danger-hover px-2 py-1'
         >
           <Trash2 />
         </Button>
@@ -71,10 +71,10 @@ const TaskCard = ({ task }: { task: TaskWithApplications }) => {
           Søknadsfrist:{' '}
           {task.deadline
             ? task.deadline.toLocaleDateString('no-NO', {
-                day: '2-digit',
-                month: 'long',
-                year: 'numeric',
-              })
+              day: '2-digit',
+              month: 'long',
+              year: 'numeric',
+            })
             : 'Ingen frist'}
         </p>
         <p className='text-muted-foreground'>Antall søknader: {task.applications.length}</p>
