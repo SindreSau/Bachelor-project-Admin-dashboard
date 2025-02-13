@@ -3,10 +3,14 @@
 import { db } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 
-export async function createTask(formData: FormData) {
-  const taskName = formData.get('taskName') as string;
-  const taskDescription = formData.get('taskDescription') as string;
+interface TaskInput {
+  taskName: string;
+  taskDescription: string;
+  deadline: string | null;
+  published?: boolean;
+}
 
+export async function createTask({ taskName, taskDescription, deadline, published }: TaskInput) {
   if (!taskName || !taskDescription) {
     throw new Error('Task name and description are required.');
   }
@@ -15,6 +19,8 @@ export async function createTask(formData: FormData) {
     data: {
       taskName,
       taskDescription,
+      deadline: deadline ? new Date(deadline) : null,
+      published,
     },
   });
 

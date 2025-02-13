@@ -2,7 +2,7 @@ import { BlobServiceClient } from '@azure/storage-blob';
 import { PrismaClient, DocumentType } from '@prisma/client';
 import fs from 'fs/promises';
 import path from 'path';
-import { faker } from '@faker-js/faker';
+import { fakerNB_NO as faker } from '@faker-js/faker';
 
 const prisma = new PrismaClient();
 
@@ -12,6 +12,8 @@ async function uploadPdf(file: File) {
   }
 
   const connectionString = process.env.AZURITE_CONNECTION_STRING || '';
+  console.log('using connectionString: ' + connectionString);
+
   const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
 
   const containerName = 'pdf';
@@ -26,7 +28,9 @@ async function uploadPdf(file: File) {
 
   await blockBlobClient.upload(buffer, buffer.length);
 
-  return blockBlobClient.url;
+  // Instead of returning blockBlobClient.url, construct the URL:
+  const baseUrl = process.env.BLOB_BASE_URL || 'http://127.0.0.1:10000';
+  return `${baseUrl}/devstoreaccount1/${containerName}/${blobName}`;
 }
 
 async function uploadFileFromPublic(fileName: string): Promise<string> {
@@ -51,6 +55,7 @@ async function main() {
       taskName: 'Bachelor application management system',
       taskDescription:
         'Build a system for managing applications for bachelor programs for Accenture. The system should allow students to apply for a program, and for the student representative to manage the applications. The system should also allow the student representative to review and approve applications.',
+      published: true,
     },
   });
   console.log('Upserted task 1.');
@@ -58,8 +63,10 @@ async function main() {
   // Create one more task with realistic content using faker
   const task2 = await prisma.task.create({
     data: {
-      taskName: faker.company.catchPhrase(),
-      taskDescription: faker.lorem.paragraphs(2),
+      taskName: 'Automated Library Management System',
+      taskDescription:
+        'Build a system for managing a library. The system should allow librarians to manage books, patrons, and loans. The system should also allow patrons to search for books, check out books, and return books. The system should also allow librarians to generate reports on books, patrons, and loans.',
+      published: true,
     },
   });
   console.log('Created task 2.');
@@ -103,8 +110,8 @@ async function main() {
       prisma.student.create({
         data: {
           email: faker.internet.email(),
-          firstName: faker.name.firstName(),
-          lastName: faker.name.lastName(),
+          firstName: faker.person.firstName(),
+          lastName: faker.person.lastName(),
         },
       })
     );
@@ -151,7 +158,7 @@ async function main() {
     await prisma.application.create({
       data: {
         school: faker.helpers.arrayElement(['OsloMet', 'Høyskolen Kristiania']),
-        coverLetterText: faker.lorem.paragraphs(2),
+        coverLetterText: faker.lorem.words(faker.number.int({ min: 10, max: 100 })),
         students: {
           connect: selectedStudents.map((student) => ({ id: student.id })),
         },
@@ -173,9 +180,15 @@ async function main() {
   // For each student (both fixed and additional), create file records if they don't exist.
   // Use "example.pdf" for both CV and Grades.
   const allStudents = [...fixedStudents, ...additionalStudents];
+  const fileSamples = ['example-1.pdf', 'example-2.pdf', 'example-3.pdf'];
   for (const student of allStudents) {
     const cvFileName = `${student.firstName.toLowerCase()}-cv.pdf`;
     const gradesFileName = `${student.firstName.toLowerCase()}-kar.pdf`;
+
+    // Randomly choose a sample for CV and a different one for Grades
+    const cvSample = faker.helpers.arrayElement(fileSamples);
+    const remainingSamples = fileSamples.filter((sample) => sample !== cvSample);
+    const gradesSample = faker.helpers.arrayElement(remainingSamples);
 
     const existingFiles = await prisma.file.findMany({
       where: {
@@ -185,7 +198,7 @@ async function main() {
     });
 
     if (!existingFiles.some((file) => file.fileName === cvFileName)) {
-      const cvUrl = await uploadFileFromPublic('example.pdf');
+      const cvUrl = await uploadFileFromPublic(cvSample);
       await prisma.file.create({
         data: {
           studentId: student.id,
@@ -200,7 +213,7 @@ async function main() {
     }
 
     if (!existingFiles.some((file) => file.fileName === gradesFileName)) {
-      const gradesUrl = await uploadFileFromPublic('example.pdf');
+      const gradesUrl = await uploadFileFromPublic(gradesSample);
       await prisma.file.create({
         data: {
           studentId: student.id,

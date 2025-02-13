@@ -43,7 +43,7 @@ model Application {
   updatedAt               DateTime  @updatedAt
   students                Student[] @relation("StudentToApplication")
   tasks                   Task[]    @relation("ApplicationToTask")
-  Review                  Review[]
+  reviews                 Review[]
   studentRepresentative   Student?  @relation(fields: [studentRepresentativeId], references: [id])
   studentRepresentativeId Int?
 }
@@ -52,6 +52,7 @@ model Task {
   id              Int           @id @default(autoincrement())
   taskName        String
   taskDescription String?
+  deadline        DateTime?
   published       Boolean       @default(false)
   minStudents     Int           @default(3)
   maxStudents     Int           @default(5)
@@ -69,8 +70,11 @@ enum ReviewStatus {
 model Review {
   id            Int           @id @default(autoincrement())
   applicationId Int
+  userId        String
   review        ReviewStatus?
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   application   Application   @relation(fields: [applicationId], references: [id])
+
+  @@unique([applicationId, userId], name: "applicationId_userId")
 }

@@ -1,18 +1,18 @@
 import { db } from '@/lib/prisma';
-import ApplicationView from './application-view';
+import { concatGroupName } from '@/lib/utils';
+import ApplicationDetailsCard from './components/application-details-card';
+import ApplicationStudentsGrid from './components/application-students-grid';
+import ApplicationCoverLetter from './components/application-cover-letter';
 
 export default async function ApplicationPage({
   params,
 }: {
   params: Promise<{ applicationId: string }>;
 }) {
-  // Await the params
   const { applicationId } = await params;
   const parsedApplicationId = parseInt(applicationId, 10);
 
-  // Fetch data on the server
-  // TODO: Move this to server-actions
-  const applicationData = await db.application.findUnique({
+  const application = await db.application.findUnique({
     where: { id: parsedApplicationId },
     include: {
       students: {
@@ -24,13 +24,34 @@ export default async function ApplicationPage({
         },
       },
       studentRepresentative: true,
+      reviews: true,
+      tasks: true,
     },
   });
 
-  if (!applicationData) {
+  if (!application) {
     return <div className='text-lg font-bold'>No application found.</div>;
   }
 
-  // Pass the data to the client component
-  return <ApplicationView application={applicationData} />;
+  return (
+    <div className='flex h-full flex-1 flex-col gap-2'>
+      {/* Application Details Card */}
+      <ApplicationDetailsCard
+        applicationId={application.id}
+        groupName={concatGroupName(application.students)}
+        school={application.school}
+        createdAt={application.createdAt}
+        updatedAt={application.updatedAt}
+        applicationReviews={application.reviews}
+      />
+      {/* Cover Letter Card */}
+      <ApplicationCoverLetter coverLetter={application.coverLetterText} tasks={application.tasks} />
+
+      {/* Students Grid */}
+      <ApplicationStudentsGrid
+        students={application.students}
+        studentRepresentativeId={application.studentRepresentativeId}
+      />
+    </div>
+  );
 }

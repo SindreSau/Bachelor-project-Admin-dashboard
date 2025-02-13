@@ -41,6 +41,13 @@ body {
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* CUSTOM ADDED */
+    --green-foreground: 142, 77%, 73%;
+    --action-color: #2563eb; /* Blue-600 */
+    --action-hover: #1d4ed8; /* Blue-700 */
+    --danger-color: #dc2626; /* Red-600 */
+    --danger-hover: #b91c1c; /* Red-700 */
   }
 
   .dark {
@@ -76,6 +83,9 @@ body {
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* CUSTOM ADDED */
+    --green-foreground: 142, 77%, 73%;
   }
 }
 
@@ -89,10 +99,10 @@ body {
   }
 
   h1 {
-    @apply md:text-3xl md:mb-3 text-2xl mb-1 font-bold;
+    @apply mb-1 text-2xl font-bold md:mb-3 md:text-3xl;
   }
 
   h2 {
-    @apply md:text-2xl md:mb-2 text-xl mb-1 font-bold;
+    @apply mb-1 text-xl font-bold md:mb-2 md:text-2xl;
   }
 }
