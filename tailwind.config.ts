@@ -11,7 +11,8 @@ export default {
     extend: {
       colors: {
         // Custom added
-        'green-foreground': 'hsl(var(--green-foreground))',
+        confirm: 'hsl(var(--confirm))',
+        'confirm-foreground': 'hsl(var(--confirm-foreground))',
         // Rest
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
