@@ -92,7 +92,7 @@ const CreateTaskForm = () => {
             control={form.control}
             name='deadline'
             render={({ field }) => (
-              <FormItem>
+              <FormItem className='flex flex-col'>
                 <FormLabel>Søknadsfrist</FormLabel>
                 <FormControl>
                   <DatePicker
