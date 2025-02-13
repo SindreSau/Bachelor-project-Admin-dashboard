@@ -9,7 +9,7 @@ interface ApplicationCoverLetterProps {
 
 const ApplicationCoverLetter = ({ coverLetter, tasks }: ApplicationCoverLetterProps) => {
   return (
-    <Card className='grow'>
+    <Card className='w-full grow'>
       <CardHeader>
         <CardTitle>
           <div className='items-start justify-between lg:flex'>

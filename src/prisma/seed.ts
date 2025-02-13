@@ -158,7 +158,7 @@ async function main() {
     await prisma.application.create({
       data: {
         school: faker.helpers.arrayElement(['OsloMet', 'Høyskolen Kristiania']),
-        coverLetterText: faker.lorem.words(faker.number.int({ min: 10, max: 100 })),
+        coverLetterText: faker.lorem.words(faker.number.int({ min: 150, max: 400 })),
         students: {
           connect: selectedStudents.map((student) => ({ id: student.id })),
         },
