@@ -38,11 +38,14 @@ const CreateTaskForm = () => {
     },
   });
 
-  const onSubmit = async (data: {
-    taskName: string;
-    taskDescription: string;
-    deadline: Date | null;
-  }) => {
+  const onSubmit = async (
+    data: {
+      taskName: string;
+      taskDescription: string;
+      deadline: Date | null;
+    },
+    publish: boolean
+  ) => {
     try {
       console.log(data);
       const deadline = data.deadline ? new Date(data.deadline) : null;
@@ -50,6 +53,7 @@ const CreateTaskForm = () => {
       await createTask({
         ...data,
         deadline: deadline ? deadline.toISOString() : null,
+        published: publish,
       });
       form.reset();
     } catch (error) {
@@ -57,24 +61,27 @@ const CreateTaskForm = () => {
     }
   };
 
+  const handleSaveClick = () => {
+    form.handleSubmit((data) => onSubmit(data, false))();
+  };
+
+  const handleSaveAndPublishClick = () => {
+    form.handleSubmit((data) => onSubmit(data, true))();
+  };
+
   return (
-    <div className='rounded-lg border bg-card p-6 shadow-sm'>
-      <h2 className='mb-6 text-2xl font-semibold'>Legg til en oppgave</h2>
+    <div className='rounded-lg border bg-card px-6 py-6 text-card-foreground shadow-sm'>
+      <h2 className='mb-4 text-2xl font-bold'>Legg til en oppgave</h2>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8 pt-4'>
+        <form className='space-y-8 pt-4'>
           <FormField
             control={form.control}
             name='taskName'
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='text-base'>Tittel</FormLabel>
+                <FormLabel>Tittel</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder='Tittel'
-                    {...field}
-                    value={field.value || ''}
-                    className='w-full'
-                  />
+                  <Input placeholder='Tittel' {...field} value={field.value || ''} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -85,14 +92,9 @@ const CreateTaskForm = () => {
             name='taskDescription'
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='text-base'>Beskrivelse</FormLabel>
+                <FormLabel>Beskrivelse</FormLabel>
                 <FormControl>
-                  <Textarea
-                    placeholder='Beskrivelse'
-                    {...field}
-                    value={field.value || ''}
-                    className='min-h-[100px] w-full'
-                  />
+                  <Textarea placeholder='Beskrivelse' {...field} value={field.value || ''} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -102,7 +104,7 @@ const CreateTaskForm = () => {
             control={form.control}
             name='deadline'
             render={({ field }) => (
-              <FormItem>
+              <FormItem className='flex flex-col'>
                 <FormLabel>Søknadsfrist</FormLabel>
                 <FormControl>
                   <DatePicker
@@ -114,7 +116,16 @@ const CreateTaskForm = () => {
               </FormItem>
             )}
           />
-          <Button type='submit'>Lagre</Button>
+          <Button
+            type='button'
+            onClick={handleSaveClick}
+            className='bg-confirm mr-2 text-foreground hover:bg-green-700'
+          >
+            Lagre
+          </Button>
+          <Button type='button' onClick={handleSaveAndPublishClick}>
+            Lagre og publiser
+          </Button>
         </form>
       </Form>
     </div>

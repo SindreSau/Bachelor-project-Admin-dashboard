@@ -7,6 +7,7 @@ interface TaskInput {
   taskName: string;
   taskDescription: string;
   deadline: string | null;
+  published?: boolean;
 }
 
 export async function createTask({ taskName, taskDescription, deadline }: TaskInput) {
