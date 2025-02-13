@@ -3,7 +3,6 @@ import { concatGroupName } from '@/lib/utils';
 import ApplicationDetailsCard from './components/application-details-card';
 import ApplicationStudentsGrid from './components/application-students-grid';
 import ApplicationCoverLetter from './components/application-cover-letter';
-import { Suspense } from 'react';
 
 export default async function ApplicationPage({
   params,
