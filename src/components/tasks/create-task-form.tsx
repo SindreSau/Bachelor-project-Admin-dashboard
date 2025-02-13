@@ -16,6 +16,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '../ui/textarea';
 import { createTask } from '@/actions/tasks/create-task';
+import { DatePicker } from './date-picker';
 
 const formSchema = z.object({
   taskName: z.string().min(2, {
@@ -24,6 +25,7 @@ const formSchema = z.object({
   taskDescription: z.string().min(2, {
     message: 'Beskrivelse må være minst 2 tegn',
   }),
+  deadline: z.date().optional().nullable(),
 });
 
 const CreateTaskForm = () => {
@@ -32,20 +34,34 @@ const CreateTaskForm = () => {
     defaultValues: {
       taskName: '',
       taskDescription: '',
+      deadline: null,
     },
   });
+
+  const onSubmit = async (data: {
+    taskName: string;
+    taskDescription: string;
+    deadline: Date | null;
+  }) => {
+    try {
+      console.log(data);
+      const deadline = data.deadline ? new Date(data.deadline) : null;
+
+      await createTask({
+        ...data,
+        deadline: deadline ? deadline.toISOString() : null,
+      });
+      form.reset();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div className='rounded-lg border bg-card p-6 shadow-sm'>
       <h2 className='mb-6 text-2xl font-semibold'>Legg til en oppgave</h2>
       <Form {...form}>
-        <form
-          action={createTask}
-          onSubmit={() => {
-            form.reset();
-          }}
-          className='space-y-6'
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8 pt-4'>
           <FormField
             control={form.control}
             name='taskName'
@@ -82,9 +98,23 @@ const CreateTaskForm = () => {
               </FormItem>
             )}
           />
-          <Button type='submit' className='w-full md:w-auto'>
-            Lagre
-          </Button>
+          <FormField
+            control={form.control}
+            name='deadline'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Søknadsfrist</FormLabel>
+                <FormControl>
+                  <DatePicker
+                    value={field.value ? new Date(field.value) : null}
+                    onChange={(date) => field.onChange(date)}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type='submit'>Lagre</Button>
         </form>
       </Form>
     </div>
