@@ -1,5 +1,9 @@
 import { db } from '@/lib/prisma';
-import ApplicationView from './application-view';
+import { concatGroupName } from '@/lib/utils';
+import ApplicationDetailsCard from './components/application-details-card';
+import ApplicationStudentsGrid from './components/application-students-grid';
+import ApplicationCoverLetter from './components/application-cover-letter';
+import { Suspense } from 'react';
 
 export default async function ApplicationPage({
   params,
@@ -9,7 +13,7 @@ export default async function ApplicationPage({
   const { applicationId } = await params;
   const parsedApplicationId = parseInt(applicationId, 10);
 
-  const applicationData = await db.application.findUnique({
+  const application = await db.application.findUnique({
     where: { id: parsedApplicationId },
     include: {
       students: {
@@ -21,28 +25,34 @@ export default async function ApplicationPage({
         },
       },
       studentRepresentative: true,
-      Review: true,
+      reviews: true,
       tasks: true,
     },
   });
 
-  if (!applicationData) {
+  if (!application) {
     return <div className='text-lg font-bold'>No application found.</div>;
   }
 
-  // For now, we'll hardcode a userId (later this will come from auth)
-  const currentUserId = 'user1';
-
-  // Find the current user's review if it exists
-  const currentUserReview = applicationData.Review.find(
-    (review) => review.userId === currentUserId
-  );
-
   return (
-    <ApplicationView
-      application={applicationData}
-      currentUserId={currentUserId}
-      currentUserReview={currentUserReview || null}
-    />
+    <div className='flex h-full flex-1 flex-col gap-2'>
+      {/* Application Details Card */}
+      <ApplicationDetailsCard
+        applicationId={application.id}
+        groupName={concatGroupName(application.students)}
+        school={application.school}
+        createdAt={application.createdAt}
+        updatedAt={application.updatedAt}
+        applicationReviews={application.reviews}
+      />
+      {/* Cover Letter Card */}
+      <ApplicationCoverLetter coverLetter={application.coverLetterText} tasks={application.tasks} />
+
+      {/* Students Grid */}
+      <ApplicationStudentsGrid
+        students={application.students}
+        studentRepresentativeId={application.studentRepresentativeId}
+      />
+    </div>
   );
 }
