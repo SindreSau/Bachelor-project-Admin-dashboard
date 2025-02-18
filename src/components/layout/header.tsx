@@ -1,5 +1,5 @@
 import { SidebarTrigger } from '../ui/sidebar';
-import CustomAvatar from './custom-avatar';
+import CustomAvatar from '../common/custom-avatar';
 import ThemeSwitcher from './theme-switcher';
 
 export const Header = async () => {
