@@ -11,7 +11,7 @@ export const Header = async () => {
       {/* RIGHT SIDE OF HEADER */}
       <div className='flex items-center justify-center gap-2'>
         <ThemeSwitcher className='h-8 w-8' />
-        <CustomAvatar />
+        <CustomAvatar clickable />
       </div>
     </header>
   );
