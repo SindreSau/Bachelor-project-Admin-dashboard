@@ -34,7 +34,7 @@ const NotFoundPage = () => {
       clearInterval(typingInterval);
       clearInterval(cursorInterval);
     };
-  }, []);
+  }, [fullText]);
 
   return (
     <main className='flex min-h-[calc(100vh-150px)] flex-col items-center justify-center'>
