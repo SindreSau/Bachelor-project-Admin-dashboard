@@ -119,7 +119,7 @@ const CreateTaskForm = () => {
           <Button
             type='button'
             onClick={handleSaveClick}
-            className='bg-confirm mr-2 text-foreground hover:bg-green-700'
+            className='mr-2 bg-confirm hover:bg-confirm/80'
           >
             Lagre
           </Button>

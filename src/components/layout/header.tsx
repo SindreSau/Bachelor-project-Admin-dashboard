@@ -1,5 +1,5 @@
 import { SidebarTrigger } from '../ui/sidebar';
-import CustomAvatar from './custom-avatar';
+import CustomAvatar from '../common/custom-avatar';
 import ThemeSwitcher from './theme-switcher';
 
 export const Header = async () => {
@@ -11,7 +11,7 @@ export const Header = async () => {
       {/* RIGHT SIDE OF HEADER */}
       <div className='flex items-center justify-center gap-2'>
         <ThemeSwitcher className='h-8 w-8' />
-        <CustomAvatar />
+        <CustomAvatar clickable />
       </div>
     </header>
   );

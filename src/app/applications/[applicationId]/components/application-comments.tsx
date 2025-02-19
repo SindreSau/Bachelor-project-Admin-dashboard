@@ -1,5 +1,5 @@
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import CustomAvatar from '@/components/layout/custom-avatar';
+import CustomAvatar from '@/components/common/custom-avatar';
 
 const ApplicationComments = () => {
   return (

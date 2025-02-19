@@ -75,7 +75,7 @@ const TaskCard = ({ task }: { task: TaskWithApplications }) => {
       </CardHeader>
 
       <CardContent className='grow'>
-        <ScrollArea className='min-h-32'>
+        <ScrollArea className=''>
           <CardDescription className='whitespace-pre-wrap text-sm'>
             {task.taskDescription}
           </CardDescription>
