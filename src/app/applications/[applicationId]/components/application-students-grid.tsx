@@ -1,7 +1,8 @@
 'use client';
 
 import { Card, CardTitle, CardHeader, CardContent } from '@/components/ui/card';
-import { Star } from 'lucide-react';
+import { Crown } from 'lucide-react';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Student, File } from '@prisma/client';
 import { getBlobPdf } from '@/utils/blobstorage/get-files';
 
@@ -41,11 +42,18 @@ const ApplicationStudentsGrid = ({ students, studentRepresentativeId }: Students
                   </h3>
                   {student.id === studentRepresentativeId && (
                     <div className='flex items-center gap-1 text-xs text-primary'>
-                      <Star size={16} className='text-primary' />
+                      <Crown size={16} className='text-primary' />
                       <span className='text-muted-foreground'>Gruppeansvarlig</span>
                     </div>
                   )}
-                  <p className='text-sm text-muted-foreground'>{student.email}</p>
+                  <ScrollArea className='w-full'>
+                    <div className='pb-3'>
+                      <p className='whitespace-nowrap pr-4 text-sm text-muted-foreground'>
+                        {student.email}
+                      </p>
+                    </div>
+                    <ScrollBar orientation='horizontal' />
+                  </ScrollArea>
                 </div>
                 <div className='mt-auto flex items-end gap-2'>
                   {student.files.map((file: File) => {
