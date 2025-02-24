@@ -50,8 +50,20 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
                     <TableCell>{concatGroupName(application.students)}</TableCell>
                     <TableCell>{application.school}</TableCell>
                     <TableCell>Pågående</TableCell>
-                    <TableCell>{application.createdAt?.toLocaleDateString('nb-NO')}</TableCell>
-                    <TableCell>{application.updatedAt?.toLocaleDateString('nb-NO')}</TableCell>
+                    <TableCell>
+                      {application.createdAt?.toLocaleDateString('nb-NO', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                      })}
+                    </TableCell>
+                    <TableCell>
+                      {application.updatedAt?.toLocaleDateString('nb-NO', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                      })}
+                    </TableCell>
                     <TableCell>
                       <Link
                         href={`/applications/${application.id.toString()}`}
