@@ -8,7 +8,7 @@ import { Star, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { useState } from 'react';
 import { submitReview } from '@/actions/applications/submit-review';
 import getApplicationStatus from '@/utils/applications/get-application-status';
-import { cn } from '@/lib/utils';
+// import { cn } from '@/lib/utils';
 
 interface ApplicationDetailsCardProps {
   applicationId: number;
@@ -98,10 +98,7 @@ const ApplicationDetailsCard = ({
               <div>
                 <p className='text-sm font-medium text-muted-foreground'>Status</p>
                 <p
-                  className={cn(
-                    'text-sm font-medium',
-                    getApplicationStatus(applicationReviews).className
-                  )}
+                  className={`text-sm font-medium ${getApplicationStatus(applicationReviews).className}`}
                 >
                   {getApplicationStatus(applicationReviews).text}
                 </p>

@@ -9,19 +9,21 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Card, CardTitle, CardHeader, CardContent } from '@/components/ui/card';
-import { Application, Student } from '@prisma/client';
+import { Application, Student, Review } from '@prisma/client';
 import { ExternalLink } from 'lucide-react';
 import { concatGroupName } from '@/lib/utils';
 import Link from 'next/link';
+import getApplicationStatus from '@/utils/applications/get-application-status';
 
 // TODO Status updated based on reviews
 
-type ApplicationWithStudents = Application & {
+type ApplicationWithStudentsAndReviews = Application & {
   students: Student[];
+  reviews: Review[];
 };
 
 interface ApplicationViewProps {
-  applications: ApplicationWithStudents[]; // Changed from single application to array
+  applications: ApplicationWithStudentsAndReviews[]; // Changed from single application to array
 }
 
 const ApplicationTable = ({ applications }: ApplicationViewProps) => {
@@ -45,11 +47,15 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
             </TableHeader>
             <TableBody>
               {applications.map((application) => {
+                const reviews = application.reviews || [];
+                const status = getApplicationStatus(reviews);
                 return (
                   <TableRow key={application.id}>
                     <TableCell>{concatGroupName(application.students)}</TableCell>
                     <TableCell>{application.school}</TableCell>
-                    <TableCell>Pågående</TableCell>
+                    <TableCell>
+                      <span className={`${status.className}`}>{status.text}</span>
+                    </TableCell>
                     <TableCell>
                       {application.createdAt?.toLocaleDateString('nb-NO', {
                         year: 'numeric',

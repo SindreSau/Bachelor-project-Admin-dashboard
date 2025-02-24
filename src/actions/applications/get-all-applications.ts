@@ -6,6 +6,7 @@ export default async function getAllApplications() {
     const applications = await db.application.findMany({
       include: {
         students: true,
+        reviews: true,
       },
       orderBy: {
         createdAt: 'desc',

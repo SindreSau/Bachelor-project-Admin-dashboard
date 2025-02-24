@@ -6,18 +6,18 @@ const getApplicationStatus = (reviews: Review[]) => {
   if (reviewCount === 0) {
     return {
       text: 'Ikke begynt',
-      className: 'text-red-500',
+      className: 'text-danger',
     };
   }
   if (reviewCount >= 3) {
     return {
       text: 'Ferdig',
-      className: 'text-green-500',
+      className: 'text-confirm',
     };
   }
   return {
     text: 'Påbegynt',
-    className: 'text-yellow-500',
+    className: 'text-warning',
   };
 };
 
