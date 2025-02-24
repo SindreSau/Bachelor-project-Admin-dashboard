@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardTitle, CardHeader, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Review, ReviewStatus } from '@prisma/client';
@@ -58,12 +58,9 @@ const ApplicationDetailsCard = ({
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Søknadsdetaljer</CardTitle>
-      </CardHeader>
       <CardContent>
         <ScrollArea>
-          <div className='grid gap-4 sm:gap-6'>
+          <div className='grid gap-4 pt-6 sm:gap-6'>
             {/* Info Section - 2 columns on mobile, 3 on larger screens */}
             <div className='grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6'>
               <div>
