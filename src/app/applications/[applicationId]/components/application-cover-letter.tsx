@@ -12,12 +12,12 @@ const ApplicationCoverLetter = ({ coverLetter, tasks }: ApplicationCoverLetterPr
     <Card className='w-full grow'>
       <CardHeader>
         <CardTitle>
-          <div className='items-start justify-between lg:flex'>
-            <div className='pb-2'>Søknad</div>
-            <div className='gap-4 lg:flex'>
+          <div className='items-center justify-between lg:flex'>
+            <div className=''>Søknad</div>
+            <div className='items-center justify-center gap-4 lg:flex'>
               {/* Tasks Section */}
-              <h3 className='mb-2 text-sm font-medium text-muted-foreground'>Oppgaver søkt på:</h3>
-              <div className='flex flex-wrap gap-2'>
+              <h3 className='text-sm font-medium text-muted-foreground'>Oppgaver søkt på:</h3>
+              <div className='flex flex-wrap items-center justify-center gap-2'>
                 {tasks.length > 0 ? (
                   tasks.map((task) => (
                     <div key={task.id} className='rounded-md bg-secondary px-3 py-1 text-sm'>

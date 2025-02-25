@@ -71,7 +71,7 @@ const TaskCard = ({ task }: { task: TaskWithApplications }) => {
         </ScrollArea>
       </CardContent>
 
-      <CardFooter className='mt-auto flex flex-wrap items-end justify-between gap-4 border-t pt-4'>
+      <CardFooter className='mt-auto flex flex-wrap items-center justify-between gap-4 border-t pt-4'>
         <div className='flex flex-wrap gap-4 text-sm text-muted-foreground'>
           <div className='flex items-center gap-1 whitespace-nowrap'>
             <Calendar className='h-3 w-3' />
