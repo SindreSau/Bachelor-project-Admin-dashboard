@@ -1,9 +1,9 @@
-import { db } from '@/lib/prisma';
 import { concatGroupName } from '@/lib/utils';
 import ApplicationDetailsCard from './components/application-details-card';
 import ApplicationStudentsGrid from './components/application-students-grid';
 import ApplicationCoverLetter from './components/application-cover-letter';
 import ApplicationComments from './components/application-comments';
+import { getOneApplication } from '@/actions/applications/get-one-application';
 
 export default async function ApplicationPage({
   params,
@@ -13,22 +13,7 @@ export default async function ApplicationPage({
   const { applicationId } = await params;
   const parsedApplicationId = parseInt(applicationId, 10);
 
-  const application = await db.application.findUnique({
-    where: { id: parsedApplicationId },
-    include: {
-      students: {
-        include: {
-          files: true,
-        },
-        orderBy: {
-          firstName: 'asc',
-        },
-      },
-      studentRepresentative: true,
-      reviews: true,
-      tasks: true,
-    },
-  });
+  const application = await getOneApplication(parsedApplicationId);
 
   if (!application) {
     return <div className='text-lg font-bold'>No application found.</div>;

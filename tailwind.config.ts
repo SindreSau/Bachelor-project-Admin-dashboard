@@ -7,12 +7,14 @@ export default {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  safelist: ['text-danger', 'text-confirm', 'text-warning'],
   theme: {
     extend: {
       colors: {
         // Custom added
         confirm: 'hsl(var(--confirm))',
         'confirm-foreground': 'hsl(var(--confirm-foreground))',
+
         // Rest
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
@@ -43,6 +45,10 @@ export default {
         destructive: {
           DEFAULT: 'hsl(var(--destructive))',
           foreground: 'hsl(var(--destructive-foreground))',
+        },
+        warning: {
+          DEFAULT: 'hsl(var(--warning))',
+          foreground: 'hsl(var(--warning-foreground))',
         },
         action: {
           DEFAULT: 'hsl(var(--action-color))',

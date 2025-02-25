@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardTitle, CardHeader, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Review, ReviewStatus } from '@prisma/client';
@@ -8,7 +8,7 @@ import { Star, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { useState } from 'react';
 import { submitReview } from '@/actions/applications/submit-review';
 import getApplicationStatus from '@/utils/applications/get-application-status';
-import { cn } from '@/lib/utils';
+// import { cn } from '@/lib/utils';
 
 interface ApplicationDetailsCardProps {
   applicationId: number;
@@ -58,12 +58,9 @@ const ApplicationDetailsCard = ({
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Søknadsdetaljer</CardTitle>
-      </CardHeader>
       <CardContent>
         <ScrollArea>
-          <div className='grid gap-4 sm:gap-6'>
+          <div className='grid gap-4 pt-6 sm:gap-6'>
             {/* Info Section - 2 columns on mobile, 3 on larger screens */}
             <div className='grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6'>
               <div>
@@ -101,10 +98,7 @@ const ApplicationDetailsCard = ({
               <div>
                 <p className='text-sm font-medium text-muted-foreground'>Status</p>
                 <p
-                  className={cn(
-                    'text-sm font-medium',
-                    getApplicationStatus(applicationReviews).className
-                  )}
+                  className={`text-sm font-medium ${getApplicationStatus(applicationReviews).className}`}
                 >
                   {getApplicationStatus(applicationReviews).text}
                 </p>
