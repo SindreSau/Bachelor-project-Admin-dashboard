@@ -45,7 +45,7 @@ const ApplicationDetailsCard = ({
     try {
       const result = await submitReview(applicationId, review, currentUserId);
       if (result.success) {
-        setSelectedReview(review);
+        setSelectedReview((prevReview) => (prevReview === review ? null : review));
       } else {
         console.error('Failed to submit review:', result.error);
       }
