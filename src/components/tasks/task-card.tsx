@@ -9,23 +9,19 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '../ui/button';
-import { Calendar, Pencil, Trash2, Users, Globe } from 'lucide-react';
-import { deleteTask } from '@/actions/tasks/delete-task';
+import { Calendar, Pencil, Users, Globe } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { changePublishStatus } from '@/actions/tasks/change-publish-status';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useState } from 'react';
 import { Task, Application } from '@prisma/client';
+import ConfirmDeleteModal from './confirm-delete-modal';
 
 type TaskWithApplications = Task & { applications: Application[] };
 
 const TaskCard = ({ task }: { task: TaskWithApplications }) => {
   const [isPublishing, setIsPublishing] = useState(false);
   const router = useRouter();
-
-  const handleDelete = async (id: number) => {
-    await deleteTask(id);
-  };
 
   const handleEditClick = (id: number) => {
     router.push(`/prosjekter/rediger/${id}`);
@@ -62,14 +58,7 @@ const TaskCard = ({ task }: { task: TaskWithApplications }) => {
             >
               <Pencil className='h-4 w-4' />
             </Button>
-            <Button
-              onClick={() => handleDelete(task.id)}
-              variant='destructive'
-              size='sm'
-              className='h-8 w-8 p-0'
-            >
-              <Trash2 className='h-4 w-4' />
-            </Button>
+            <ConfirmDeleteModal taskId={task.id} />
           </div>
         </div>
       </CardHeader>
@@ -82,7 +71,7 @@ const TaskCard = ({ task }: { task: TaskWithApplications }) => {
         </ScrollArea>
       </CardContent>
 
-      <CardFooter className='mt-auto flex flex-wrap items-end justify-between gap-4 border-t pt-4'>
+      <CardFooter className='mt-auto flex flex-wrap items-center justify-between gap-4 border-t pt-4'>
         <div className='flex flex-wrap gap-4 text-sm text-muted-foreground'>
           <div className='flex items-center gap-1 whitespace-nowrap'>
             <Calendar className='h-3 w-3' />

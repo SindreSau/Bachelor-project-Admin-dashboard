@@ -121,7 +121,7 @@ const CreateTaskForm = () => {
             onClick={handleSaveClick}
             className='mr-2 bg-confirm hover:bg-confirm/80'
           >
-            Lagre
+            Lagre som utkast
           </Button>
           <Button type='button' onClick={handleSaveAndPublishClick}>
             Lagre og publiser

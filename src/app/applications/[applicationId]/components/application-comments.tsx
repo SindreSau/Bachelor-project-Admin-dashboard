@@ -10,29 +10,29 @@ const ApplicationComments = () => {
       <CardContent>
         <div className='flex flex-col gap-1'>
           <Card>
-            <CardHeader className=''>
+            <CardHeader className='px-3 py-2'>
               <div className='flex items-center gap-3'>
                 <CustomAvatar />
                 <div className='font-medium'>Jens</div>
+                <div className='text-sm text-muted-foreground'>12. april 2021</div>
               </div>
-              <div className='text-sm text-muted-foreground'>12. april 2021</div>
             </CardHeader>
 
-            <CardContent className='text-sm text-muted-foreground'>
+            <CardContent className='px-3 pb-3 pt-0 text-sm text-muted-foreground'>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec nisl nec nisl
               consectetur adipiscing elit. Nulla nec nisl nec nisl.
             </CardContent>
           </Card>
           <Card>
-            <CardHeader className=''>
+            <CardHeader className='px-3 py-2'>
               <div className='flex items-center gap-3'>
                 <CustomAvatar />
                 <div className='font-medium'>Daniel</div>
+                <div className='text-sm text-muted-foreground'>12. april 2021</div>
               </div>
-              <div className='text-sm text-muted-foreground'>12. april 2021</div>
             </CardHeader>
 
-            <CardContent className='text-sm text-muted-foreground'>
+            <CardContent className='px-3 pb-3 pt-0 text-sm text-muted-foreground'>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit.
             </CardContent>
           </Card>
