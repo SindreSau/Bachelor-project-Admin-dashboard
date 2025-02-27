@@ -30,12 +30,14 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-# Install required tools in the runner stage
-RUN npm install -g pnpm prisma tsx
+# Install required tools in the runner stage - split into separate commands
+RUN npm install -g pnpm
+RUN npm install -g prisma
+RUN npm install -g tsx
 
-# Create non-root user
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+# Create non-root user (Alpine syntax)
+RUN addgroup -S -g 1001 nodejs
+RUN adduser -S -u 1001 -G nodejs nextjs
 
 # Copy necessary files and ensure proper structure
 COPY --from=builder /app/public ./public
