@@ -15,8 +15,6 @@ import { concatGroupName } from '@/lib/utils';
 import Link from 'next/link';
 import getApplicationStatus from '@/utils/applications/get-application-status';
 
-// TODO Status updated based on reviews
-
 type ApplicationWithStudentsAndReviews = Application & {
   students: Student[];
   reviews: Review[];
