@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -17,6 +18,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '../ui/textarea';
 import { createTask } from '@/actions/tasks/create-task';
 import { DatePicker } from './date-picker';
+import Spinner from '@/components/common/spinner';
 
 const formSchema = z.object({
   taskName: z.string().min(2, {
@@ -29,6 +31,10 @@ const formSchema = z.object({
 });
 
 const CreateTaskForm = () => {
+  // Track loading states for both buttons
+  const [isDraftLoading, setIsDraftLoading] = useState(false);
+  const [isPublishLoading, setIsPublishLoading] = useState(false);
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -46,6 +52,13 @@ const CreateTaskForm = () => {
     },
     publish: boolean
   ) => {
+    // Set the appropriate loading state based on which button was clicked
+    if (publish) {
+      setIsPublishLoading(true);
+    } else {
+      setIsDraftLoading(true);
+    }
+
     try {
       console.log(data);
       const deadline = data.deadline ? new Date(data.deadline) : null;
@@ -58,6 +71,13 @@ const CreateTaskForm = () => {
       form.reset();
     } catch (error) {
       console.error(error);
+    } finally {
+      // Reset loading states regardless of outcome
+      if (publish) {
+        setIsPublishLoading(false);
+      } else {
+        setIsDraftLoading(false);
+      }
     }
   };
 
@@ -116,16 +136,38 @@ const CreateTaskForm = () => {
               </FormItem>
             )}
           />
-          <Button
-            type='button'
-            onClick={handleSaveClick}
-            className='mr-2 bg-confirm hover:bg-confirm/80'
-          >
-            Lagre som utkast
-          </Button>
-          <Button type='button' onClick={handleSaveAndPublishClick}>
-            Lagre og publiser
-          </Button>
+          <div className='flex space-x-2'>
+            <Button
+              type='button'
+              onClick={handleSaveClick}
+              disabled={isDraftLoading || isPublishLoading}
+              className='inline-flex items-center bg-confirm hover:bg-confirm/80 disabled:bg-confirm/50'
+            >
+              {isDraftLoading ? (
+                <>
+                  <Spinner size='xs' className='mr-2' />
+                  <span>Lagrer...</span>
+                </>
+              ) : (
+                <span>Lagre som utkast</span>
+              )}
+            </Button>
+            <Button
+              type='button'
+              onClick={handleSaveAndPublishClick}
+              disabled={isDraftLoading || isPublishLoading}
+              className='inline-flex items-center'
+            >
+              {isPublishLoading ? (
+                <>
+                  <Spinner size='xs' className='mr-2' />
+                  <span>Publiserer...</span>
+                </>
+              ) : (
+                <span>Lagre og publiser</span>
+              )}
+            </Button>
+          </div>
         </form>
       </Form>
     </div>

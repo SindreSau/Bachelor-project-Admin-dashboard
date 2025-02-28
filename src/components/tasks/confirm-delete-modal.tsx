@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -10,28 +11,42 @@ import {
 import { Trash2 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { deleteTask } from '@/actions/tasks/delete-task';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { getTask } from '@/actions/tasks/get-task';
+import Spinner from '@/components/common/spinner';
 
 export default function ConfirmDeleteModal({ taskId }: { taskId: number }) {
   const [hasApplications, setHasApplications] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const fetchTask = async () => {
-      const task = await getTask(taskId);
-      const result = (task?.applications?.length ?? 0) > 0;
-      setHasApplications(result);
+      if (isOpen) {
+        const task = await getTask(taskId);
+        const result = (task?.applications?.length ?? 0) > 0;
+        setHasApplications(result);
+      }
     };
 
     fetchTask();
-  }, [taskId]);
+  }, [taskId, isOpen]);
 
   const handleDelete = async (taskId: number) => {
-    await deleteTask(taskId);
+    setIsDeleting(true);
+
+    try {
+      await deleteTask(taskId);
+      setIsOpen(false);
+    } catch (error) {
+      console.error('Error deleting task:', error);
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <span>
           <Button variant='destructive' size='sm' className='h-8 w-8 p-0'>
@@ -52,8 +67,21 @@ export default function ConfirmDeleteModal({ taskId }: { taskId: number }) {
           )}
         </DialogHeader>
         <DialogFooter className='sm:justify-start'>
-          <Button onClick={() => handleDelete(taskId)} variant='destructive' size='sm'>
-            Slett
+          <Button
+            onClick={() => handleDelete(taskId)}
+            variant='destructive'
+            size='sm'
+            disabled={isDeleting}
+            className='inline-flex items-center disabled:cursor-not-allowed'
+          >
+            {isDeleting ? (
+              <>
+                <Spinner size='xs' className='mr-2' />
+                <span>Sletter...</span>
+              </>
+            ) : (
+              'Slett'
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

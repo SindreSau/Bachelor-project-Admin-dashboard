@@ -69,7 +69,6 @@ const ApplicationStudentsGrid = ({ students, studentRepresentativeId }: Students
 
                       // Set loading state for this file
                       setLoadingFiles((prev) => ({ ...prev, [file.id]: true }));
-                      await new Promise((resolve) => setTimeout(resolve, 4000));
 
                       try {
                         const pdfFile = await getBlobPdf(file.storageUrl);
