@@ -1,6 +1,7 @@
 'use server';
 
 import { db } from '@/lib/prisma'; // Make sure this path matches your Prisma client import
+import { revalidatePath } from 'next/cache';
 
 // Server action to add a comment to the database
 export async function addComment(data: {
@@ -24,6 +25,9 @@ export async function addComment(data: {
         userId,
       },
     });
+
+    // Revalidate the path
+    revalidatePath(`/applications/${applicationId}`);
 
     return {
       success: true,
