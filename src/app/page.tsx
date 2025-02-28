@@ -5,9 +5,11 @@ export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   const applications = await getAllApplications();
-  return (
-    <>
-      <ApplicationTable applications={applications} />
-    </>
-  );
+  console.log(applications);
+
+  if (applications.length === 0) {
+    return <p className='text-center text-muted-foreground'>Ingen søknader å vise.</p>;
+  }
+
+  return <ApplicationTable applications={applications} />;
 }

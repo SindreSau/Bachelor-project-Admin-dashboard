@@ -2,12 +2,27 @@
 import { db } from '@/lib/prisma';
 
 export const getTasks = async () => {
-  return await db.task.findMany({
-    include: {
-      applications: true,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
+  try {
+    const tasks = await db.task
+      .findMany({
+        include: {
+          _count: {
+            select: { applications: true },
+          },
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      })
+      .catch((err) => {
+        console.error('Database query failed:', err);
+        return [];
+      });
+
+    return tasks;
+  } catch (error) {
+    console.error('Database error:', error);
+    // Return empty array instead of failing
+    return [];
+  }
 };
