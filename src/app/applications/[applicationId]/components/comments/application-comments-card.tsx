@@ -2,50 +2,56 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import Comment from './application-comment';
 import CommentInputField from '../comments/applications-comment-input';
 
-const ApplicationComments = () => {
+interface CommentType {
+  id: number;
+  commentText: string;
+  userId: string;
+  createdAt: Date;
+}
+
+interface ApplicationCommentsProps {
+  applicationId: number;
+  comments: CommentType[];
+  currentUserId?: string;
+}
+
+const ApplicationComments = ({
+  applicationId,
+  comments,
+  currentUserId,
+}: ApplicationCommentsProps) => {
   // For demo purposes, you would replace this with actual data from your backend
   // feks const user = useAuthUser();
-  const currentUser = 'Jens';
 
-  // Hardcoded comments for demo
-  const comments = [
-    {
-      author: 'Jens',
-      date: '12. april 2021',
-      content:
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec nisl nec nisl consectetur adipiscing elit. Nulla nec nisl nec nisl.',
-    },
-    {
-      author: 'Daniel',
-      date: '12. april 2021',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-    },
-    {
-      author: 'Jens',
-      date: '13. april 2021',
-      content: 'Nullam quis risus eget urna mollis ornare vel eu leo.',
-    },
-  ];
+  const hasComments = comments && comments.length > 0;
 
   return (
     <Card className='w-full xl:max-w-xs'>
       <CardHeader>
-        <CardTitle>Kommentarer</CardTitle>
+        <CardTitle>Kommentarer ({hasComments ? comments.length : 0})</CardTitle>
       </CardHeader>
       <CardContent>
         <div className='flex flex-col gap-2'>
-          {comments.map((comment, index) => (
-            <Comment
-              key={index}
-              author={comment.author}
-              date={comment.date}
-              content={comment.content}
-              isCurrentUser={comment.author === currentUser}
-            />
-          ))}
+          {!hasComments ? (
+            <p className='text-sm text-gray-500'>Ingen kommentarer ennå.</p>
+          ) : (
+            comments.map((comment) => (
+              <Comment
+                key={comment.id}
+                user={comment.userId} // You might want to fetch user names from somewhere
+                date={comment.createdAt?.toLocaleDateString('nb-NO', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+                content={comment.commentText}
+                isCurrentUser={comment.userId === currentUserId}
+              />
+            ))
+          )}
         </div>
       </CardContent>
-      <CommentInputField />
+      {currentUserId && <CommentInputField applicationId={applicationId} userId={currentUserId} />}
     </Card>
   );
 };

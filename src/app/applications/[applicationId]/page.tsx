@@ -15,6 +15,8 @@ export default async function ApplicationPage({
 
   const application = await getOneApplication(parsedApplicationId);
 
+  const currentUserId = 'Jens';
+
   if (!application) {
     return <div className='text-lg font-bold'>No application found.</div>;
   }
@@ -29,10 +31,15 @@ export default async function ApplicationPage({
         createdAt={application.createdAt}
         updatedAt={application.updatedAt}
         applicationReviews={application.reviews}
+        currentUserId={currentUserId}
       />
       <div className='flex h-full flex-col-reverse gap-2 xl:flex-row-reverse'>
         {/* Cover Letter Card */}
-        <ApplicationComments />
+        <ApplicationComments
+          applicationId={application.id}
+          comments={application.comments}
+          currentUserId={currentUserId}
+        />
         <ApplicationCoverLetter
           coverLetter={application.coverLetterText}
           tasks={application.tasks}

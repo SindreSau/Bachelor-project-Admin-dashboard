@@ -17,6 +17,7 @@ interface ApplicationDetailsCardProps {
   createdAt: Date;
   updatedAt: Date;
   applicationReviews: Review[];
+  currentUserId: string;
 }
 
 const ApplicationDetailsCard = ({
@@ -26,10 +27,8 @@ const ApplicationDetailsCard = ({
   createdAt,
   updatedAt,
   applicationReviews,
+  currentUserId,
 }: ApplicationDetailsCardProps) => {
-  // For now, we'll hardcode a userId (later this will come from auth)
-  const currentUserId = 'user1';
-
   // Find the current user's review if it exists
   const currentUserReview = applicationReviews.find((review) => review.userId === currentUserId);
 

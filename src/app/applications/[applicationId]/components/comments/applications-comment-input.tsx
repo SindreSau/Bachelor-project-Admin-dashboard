@@ -7,9 +7,10 @@ import { addComment } from '@/actions/applications/comment-actions';
 
 interface CommentInputFieldProps {
   applicationId?: number; // Optional if you want to pass it from the parent
+  userId: string; // You would typically get this from your auth context
 }
 
-const CommentInputField = ({ applicationId = 1 }: CommentInputFieldProps) => {
+const CommentInputField = ({ applicationId = 1, userId }: CommentInputFieldProps) => {
   const [comment, setComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
@@ -26,10 +27,6 @@ const CommentInputField = ({ applicationId = 1 }: CommentInputFieldProps) => {
     setStatus('idle');
 
     try {
-      // For now, we'll hardcode the userId
-      // In a real app, you would get this from your auth system
-      const userId = 'user-123'; // Replace with actual user ID from auth context
-
       const result = await addComment({
         applicationId,
         commentText: comment,
