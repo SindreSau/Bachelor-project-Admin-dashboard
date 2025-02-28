@@ -2,7 +2,7 @@ import { concatGroupName } from '@/lib/utils';
 import ApplicationDetailsCard from './components/application-details-card';
 import ApplicationStudentsGrid from './components/application-students-grid';
 import ApplicationCoverLetter from './components/application-cover-letter';
-import ApplicationComments from './components/application-comments';
+import ApplicationComments from './components/application-comments-card';
 import { getOneApplication } from '@/actions/applications/get-one-application';
 
 export default async function ApplicationPage({
