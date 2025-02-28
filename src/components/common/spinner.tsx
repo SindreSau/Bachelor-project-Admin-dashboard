@@ -1,10 +1,24 @@
-export default function Spinner() {
+type SpinnerProps = {
+  size?: 'xs' | 'sm' | 'default' | 'lg';
+  className?: string;
+};
+
+export default function Spinner({ size = 'default', className = '' }: SpinnerProps) {
+  const sizeClasses = {
+    xs: 'h-4 w-4',
+    sm: 'h-6 w-6',
+    default: 'h-8 w-8',
+    lg: 'h-10 w-10',
+  };
   return (
     // BASED ON FLOWBITE/SPINNER
-    <div className='flex h-full w-full items-center justify-center' role='status'>
+    <div
+      className={`flex h-full w-full items-center justify-center ${sizeClasses[size]} ${className}`}
+      role='status'
+    >
       <svg
         aria-hidden='true'
-        className='h-8 w-8 animate-spin fill-primary text-muted'
+        className={`animate-spin fill-primary text-muted ${sizeClasses[size]}`}
         viewBox='0 0 100 101'
         fill='none'
         xmlns='http://www.w3.org/2000/svg'
