@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -20,6 +20,7 @@ import { Task } from '@prisma/client';
 import { updateTask } from '@/actions/tasks/update-task';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Spinner from '@/components/common/spinner';
 
 const formSchema = z.object({
   taskName: z.string().min(2, {
@@ -31,6 +32,7 @@ const formSchema = z.object({
 });
 
 const EditTaskForm = ({ task }: { task: Task }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -42,8 +44,14 @@ const EditTaskForm = ({ task }: { task: Task }) => {
   const router = useRouter();
 
   const onSubmit = async (data: { taskName: string; taskDescription: string }) => {
-    await updateTask(task.id, data);
-    router.push('/prosjekter');
+    setIsSubmitting(true);
+    try {
+      await updateTask(task.id, data);
+      router.push('/prosjekter');
+    } catch (error) {
+      console.error('Error updating task:', error);
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -78,9 +86,24 @@ const EditTaskForm = ({ task }: { task: Task }) => {
             )}
           />
           <div className='flex space-x-4'>
-            <Button type='submit'>Lagre</Button>
+            <Button
+              type='submit'
+              disabled={isSubmitting}
+              className='inline-flex items-center disabled:cursor-not-allowed'
+            >
+              {isSubmitting ? (
+                <>
+                  <Spinner size='xs' className='mr-2' />
+                  <span>Lagrer...</span>
+                </>
+              ) : (
+                'Lagre'
+              )}
+            </Button>
             <Link href='/prosjekter'>
-              <Button>Avbryt</Button>
+              <Button type='button' variant='secondary' disabled={isSubmitting}>
+                Avbryt
+              </Button>
             </Link>
           </div>
         </form>
