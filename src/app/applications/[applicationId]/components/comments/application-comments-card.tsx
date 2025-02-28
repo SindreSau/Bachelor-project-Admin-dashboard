@@ -1,5 +1,6 @@
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import Comment from './application-comment';
+import CommentInputField from '../comments/applications-comment-input';
 
 const ApplicationComments = () => {
   // For demo purposes, you would replace this with actual data from your backend
@@ -44,6 +45,7 @@ const ApplicationComments = () => {
           ))}
         </div>
       </CardContent>
+      <CommentInputField />
     </Card>
   );
 };
