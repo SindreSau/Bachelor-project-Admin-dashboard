@@ -45,7 +45,9 @@ const TaskCard = ({ task }: { task: TaskWithApplications }) => {
   };
 
   return (
-    <Card className='flex h-full w-full grow flex-col'>
+    <Card
+      className={`flex h-full w-full grow flex-col ${task.published ? 'border border-primary' : ''}`}
+    >
       <CardHeader className='pb-4'>
         <div className='flex items-start justify-between gap-4'>
           <CardTitle className='text-xl'>{task.taskName}</CardTitle>
