@@ -1,7 +1,7 @@
 export default function Spinner() {
   return (
     // BASED ON FLOWBITE/SPINNER
-    <div className='flex justify-center' role='status'>
+    <div className='flex h-full w-full items-center justify-center' role='status'>
       <svg
         aria-hidden='true'
         className='h-8 w-8 animate-spin fill-primary text-muted'

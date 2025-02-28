@@ -6,6 +6,7 @@
     "dev": "next dev --turbo",
     "prebuild": "prettier --write \"src/**/*.{ts,tsx}\" && next lint --fix",
     "build": "next build",
+    "build:standalone": "next build && cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",

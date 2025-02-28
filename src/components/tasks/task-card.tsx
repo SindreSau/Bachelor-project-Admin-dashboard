@@ -14,12 +14,16 @@ import { useRouter } from 'next/navigation';
 import { changePublishStatus } from '@/actions/tasks/change-publish-status';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useState } from 'react';
-import { Task, Application } from '@prisma/client';
+import { Task } from '@prisma/client';
 import ConfirmDeleteModal from './confirm-delete-modal';
 
-type TaskWithApplications = Task & { applications: Application[] };
+type TaskWithApplicationCount = Task & {
+  _count?: {
+    applications: number;
+  };
+};
 
-const TaskCard = ({ task }: { task: TaskWithApplications }) => {
+const TaskCard = ({ task }: { task: TaskWithApplicationCount }) => {
   const [isPublishing, setIsPublishing] = useState(false);
   const router = useRouter();
 
@@ -83,7 +87,7 @@ const TaskCard = ({ task }: { task: TaskWithApplications }) => {
           </div>
           <div className='flex items-center gap-1 whitespace-nowrap'>
             <Users className='h-3 w-3' />
-            <span>Søknader: {task.applications.length}</span>
+            <span>Søknader: {task._count?.applications || 0}</span>
           </div>
           <div className='flex items-center gap-1 whitespace-nowrap'>
             <Globe className='h-3 w-3' />
