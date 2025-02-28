@@ -28,9 +28,6 @@ const ApplicationDetailsCard = ({
   applicationReviews,
   currentUserId,
 }: ApplicationDetailsCardProps) => {
-  // For now, we'll hardcode a userId (later this will come from auth)
-  const currentUserId = 'user1';
-
   // Use state to track the current user's review
   const [currentUserStatus, setCurrentUserStatus] = useState<ReviewStatus | null>(
     applicationReviews.find((review) => review.userId === currentUserId)?.review || null
