@@ -77,11 +77,7 @@ const TaskCard = ({ task }: { task: TaskWithApplications }) => {
         <div className='flex flex-wrap gap-4 text-sm text-muted-foreground'>
           <div className='flex items-center gap-1 whitespace-nowrap'>
             <Calendar className='h-3 w-3' />
-            <span>Opprettet: {formatDate(task.createdAt)}</span>
-          </div>
-          <div className='flex items-center gap-1 whitespace-nowrap'>
-            <Calendar className='h-3 w-3' />
-            <span>Oppdatert: {formatDate(task.updatedAt)}</span>
+            <span>Sist endret: {formatDate(task.updatedAt)}</span>
           </div>
           <div className='flex items-center gap-1 whitespace-nowrap'>
             <Users className='h-3 w-3' />
