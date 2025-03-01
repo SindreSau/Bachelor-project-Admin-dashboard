@@ -41,3 +41,33 @@ export async function addComment(data: {
     };
   }
 }
+
+export async function deleteComment(commentId: number) {
+  try {
+    // First get the comment to know which application to revalidate
+    const comment = await db.comment.findUnique({
+      where: { id: commentId },
+      select: { applicationId: true },
+    });
+
+    if (!comment) {
+      return { success: false, error: 'Comment not found' };
+    }
+
+    // Delete the comment
+    await db.comment.delete({
+      where: { id: commentId },
+    });
+
+    // Revalidate the application path
+    revalidatePath(`/applications/${comment.applicationId}`);
+
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to delete comment:', error);
+    return {
+      success: false,
+      error: 'Failed to delete comment. Please try again.',
+    };
+  }
+}

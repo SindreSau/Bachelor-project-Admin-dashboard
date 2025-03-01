@@ -20,15 +20,14 @@ const ApplicationComments = ({
   comments,
   currentUserId,
 }: ApplicationCommentsProps) => {
-  // For demo purposes, you would replace this with actual data from your backend
-  // feks const user = useAuthUser();
-
   const hasComments = comments && comments.length > 0;
 
   return (
     <Card className='w-full xl:max-w-xs'>
       <CardHeader>
-        <CardTitle>Kommentarer ({hasComments ? comments.length : 0})</CardTitle>
+        <CardTitle className='text-lg font-normal'>
+          Kommentarer ({hasComments ? comments.length : 0})
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <div className='flex flex-col gap-2'>
@@ -38,7 +37,8 @@ const ApplicationComments = ({
             comments.map((comment) => (
               <Comment
                 key={comment.id}
-                user={comment.userId} // You might want to fetch user names from somewhere
+                id={comment.id}
+                user={comment.userId}
                 date={comment.createdAt?.toLocaleDateString('nb-NO', {
                   year: 'numeric',
                   month: 'long',
