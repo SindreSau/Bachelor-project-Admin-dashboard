@@ -16,6 +16,7 @@ interface ApplicationDetailsCardProps {
   createdAt: Date;
   updatedAt: Date;
   applicationReviews: Review[];
+  currentUserId: string;
 }
 
 const ApplicationDetailsCard = ({
@@ -25,10 +26,8 @@ const ApplicationDetailsCard = ({
   createdAt,
   updatedAt,
   applicationReviews,
+  currentUserId,
 }: ApplicationDetailsCardProps) => {
-  // For now, we'll hardcode a userId (later this will come from auth)
-  const currentUserId = 'user1';
-
   // Use state to track the current user's review
   const [currentUserStatus, setCurrentUserStatus] = useState<ReviewStatus | null>(
     applicationReviews.find((review) => review.userId === currentUserId)?.review || null
