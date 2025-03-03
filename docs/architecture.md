@@ -8,6 +8,12 @@ This document outlines the authentication setup for two Next.js 15 applications 
 - **Application Portal**: Public-facing with API endpoint secured by API key
 - **Communication**: Secured via API keys and CORS
 
+## Architecture Diagram
+
+Below is the system's architecture diagram:
+
+![Architecture Diagram](./architecture.png)
+
 ## Dashboard Application Setup
 
 ### Middleware Configuration
