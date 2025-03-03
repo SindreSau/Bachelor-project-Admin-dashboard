@@ -56,6 +56,7 @@ async function main() {
       taskDescription:
         'Build a system for managing applications for bachelor programs for Accenture. The system should allow students to apply for a program, and for the student representative to manage the applications. The system should also allow the student representative to review and approve applications.',
       published: true,
+      deadline: new Date('2025-10-25'),
     },
   });
   console.log('Upserted task 1.');
@@ -67,6 +68,7 @@ async function main() {
       taskDescription:
         'Build a system for managing a library. The system should allow librarians to manage books, patrons, and loans. The system should also allow patrons to search for books, check out books, and return books. The system should also allow librarians to generate reports on books, patrons, and loans.',
       published: true,
+      deadline: new Date('2025-10-25'),
     },
   });
   console.log('Created task 2.');
