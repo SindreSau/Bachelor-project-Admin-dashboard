@@ -6,7 +6,9 @@
     "dev": "next dev --turbo",
     "prebuild": "prettier --write \"src/**/*.{ts,tsx}\" && next lint --fix",
     "build": "next build",
+    "build:standalone": "next build && cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/",
     "start": "next start",
+    "start:standalone": "node .next/standalone/server.js",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "db:generate": "prisma generate",
@@ -46,6 +48,7 @@
     "react-day-picker": "8.10.1",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
+    "sonner": "^2.0.1",
     "tailwind-merge": "^3.0.1",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.24.1"

@@ -135,6 +135,14 @@ async function main() {
       tasks: {
         connect: [{ id: task1.id }],
       },
+      comments: {
+        createMany: {
+          data: [
+            { commentText: 'Ganske bra.', userId: 'Daniel' },
+            { commentText: 'Veldig bra.', userId: 'William' },
+          ],
+        },
+      },
     },
   });
   console.log('Upserted application 1.');

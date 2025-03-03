@@ -1,10 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import { Card, CardTitle, CardHeader, CardContent } from '@/components/ui/card';
-import { Crown } from 'lucide-react';
+import { Crown, ExternalLink } from 'lucide-react';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Student, File } from '@prisma/client';
 import { getBlobPdf } from '@/utils/blobstorage/get-files';
+import Spinner from '@/components/common/spinner';
 
 type StudentWithFiles = Student & {
   files: File[];
@@ -16,6 +18,9 @@ interface StudentsGridProps {
 }
 
 const ApplicationStudentsGrid = ({ students, studentRepresentativeId }: StudentsGridProps) => {
+  // Track loading state for each file
+  const [loadingFiles, setLoadingFiles] = useState<Record<number, boolean>>({});
+
   // Sort students so that the representative always appears first
   const sortedStudents = [...students].sort((a, b) => {
     if (a.id === studentRepresentativeId) return -1;
@@ -57,8 +62,14 @@ const ApplicationStudentsGrid = ({ students, studentRepresentativeId }: Students
                 </div>
                 <div className='mt-auto flex items-end gap-2'>
                   {student.files.map((file: File) => {
+                    const isLoading = loadingFiles[file.id] || false;
+
                     const handleClick = async (e: React.MouseEvent) => {
                       e.preventDefault();
+
+                      // Set loading state for this file
+                      setLoadingFiles((prev) => ({ ...prev, [file.id]: true }));
+
                       try {
                         const pdfFile = await getBlobPdf(file.storageUrl);
                         const arrayBuffer = await pdfFile.arrayBuffer();
@@ -71,6 +82,9 @@ const ApplicationStudentsGrid = ({ students, studentRepresentativeId }: Students
                         setTimeout(() => window.URL.revokeObjectURL(url), 1000);
                       } catch (error) {
                         console.error('Error opening file:', error);
+                      } finally {
+                        // Reset loading state regardless of outcome
+                        setLoadingFiles((prev) => ({ ...prev, [file.id]: false }));
                       }
                     };
 
@@ -78,9 +92,15 @@ const ApplicationStudentsGrid = ({ students, studentRepresentativeId }: Students
                       <button
                         key={file.id}
                         onClick={handleClick}
-                        className='rounded bg-primary/50 px-2 py-1 text-xs text-inherit transition-colors hover:bg-primary/70'
+                        disabled={isLoading}
+                        className='flex items-center justify-center rounded bg-primary/50 px-2 py-1 text-xs text-inherit transition-colors hover:bg-primary/70 disabled:cursor-not-allowed disabled:bg-primary/25'
                       >
-                        {file.documentType === 'CV' ? 'Vis CV' : 'Vis Karakterer'}
+                        <span>{file.documentType === 'CV' ? 'CV' : 'Karakterer'}</span>
+                        {isLoading ? (
+                          <Spinner size='xs' className='ml-2' />
+                        ) : (
+                          <ExternalLink className='ml-2 h-3 w-3' />
+                        )}
                       </button>
                     );
                   })}

@@ -44,6 +44,7 @@ model Application {
   students                Student[] @relation("StudentToApplication")
   tasks                   Task[]    @relation("ApplicationToTask")
   reviews                 Review[]
+  comments                Comment[]
   studentRepresentative   Student?  @relation(fields: [studentRepresentativeId], references: [id])
   studentRepresentativeId Int?
 }
@@ -80,7 +81,12 @@ model Review {
 }
 
 model Comment {
-  id          Int      @id @default(autoincrement())
-  commentText String
-  createdAt   DateTime @default(now())
+  id            Int         @id @default(autoincrement())
+  commentText   String
+  userId        String
+  applicationId Int
+  createdAt     DateTime    @default(now())
+  application   Application @relation(fields: [applicationId], references: [id])
+
+  @@index([applicationId])
 }

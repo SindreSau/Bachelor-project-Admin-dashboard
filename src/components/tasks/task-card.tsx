@@ -9,17 +9,21 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '../ui/button';
-import { Calendar, Pencil, Users, Globe } from 'lucide-react';
+import { Calendar, Pencil, Users, Globe, Hourglass } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { changePublishStatus } from '@/actions/tasks/change-publish-status';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useState } from 'react';
-import { Task, Application } from '@prisma/client';
+import { Task } from '@prisma/client';
 import ConfirmDeleteModal from './confirm-delete-modal';
 
-type TaskWithApplications = Task & { applications: Application[] };
+type TaskWithApplicationCount = Task & {
+  _count?: {
+    applications: number;
+  };
+};
 
-const TaskCard = ({ task }: { task: TaskWithApplications }) => {
+const TaskCard = ({ task }: { task: TaskWithApplicationCount }) => {
   const [isPublishing, setIsPublishing] = useState(false);
   const router = useRouter();
 
@@ -45,7 +49,9 @@ const TaskCard = ({ task }: { task: TaskWithApplications }) => {
   };
 
   return (
-    <Card className='flex h-full w-full grow flex-col'>
+    <Card
+      className={`flex h-full w-full grow flex-col ${task.published ? 'border border-primary' : ''}`}
+    >
       <CardHeader className='pb-4'>
         <div className='flex items-start justify-between gap-4'>
           <CardTitle className='text-xl'>{task.taskName}</CardTitle>
@@ -75,19 +81,19 @@ const TaskCard = ({ task }: { task: TaskWithApplications }) => {
         <div className='flex flex-wrap gap-4 text-sm text-muted-foreground'>
           <div className='flex items-center gap-1 whitespace-nowrap'>
             <Calendar className='h-3 w-3' />
-            <span>Opprettet: {formatDate(task.createdAt)}</span>
-          </div>
-          <div className='flex items-center gap-1 whitespace-nowrap'>
-            <Calendar className='h-3 w-3' />
-            <span>Oppdatert: {formatDate(task.updatedAt)}</span>
+            <span>Sist endret: {formatDate(task.updatedAt)}</span>
           </div>
           <div className='flex items-center gap-1 whitespace-nowrap'>
             <Users className='h-3 w-3' />
-            <span>Søknader: {task.applications.length}</span>
+            <span>Søknader: {task._count?.applications || 0}</span>
           </div>
           <div className='flex items-center gap-1 whitespace-nowrap'>
             <Globe className='h-3 w-3' />
             <span>Status: {task.published ? 'Publisert' : 'Upublisert'}</span>
+          </div>
+          <div className='flex items-center gap-1 whitespace-nowrap'>
+            <Hourglass className='h-3 w-3' />
+            <span>Søknadsfrist: {task.deadline ? formatDate(task.deadline) : 'Ingen frist'}</span>
           </div>
         </div>
 
