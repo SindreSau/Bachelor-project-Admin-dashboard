@@ -83,12 +83,15 @@ model Review {
 }
 
 model Comment {
-  id            Int         @id @default(autoincrement())
-  commentText   String
-  kindeUserId   String
-  applicationId Int
-  createdAt     DateTime    @default(now())
-  application   Application @relation(fields: [applicationId], references: [id])
+  id              Int         @id @default(autoincrement())
+  commentText     String
+  kindeUserId     String
+  kindeGivenName  String //"Cached" name
+  kindeFamilyName String //"Cached" family name
+  kindeUserImage  String //"Cached" image
+  applicationId   Int
+  createdAt       DateTime    @default(now())
+  application     Application @relation(fields: [applicationId], references: [id])
 
   @@index([applicationId])
 }
