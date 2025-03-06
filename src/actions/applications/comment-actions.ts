@@ -1,15 +1,28 @@
 'use server';
 
-import { db } from '@/lib/prisma'; // Make sure this path matches your Prisma client import
+import { db } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 
-// Server action to add a comment to the database
-export async function addComment(data: {
+// Updated interface to match the new model
+interface CommentData {
   applicationId: number;
   commentText: string;
-  userId: string;
-}) {
-  const { applicationId, commentText, userId } = data;
+  kindeUserId: string;
+  kindeGivenName: string;
+  kindeFamilyName: string;
+  kindeUserImage: string;
+}
+
+// Server action to add a comment to the database
+export async function addComment(data: CommentData) {
+  const {
+    applicationId,
+    commentText,
+    kindeUserId,
+    kindeGivenName,
+    kindeFamilyName,
+    kindeUserImage,
+  } = data;
 
   // Validate inputs
   if (!commentText.trim()) {
@@ -22,12 +35,15 @@ export async function addComment(data: {
       data: {
         applicationId,
         commentText: commentText.trim(),
-        userId,
+        kindeUserId,
+        kindeGivenName,
+        kindeFamilyName,
+        kindeUserImage,
       },
     });
 
     // Revalidate the path
-    revalidatePath(`/applications/${applicationId}`);
+    revalidatePath(`/soknader/${applicationId}`);
 
     return {
       success: true,
@@ -60,7 +76,7 @@ export async function deleteComment(commentId: number) {
     });
 
     // Revalidate the application path
-    revalidatePath(`/applications/${comment.applicationId}`);
+    revalidatePath(`/soknader/${comment.applicationId}`);
 
     return { success: true };
   } catch (error) {

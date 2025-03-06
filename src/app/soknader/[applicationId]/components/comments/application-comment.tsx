@@ -7,53 +7,63 @@ import { Button } from '@/components/ui/button';
 import { Trash2 } from 'lucide-react';
 import { deleteComment } from '@/actions/applications/comment-actions';
 import { toast } from 'sonner';
+import { Comment as CommentType } from '@prisma/client';
 
 interface CommentProps {
-  id: number;
-  user: string;
-  date: string;
-  content: string;
+  comment: CommentType;
   isCurrentUser: boolean;
 }
 
-const Comment = ({ id, user, date, content, isCurrentUser }: CommentProps) => {
+const Comment = ({ comment, isCurrentUser }: CommentProps) => {
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     setIsDeleting(true);
 
-    deleteComment(id)
-      .then((result) => {
-        if (result.success) {
-          toast.info('Kommentar slettet');
-        } else {
-          toast.error('Kunne ikke slette kommentar');
-          console.error(result.error);
-        }
-      })
-      .catch((err) => {
+    try {
+      const result = await deleteComment(comment.id);
+      if (result.success) {
+        toast.info('Kommentar slettet');
+      } else {
         toast.error('Kunne ikke slette kommentar');
-        console.error(err);
-      })
-      .finally(() => {
-        setIsDeleting(false);
-      });
+        console.error(result.error);
+      }
+    } catch (err) {
+      toast.error('Kunne ikke slette kommentar');
+      console.error(err);
+    } finally {
+      setIsDeleting(false);
+    }
   };
+
+  // Format the date
+  const formattedDate = new Date(comment.createdAt).toLocaleDateString('no-NB', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  });
 
   return (
     <div className={`flex w-full ${isCurrentUser ? 'justify-end' : 'justify-start'} mb-3`}>
       <Card className={`w-4/5 ${isCurrentUser ? 'border bg-accent dark:bg-accent/50' : ''}`}>
         <CardHeader className='flex flex-row items-center justify-between px-3 py-2'>
           <div className='flex items-center gap-3'>
-            <CustomAvatar size='sm' />
-            <div className='font-medium'>{user}</div>
-            <div className='text-sm text-muted-foreground'>
-              {new Date(date).toLocaleDateString('no-NB', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-              })}
+            <CustomAvatar
+              size='sm'
+              user={{
+                id: comment.kindeUserId,
+                given_name: comment.kindeGivenName,
+                family_name: comment.kindeFamilyName,
+                picture: comment.kindeUserImage,
+              }}
+            />
+            <div className='font-medium'>
+              <span className='md:hidden'>{comment.kindeGivenName}</span>
+              <span className='hidden md:inline'>
+                {comment.kindeGivenName} {comment.kindeFamilyName}
+              </span>
             </div>
+            <div className='text-sm text-muted-foreground'>{formattedDate}</div>
           </div>
           {isCurrentUser && (
             <Button
@@ -63,13 +73,13 @@ const Comment = ({ id, user, date, content, isCurrentUser }: CommentProps) => {
               onClick={handleDelete}
               disabled={isDeleting}
             >
-              <Trash2 />
+              <Trash2 className='h-4 w-4' />
             </Button>
           )}
         </CardHeader>
 
         <CardContent className='px-3 pb-3 pt-0 text-sm text-muted-foreground'>
-          {content}
+          {comment.commentText}
         </CardContent>
       </Card>
     </div>

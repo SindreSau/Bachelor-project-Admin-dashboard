@@ -2,8 +2,10 @@ import { concatGroupName } from '@/lib/utils';
 import ApplicationDetailsCard from './components/application-details-card';
 import ApplicationStudentsGrid from './components/application-students-grid';
 import ApplicationCoverLetter from './components/application-cover-letter';
-// import ApplicationComments from './components/comments/application-comments-card';
 import { getOneApplication } from '@/actions/applications/get-one-application';
+import ApplicationComments from './components/comments/application-comments-card';
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 
 export default async function ApplicationPage({
   params,
@@ -12,6 +14,10 @@ export default async function ApplicationPage({
 }) {
   const { applicationId } = await params;
   const parsedApplicationId = parseInt(applicationId, 10);
+
+  // Get user session on the server
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
 
   const application = await getOneApplication(parsedApplicationId);
 
@@ -30,20 +36,70 @@ export default async function ApplicationPage({
         updatedAt={application.updatedAt}
         applicationReviews={application.reviews}
       />
-      <div className='flex h-full flex-col-reverse gap-2 xl:flex-row-reverse'>
-        {/* Cover Letter Card */}
-        {/* <ApplicationComments
-          applicationId={application.id}
-          comments={application.comments}
-          currentUserName={currentUserName}
-        /> */}
-        <ApplicationCoverLetter
-          coverLetter={application.coverLetterText}
-          tasks={application.tasks}
-        />
 
-        {/* Students Grid */}
+      {/* Main content area with ResizablePanelGroup for larger screens */}
+      <div className='flex-1'>
+        {/* Mobile view - stacked layout */}
+        <div className='flex flex-col gap-2 xl:hidden'>
+          <ApplicationCoverLetter
+            coverLetter={application.coverLetterText}
+            tasks={application.tasks}
+          />
+          <ApplicationComments
+            applicationId={application.id}
+            comments={application.comments}
+            currentUser={
+              user
+                ? {
+                    id: user.id,
+                    given_name: user.given_name || '',
+                    family_name: user.family_name || '',
+                    picture: user.picture || '',
+                  }
+                : undefined
+            }
+          />
+        </div>
+
+        {/* Desktop view - resizable panels */}
+        <div className='hidden h-full xl:block'>
+          <ResizablePanelGroup direction='horizontal' className='h-full'>
+            {/* Cover Letter Panel - 66% default */}
+            <ResizablePanel defaultSize={66} minSize={30}>
+              <div className='h-full p-1'>
+                <ApplicationCoverLetter
+                  coverLetter={application.coverLetterText}
+                  tasks={application.tasks}
+                />
+              </div>
+            </ResizablePanel>
+
+            <ResizableHandle withHandle />
+
+            {/* Comments Panel */}
+            <ResizablePanel defaultSize={34} minSize={20}>
+              <div className='h-full p-1'>
+                <ApplicationComments
+                  applicationId={application.id}
+                  comments={application.comments}
+                  currentUser={
+                    user
+                      ? {
+                          id: user.id,
+                          given_name: user.given_name || '',
+                          family_name: user.family_name || '',
+                          picture: user.picture || '',
+                        }
+                      : undefined
+                  }
+                />
+              </div>
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        </div>
       </div>
+
+      {/* Students Grid */}
       <ApplicationStudentsGrid
         students={application.students}
         studentRepresentativeId={application.studentRepresentativeId}

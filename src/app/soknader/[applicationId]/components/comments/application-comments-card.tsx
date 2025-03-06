@@ -1,58 +1,57 @@
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import Comment from './application-comment';
 import CommentInputField from './applications-comment-input';
+import { Comment as CommentType } from '@prisma/client';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
-interface CommentType {
-  id: number;
-  commentText: string;
-  userId: string;
-  createdAt: Date;
+interface User {
+  id: string;
+  given_name: string;
+  family_name: string;
+  picture: string;
 }
 
 interface ApplicationCommentsProps {
   applicationId: number;
   comments: CommentType[];
-  currentUserName?: string;
+  currentUser?: User;
 }
 
 const ApplicationComments = ({
   applicationId,
   comments,
-  currentUserName,
+  currentUser,
 }: ApplicationCommentsProps) => {
   const hasComments = comments && comments.length > 0;
 
   return (
-    <Card className='w-full xl:max-w-xs'>
-      <CardHeader>
+    <Card className='flex h-full w-full flex-col'>
+      <CardHeader className='flex-none'>
         <CardTitle className='text-lg font-normal'>
           Kommentarer ({hasComments ? comments.length : 0})
         </CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className='flex flex-col gap-2'>
-          {!hasComments ? (
-            <p className='text-sm text-gray-500'>Ingen kommentarer ennå.</p>
-          ) : (
-            comments.map((comment) => (
-              <Comment
-                key={comment.id}
-                id={comment.id}
-                user={comment.userId}
-                date={comment.createdAt?.toLocaleDateString('nb-NO', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-                content={comment.commentText}
-                isCurrentUser={comment.userId === currentUserName}
-              />
-            ))
-          )}
-        </div>
+      <CardContent className='flex-grow overflow-hidden p-0 pl-4 pr-4'>
+        <ScrollArea className='h-full max-h-[400px] pr-4'>
+          <div className='flex flex-col gap-2 pb-2'>
+            {!hasComments ? (
+              <p className='text-sm text-gray-500'>Ingen kommentarer ennå.</p>
+            ) : (
+              comments.map((comment) => (
+                <Comment
+                  key={comment.id}
+                  comment={comment}
+                  isCurrentUser={currentUser?.id === comment.kindeUserId}
+                />
+              ))
+            )}
+          </div>
+        </ScrollArea>
       </CardContent>
-      {currentUserName && (
-        <CommentInputField applicationId={applicationId} userId={currentUserName} />
+      {currentUser && (
+        <div className='flex-none'>
+          <CommentInputField applicationId={applicationId} user={currentUser} />
+        </div>
       )}
     </Card>
   );
