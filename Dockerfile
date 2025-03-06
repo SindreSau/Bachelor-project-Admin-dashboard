@@ -17,6 +17,8 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+ENV NEXT_TELEMETRY_DISABLED=1
+
 # Generate Prisma Client for the correct platform
 RUN npm install -g pnpm prisma
 RUN cd src && npx prisma generate
