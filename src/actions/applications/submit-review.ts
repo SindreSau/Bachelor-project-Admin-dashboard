@@ -40,7 +40,7 @@ export async function submitReview(
         },
         update: {
           review,
-          kindeGivenName, // Update the name in case it changed
+          kindeGivenName,
         },
         create: {
           applicationId,

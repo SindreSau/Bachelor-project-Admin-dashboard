@@ -1,11 +1,11 @@
 'use client';
 
+import { useMemo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Review } from '@prisma/client';
-import { useState } from 'react';
 import getApplicationStatus from '@/utils/applications/get-application-status';
-import ReviewControls from './review-controls'; // Adjust path as needed
+import ReviewControls from './review-controls';
 
 interface ApplicationDetailsCardProps {
   applicationId: number;
@@ -22,20 +22,36 @@ const ApplicationDetailsCard = ({
   school,
   createdAt,
   updatedAt,
-  applicationReviews: initialReviews,
+  applicationReviews,
 }: ApplicationDetailsCardProps) => {
-  // State to manage reviews and allow for local updates
-  const [applicationReviews, setApplicationReviews] = useState(initialReviews);
-
-  // Optional callback to refresh reviews (e.g., fetch from server)
-  // If you have a way to fetch updated reviews, you could implement it here
-  const handleReviewUpdate = () => {
-    // This is a simple approach that relies on the local state
-    // In a real app, you might want to fetch fresh data from the server
-    setApplicationReviews([...applicationReviews]);
+  // Format date with a reusable function
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('nb-NO', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
   };
 
-  const applicationStatus = getApplicationStatus(applicationReviews);
+  // Memoize application status to avoid recalculation
+  const applicationStatus = useMemo(
+    () => getApplicationStatus(applicationReviews),
+    [applicationReviews]
+  );
+
+  // Define info items to reduce JSX repetition
+  const infoItems = [
+    { id: 'group', label: 'Gruppenavn', value: groupName },
+    { id: 'school', label: 'Skole', value: school || '-' },
+    { id: 'created', label: 'Søknadsdato', value: formatDate(createdAt) },
+    { id: 'updated', label: 'Sist Oppdatert', value: formatDate(updatedAt) },
+    {
+      id: 'status',
+      label: 'Status',
+      value: applicationStatus.text,
+      className: applicationStatus.className,
+    },
+  ];
 
   return (
     <Card>
@@ -44,50 +60,17 @@ const ApplicationDetailsCard = ({
           <div className='grid gap-4 pt-6 sm:gap-6'>
             {/* Info Section - 2 columns on mobile, 3 on larger screens */}
             <div className='grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6'>
-              <div>
-                <p className='text-sm font-medium text-muted-foreground'>Gruppenavn</p>
-                <p className='text-sm'>{groupName}</p>
-              </div>
+              {infoItems.map((item) => (
+                <div key={item.id}>
+                  <p className='text-sm font-medium text-muted-foreground'>{item.label}</p>
+                  <p className={`text-sm ${item.className || ''}`}>{item.value}</p>
+                </div>
+              ))}
 
-              <div>
-                <p className='text-sm font-medium text-muted-foreground'>Skole</p>
-                <p className='text-sm'>{school}</p>
-              </div>
-
-              <div>
-                <p className='text-sm font-medium text-muted-foreground'>Søknadsdato</p>
-                <p className='text-sm'>
-                  {createdAt?.toLocaleDateString('nb-NO', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })}
-                </p>
-              </div>
-
-              <div>
-                <p className='text-sm font-medium text-muted-foreground'>Sist Oppdatert</p>
-                <p className='text-sm'>
-                  {updatedAt?.toLocaleDateString('nb-NO', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })}
-                </p>
-              </div>
-
-              <div>
-                <p className='text-sm font-medium text-muted-foreground'>Status</p>
-                <p className={`text-sm font-medium ${applicationStatus.className}`}>
-                  {applicationStatus.text}
-                </p>
-              </div>
-
-              {/* Review Controls Component */}
+              {/* Review Component */}
               <ReviewControls
                 applicationId={applicationId}
                 applicationReviews={applicationReviews}
-                onReviewUpdate={handleReviewUpdate}
               />
             </div>
           </div>
