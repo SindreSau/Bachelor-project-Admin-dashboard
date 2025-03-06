@@ -90,7 +90,7 @@ const CreateTaskForm = () => {
   };
 
   return (
-    <div className='my-6 rounded-lg border bg-card px-6 py-6 text-card-foreground shadow-xs'>
+    <div className='bg-card text-card-foreground my-6 rounded-lg border px-6 py-6 shadow-xs'>
       <h2 className='mb-4 text-xl font-bold'>Legg til en oppgave</h2>
       <Form {...form}>
         <form className='space-y-8 pt-4'>
@@ -141,7 +141,7 @@ const CreateTaskForm = () => {
               type='button'
               onClick={handleSaveClick}
               disabled={isDraftLoading || isPublishLoading}
-              className='inline-flex items-center bg-confirm hover:bg-confirm/80 disabled:bg-confirm/50'
+              className='bg-confirm hover:bg-confirm/80 disabled:bg-confirm/50 inline-flex items-center'
             >
               {isDraftLoading ? (
                 <>

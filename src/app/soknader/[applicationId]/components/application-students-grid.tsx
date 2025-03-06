@@ -38,7 +38,7 @@ const ApplicationStudentsGrid = ({ students, studentRepresentativeId }: Students
           {sortedStudents.map((student) => (
             <Card
               key={student.id}
-              className={`${student.id === studentRepresentativeId ? 'border border-primary' : ''}`}
+              className={`${student.id === studentRepresentativeId ? 'border-primary border' : ''}`}
             >
               <CardContent className='flex h-full flex-col gap-1 pt-4'>
                 <div className='flex flex-col gap-2'>
@@ -46,14 +46,14 @@ const ApplicationStudentsGrid = ({ students, studentRepresentativeId }: Students
                     {student.firstName} {student.lastName}
                   </h3>
                   {student.id === studentRepresentativeId && (
-                    <div className='flex items-center gap-1 text-xs text-primary'>
+                    <div className='text-primary flex items-center gap-1 text-xs'>
                       <Crown size={16} className='text-primary' />
                       <span className='text-muted-foreground'>Gruppeansvarlig</span>
                     </div>
                   )}
                   <ScrollArea className='w-full'>
                     <div className='pb-3'>
-                      <p className='whitespace-nowrap pr-4 text-sm text-muted-foreground'>
+                      <p className='text-muted-foreground pr-4 text-sm whitespace-nowrap'>
                         {student.email}
                       </p>
                     </div>
@@ -93,7 +93,7 @@ const ApplicationStudentsGrid = ({ students, studentRepresentativeId }: Students
                         key={file.id}
                         onClick={handleClick}
                         disabled={isLoading}
-                        className='flex items-center justify-center rounded bg-primary/50 px-2 py-1 text-xs text-inherit transition-colors hover:bg-primary/70 disabled:cursor-not-allowed disabled:bg-primary/25'
+                        className='bg-primary/50 hover:bg-primary/70 disabled:bg-primary/25 flex items-center justify-center rounded px-2 py-1 text-xs text-inherit transition-colors disabled:cursor-not-allowed'
                       >
                         <span>{file.documentType === 'CV' ? 'CV' : 'Karakterer'}</span>
                         {isLoading ? (
@@ -109,7 +109,7 @@ const ApplicationStudentsGrid = ({ students, studentRepresentativeId }: Students
                       !student.files.some((file: File) => file.documentType === type) && (
                         <span
                           key={type}
-                          className='rounded bg-destructive px-2 py-1 text-xs text-primary-foreground'
+                          className='bg-destructive text-primary-foreground rounded px-2 py-1 text-xs'
                         >
                           Mangler {type === 'CV' ? 'CV' : 'Karakterer'}
                         </span>

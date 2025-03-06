@@ -44,8 +44,10 @@ const Comment = ({ comment, isCurrentUser }: CommentProps) => {
   });
 
   return (
-    <div className={`flex w-full ${isCurrentUser ? 'justify-end' : 'justify-start'} mb-3`}>
-      <Card className={`w-4/5 ${isCurrentUser ? 'border bg-accent dark:bg-accent/50' : ''}`}>
+    <div
+      className={`@container flex w-full ${isCurrentUser ? 'justify-end' : 'justify-start'} mb-3`}
+    >
+      <Card className={`w-4/5 ${isCurrentUser ? 'bg-accent dark:bg-accent/50 border' : ''}`}>
         <CardHeader className='flex flex-row items-center justify-between px-3 py-2'>
           <div className='flex items-center gap-3'>
             <CustomAvatar
@@ -58,18 +60,18 @@ const Comment = ({ comment, isCurrentUser }: CommentProps) => {
               }}
             />
             <div className='font-medium'>
-              <span className='md:hidden'>{comment.kindeGivenName}</span>
-              <span className='hidden md:inline'>
+              <span className='@sm:hidden'>{comment.kindeGivenName}</span>
+              <span className='hidden @sm:inline'>
                 {comment.kindeGivenName} {comment.kindeFamilyName}
               </span>
             </div>
-            <div className='text-sm text-muted-foreground'>{formattedDate}</div>
+            <div className='text-muted-foreground text-sm'>{formattedDate}</div>
           </div>
           {isCurrentUser && (
             <Button
               variant='ghost'
               size='icon'
-              className='h-7 w-7 -translate-y-1 text-destructive hover:bg-destructive/60'
+              className='text-destructive hover:bg-destructive/60 h-7 w-7 -translate-y-1'
               onClick={handleDelete}
               disabled={isDeleting}
             >
@@ -78,7 +80,7 @@ const Comment = ({ comment, isCurrentUser }: CommentProps) => {
           )}
         </CardHeader>
 
-        <CardContent className='px-3 pb-3 pt-0 text-sm text-muted-foreground'>
+        <CardContent className='text-muted-foreground px-3 pt-0 pb-3 text-sm'>
           {comment.commentText}
         </CardContent>
       </Card>

@@ -124,7 +124,7 @@ const ReviewControls = ({ applicationId, applicationReviews }: ReviewControlsPro
 
   return (
     <div>
-      <p className='text-sm font-medium text-muted-foreground'>Vurdering</p>
+      <p className='text-muted-foreground text-sm font-medium'>Vurdering</p>
       <div className='flex gap-2'>
         <TooltipProvider>
           {REVIEW_TYPES.map(({ value, icon: Icon }) => {
@@ -148,8 +148,8 @@ const ReviewControls = ({ applicationId, applicationReviews }: ReviewControlsPro
                     <Icon className='h-4 w-4' />
                     {count > 0 && (
                       <span
-                        className={`absolute -right-2 -top-2 ${
-                          isSelected ? 'bg-white text-primary' : 'bg-primary text-white'
+                        className={`absolute -top-2 -right-2 ${
+                          isSelected ? 'text-primary bg-white' : 'bg-primary text-white'
                         } flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold`}
                       >
                         {count}
@@ -171,7 +171,7 @@ const ReviewControls = ({ applicationId, applicationReviews }: ReviewControlsPro
                               picture: review.kindeUserImage || '',
                             }}
                           />
-                          <span className='whitespace-nowrap text-sm'>
+                          <span className='text-sm whitespace-nowrap'>
                             {review.kindeGivenName || 'User'}
                           </span>
                         </div>

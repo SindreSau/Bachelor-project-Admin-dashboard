@@ -53,7 +53,7 @@ export default function CustomAvatar({
   const avatar = loading ? (
     <div className={`${avatarSizeClass}`}></div>
   ) : (
-    <Avatar className={`${avatarSizeClass} border border-primary/30 dark:border-primary/50`}>
+    <Avatar className={`${avatarSizeClass} border-primary/30 dark:border-primary/50 border`}>
       <AvatarImage src={avatarImageUrl} alt={initials} width={35} height={35} />
       <AvatarFallback>{initials}</AvatarFallback>
     </Avatar>

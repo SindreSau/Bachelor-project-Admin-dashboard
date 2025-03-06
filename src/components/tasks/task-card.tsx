@@ -50,7 +50,7 @@ const TaskCard = ({ task }: { task: TaskWithApplicationCount }) => {
 
   return (
     <Card
-      className={`flex h-full w-full grow flex-col ${task.published ? 'border border-primary' : ''}`}
+      className={`flex h-full w-full grow flex-col ${task.published ? 'border-primary border' : ''}`}
     >
       <CardHeader className='pb-4'>
         <div className='flex items-start justify-between gap-4'>
@@ -71,14 +71,14 @@ const TaskCard = ({ task }: { task: TaskWithApplicationCount }) => {
 
       <CardContent className='grow'>
         <ScrollArea className=''>
-          <CardDescription className='whitespace-pre-wrap text-sm'>
+          <CardDescription className='text-sm whitespace-pre-wrap'>
             {task.taskDescription}
           </CardDescription>
         </ScrollArea>
       </CardContent>
 
       <CardFooter className='mt-auto flex flex-wrap items-center justify-between gap-4 border-t pt-4'>
-        <div className='flex flex-wrap gap-4 text-sm text-muted-foreground'>
+        <div className='text-muted-foreground flex flex-wrap gap-4 text-sm'>
           <div className='flex items-center gap-1 whitespace-nowrap'>
             <Calendar className='h-3 w-3' />
             <span>Sist endret: {formatDate(task.updatedAt)}</span>

@@ -17,7 +17,7 @@ async function ApplicationTableContent() {
   const applications = await getAllApplications();
 
   if (!applications || applications.length === 0) {
-    return <p className='text-center text-muted-foreground'>Ingen søknader å vise.</p>;
+    return <p className='text-muted-foreground text-center'>Ingen søknader å vise.</p>;
   }
 
   return <ApplicationTable applications={applications} />;

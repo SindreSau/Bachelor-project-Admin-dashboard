@@ -18,7 +18,7 @@ export default function Spinner({ size = 'default', className = '' }: SpinnerPro
     >
       <svg
         aria-hidden='true'
-        className={`animate-spin fill-primary text-muted ${sizeClasses[size]}`}
+        className={`fill-primary text-muted animate-spin ${sizeClasses[size]}`}
         viewBox='0 0 100 101'
         fill='none'
         xmlns='http://www.w3.org/2000/svg'

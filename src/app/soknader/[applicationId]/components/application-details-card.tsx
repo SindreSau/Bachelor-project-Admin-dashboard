@@ -62,7 +62,7 @@ const ApplicationDetailsCard = ({
             <div className='grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6'>
               {infoItems.map((item) => (
                 <div key={item.id}>
-                  <p className='text-sm font-medium text-muted-foreground'>{item.label}</p>
+                  <p className='text-muted-foreground text-sm font-medium'>{item.label}</p>
                   <p className={`text-sm ${item.className || ''}`}>{item.value}</p>
                 </div>
               ))}
