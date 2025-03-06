@@ -1,4 +1,4 @@
-### Set up Kinde Auth yourself
+## Set up Kinde Auth yourself
 
 1. Login/Register on Kinde
 2. Set up a new project as prompted - choose existing codebase
@@ -10,3 +10,7 @@
 - In Authentication, only email+code should be selected to use passwordless login with email
 - **VERY IMPORTANT**: Go to settings -> Policies and untick "Allow self-sign up" to avoid unauthorized users signing up
 - Set up the necessary users
+
+## Adding images for users
+
+- Images are hosted on Gravatar, so make sure to set up a Gravatar account with the same email as the user

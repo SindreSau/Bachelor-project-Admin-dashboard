@@ -12,9 +12,17 @@ import {
 import { LogoutLink, useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import { LogOut } from 'lucide-react';
 
+interface User {
+  id: string;
+  given_name?: string;
+  family_name?: string;
+  picture?: string;
+}
+
 interface CustomAvatarProps {
   clickable?: boolean;
   size?: 'xs' | 'sm' | 'default' | 'lg';
+  user?: User; // Optional user prop
 }
 
 const sizeClasses = {
@@ -24,21 +32,27 @@ const sizeClasses = {
   lg: 'h-12 w-12',
 };
 
-export default function CustomAvatar({ clickable = false, size = 'default' }: CustomAvatarProps) {
-  const { user, isLoading } = useKindeBrowserClient();
+export default function CustomAvatar({
+  clickable = false,
+  size = 'default',
+  user,
+}: CustomAvatarProps) {
+  const { user: kindeUser, isLoading } = useKindeBrowserClient();
 
-  console.log('user', user);
+  // Use provided user or fall back to Kinde user
+  const displayUser = user || kindeUser;
+  const loading = !user && isLoading;
 
-  const initials = nameToInitials(user?.given_name || '', user?.family_name || '');
+  const initials = nameToInitials(displayUser?.given_name || '', displayUser?.family_name || '');
 
-  let avatarImageUrl: string = user?.picture || '';
-  if (avatarImageUrl.includes('gravatar')) {
-    avatarImageUrl = '';
-  }
+  const avatarImageUrl: string = displayUser?.picture || '';
+  // if (avatarImageUrl.includes('gravatar')) {
+  //   avatarImageUrl = '';
+  // }
 
   const avatarSizeClass = sizeClasses[size];
 
-  const avatar = isLoading ? (
+  const avatar = loading ? (
     <div className={`${avatarSizeClass}`}></div>
   ) : (
     <Avatar className={`${avatarSizeClass} border border-primary/30 dark:border-primary/50`}>
@@ -47,7 +61,8 @@ export default function CustomAvatar({ clickable = false, size = 'default' }: Cu
     </Avatar>
   );
 
-  if (!clickable) {
+  // Only make clickable if no specific user is provided (meaning it's the current user)
+  if (!clickable || user) {
     return avatar;
   }
 

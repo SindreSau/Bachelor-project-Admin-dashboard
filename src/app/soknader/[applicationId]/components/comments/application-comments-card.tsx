@@ -1,6 +1,6 @@
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import Comment from './application-comment';
-import CommentInputField from '../comments/applications-comment-input';
+import CommentInputField from './applications-comment-input';
 
 interface CommentType {
   id: number;
@@ -12,13 +12,13 @@ interface CommentType {
 interface ApplicationCommentsProps {
   applicationId: number;
   comments: CommentType[];
-  currentUserId?: string;
+  currentUserName?: string;
 }
 
 const ApplicationComments = ({
   applicationId,
   comments,
-  currentUserId,
+  currentUserName,
 }: ApplicationCommentsProps) => {
   const hasComments = comments && comments.length > 0;
 
@@ -45,13 +45,15 @@ const ApplicationComments = ({
                   day: 'numeric',
                 })}
                 content={comment.commentText}
-                isCurrentUser={comment.userId === currentUserId}
+                isCurrentUser={comment.userId === currentUserName}
               />
             ))
           )}
         </div>
       </CardContent>
-      {currentUserId && <CommentInputField applicationId={applicationId} userId={currentUserId} />}
+      {currentUserName && (
+        <CommentInputField applicationId={applicationId} userId={currentUserName} />
+      )}
     </Card>
   );
 };
