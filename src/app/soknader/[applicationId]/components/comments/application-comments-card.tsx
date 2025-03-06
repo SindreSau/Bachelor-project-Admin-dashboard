@@ -31,7 +31,7 @@ const ApplicationComments = ({
           Kommentarer ({hasComments ? comments.length : 0})
         </CardTitle>
       </CardHeader>
-      <CardContent className='flex-grow overflow-hidden p-0 pl-4 pr-4'>
+      <CardContent className='grow overflow-hidden p-0 pl-4 pr-4'>
         <ScrollArea className='h-full max-h-[400px] pr-4'>
           <div className='flex flex-col gap-2 pb-2'>
             {!hasComments ? (

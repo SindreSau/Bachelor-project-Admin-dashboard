@@ -39,7 +39,7 @@ const RootLayout = ({
           <AppSidebar />
           <div className='flex w-full flex-col'>
             <Header />
-            <main className='mx-auto w-full max-w-screen-2xl flex-grow p-4'>{children}</main>
+            <main className='mx-auto w-full max-w-(--breakpoint-2xl) grow p-4'>{children}</main>
             <Toaster richColors />
           </div>
         </Providers>

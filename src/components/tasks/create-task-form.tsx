@@ -90,7 +90,7 @@ const CreateTaskForm = () => {
   };
 
   return (
-    <div className='my-6 rounded-lg border bg-card px-6 py-6 text-card-foreground shadow-sm'>
+    <div className='my-6 rounded-lg border bg-card px-6 py-6 text-card-foreground shadow-xs'>
       <h2 className='mb-4 text-xl font-bold'>Legg til en oppgave</h2>
       <Form {...form}>
         <form className='space-y-8 pt-4'>
