@@ -62,7 +62,7 @@ export default function CustomAvatar({ clickable = false, size = 'default' }: Cu
         </DropdownMenuItem>
         <DropdownMenuSeparator /> */}
 
-        <DropdownMenuItem className=''>
+        <DropdownMenuItem className='flex items-center justify-between'>
           <LogoutLink>Logg ut</LogoutLink>
           <LogOut />
         </DropdownMenuItem>
