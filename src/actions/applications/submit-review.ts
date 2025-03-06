@@ -8,7 +8,8 @@ export async function submitReview(
   applicationId: number,
   review: ReviewStatus | null,
   kindeUserId: string,
-  kindeGivenName: string = ''
+  kindeGivenName: string = '',
+  kindeUserImage: string = ''
 ) {
   try {
     let result;
@@ -41,11 +42,13 @@ export async function submitReview(
         update: {
           review,
           kindeGivenName,
+          kindeUserImage,
         },
         create: {
           applicationId,
           kindeUserId,
           kindeGivenName,
+          kindeUserImage,
           review,
         },
       });

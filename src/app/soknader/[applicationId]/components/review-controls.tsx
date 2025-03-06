@@ -24,6 +24,7 @@ const ReviewControls = ({ applicationId, applicationReviews }: ReviewControlsPro
   const { user, isLoading } = useKindeBrowserClient();
   const currentUserId = user?.id || '';
   const currentUserName = user?.given_name || '';
+  const currentUserImage = user?.picture || '';
 
   // Use state to track the current user's review
   const [currentUserStatus, setCurrentUserStatus] = useState<ReviewStatus | null>(null);
@@ -51,6 +52,7 @@ const ReviewControls = ({ applicationId, applicationReviews }: ReviewControlsPro
         applicationId,
         kindeUserId: currentUserId,
         kindeGivenName: currentUserName,
+        kindeUserImage: currentUserImage,
         review: currentUserStatus,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -58,7 +60,14 @@ const ReviewControls = ({ applicationId, applicationReviews }: ReviewControlsPro
     }
 
     return filteredReviews;
-  }, [applicationReviews, currentUserId, currentUserStatus, applicationId, currentUserName]);
+  }, [
+    applicationReviews,
+    currentUserId,
+    currentUserStatus,
+    applicationId,
+    currentUserName,
+    currentUserImage,
+  ]);
 
   // Memoize review counts to avoid recalculating on every render
   const reviewCounts = useMemo(() => {
@@ -90,7 +99,8 @@ const ReviewControls = ({ applicationId, applicationReviews }: ReviewControlsPro
         applicationId,
         shouldRemove ? null : clickedReview,
         currentUserId,
-        currentUserName
+        currentUserName,
+        currentUserImage
       );
 
       if (result.success) {
@@ -158,7 +168,7 @@ const ReviewControls = ({ applicationId, applicationReviews }: ReviewControlsPro
                               id: review.kindeUserId,
                               given_name: review.kindeGivenName,
                               family_name: '',
-                              picture: '',
+                              picture: review.kindeUserImage || '',
                             }}
                           />
                           <span className='whitespace-nowrap text-sm'>

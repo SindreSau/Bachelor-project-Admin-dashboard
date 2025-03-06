@@ -45,10 +45,8 @@ export default function CustomAvatar({
 
   const initials = nameToInitials(displayUser?.given_name || '', displayUser?.family_name || '');
 
-  const avatarImageUrl: string = displayUser?.picture || '';
-  // if (avatarImageUrl.includes('gravatar')) {
-  //   avatarImageUrl = '';
-  // }
+  // Use the picture URL if it exists and is not empty
+  const avatarImageUrl = displayUser?.picture || '';
 
   const avatarSizeClass = sizeClasses[size];
 
@@ -70,13 +68,6 @@ export default function CustomAvatar({
     <DropdownMenu>
       <DropdownMenuTrigger>{avatar}</DropdownMenuTrigger>
       <DropdownMenuContent>
-        {/* <DropdownMenuItem className='flex-col items-start p-0'>
-          <Link href='/account' className='w-full'>
-            <DropdownMenuLabel>Min konto</DropdownMenuLabel>
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator /> */}
-
         <DropdownMenuItem className='flex items-center justify-between'>
           <LogoutLink>Logg ut</LogoutLink>
           <LogOut />

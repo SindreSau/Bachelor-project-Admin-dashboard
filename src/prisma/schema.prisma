@@ -72,7 +72,8 @@ model Review {
   id             Int           @id @default(autoincrement())
   applicationId  Int
   kindeUserId    String
-  kindeGivenName String //"Cached" name for better performance
+  kindeGivenName String //"Cached" name
+  kindeUserImage String //"Cached" image
   review         ReviewStatus?
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
