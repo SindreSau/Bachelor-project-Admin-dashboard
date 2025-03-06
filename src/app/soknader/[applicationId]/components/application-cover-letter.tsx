@@ -18,7 +18,7 @@ const ApplicationCoverLetter = ({ coverLetter, tasks }: ApplicationCoverLetterPr
   ];
 
   return (
-    <Card className='@container h-full'>
+    <Card className='@container h-full w-full flex-col'>
       <CardHeader>
         <CardTitle>
           <div className='flex flex-col @xl:flex-row @xl:items-center @xl:justify-between @xl:gap-6'>

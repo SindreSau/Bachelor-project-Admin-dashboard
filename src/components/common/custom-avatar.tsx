@@ -26,8 +26,8 @@ interface CustomAvatarProps {
 }
 
 const sizeClasses = {
-  xs: 'h-5 w-5',
-  sm: 'h-6 w-6',
+  xs: 'h-5 w-5 text-xs',
+  sm: 'h-6 w-6 text-sm',
   default: 'h-8 w-8',
   lg: 'h-12 w-12',
 };

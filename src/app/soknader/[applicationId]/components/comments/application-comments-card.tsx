@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import Comment from './application-comment';
 import CommentInputField from './applications-comment-input';
 import { Comment as CommentType } from '@prisma/client';
@@ -31,9 +31,11 @@ const ApplicationComments = ({
           Kommentarer ({hasComments ? comments.length : 0})
         </CardTitle>
       </CardHeader>
-      <CardContent className='grow overflow-hidden p-0 pr-4 pl-4'>
-        <ScrollArea className='h-full max-h-[400px] pr-4'>
-          <div className='flex flex-col gap-2 pb-2'>
+
+      <div className='max-h-[35rem] flex-1 px-4'>
+        {/* ScrollArea with explicit fixed height */}
+        <ScrollArea className='h-64 xl:h-full' type='auto'>
+          <div className='flex flex-col gap-2 pr-4 pb-2'>
             {!hasComments ? (
               <p className='text-sm text-gray-500'>Ingen kommentarer ennå.</p>
             ) : (
@@ -47,9 +49,10 @@ const ApplicationComments = ({
             )}
           </div>
         </ScrollArea>
-      </CardContent>
+      </div>
+
       {currentUser && (
-        <div className='flex-none'>
+        <div className='mt-2 flex-none px-4 pb-4'>
           <CommentInputField applicationId={applicationId} user={currentUser} />
         </div>
       )}

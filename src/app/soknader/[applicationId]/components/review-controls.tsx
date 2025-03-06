@@ -124,7 +124,7 @@ const ReviewControls = ({ applicationId, applicationReviews }: ReviewControlsPro
 
   return (
     <div>
-      <p className='text-muted-foreground text-sm font-medium'>Vurdering</p>
+      <p className='text-muted-foreground sr-only text-sm font-medium'>Vurdering</p>
       <div className='flex gap-2'>
         <TooltipProvider>
           {REVIEW_TYPES.map(({ value, icon: Icon }) => {

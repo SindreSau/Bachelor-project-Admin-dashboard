@@ -30,10 +30,10 @@ const ApplicationStudentsGrid = ({ students, studentRepresentativeId }: Students
 
   return (
     <Card className='w-full'>
-      <CardHeader>
-        <CardTitle>Studenter</CardTitle>
+      <CardHeader className='py-3'>
+        <CardTitle className='text-xl'>Studenter</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className='pb-3'>
         <div className='grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-4'>
           {sortedStudents.map((student) => (
             <Card
@@ -41,7 +41,7 @@ const ApplicationStudentsGrid = ({ students, studentRepresentativeId }: Students
               className={`${student.id === studentRepresentativeId ? 'border-primary border' : ''}`}
             >
               <CardContent className='flex h-full flex-col gap-1 pt-4'>
-                <div className='flex flex-col gap-2'>
+                <div className='flex flex-col gap-1'>
                   <h3 className='font-medium'>
                     {student.firstName} {student.lastName}
                   </h3>
