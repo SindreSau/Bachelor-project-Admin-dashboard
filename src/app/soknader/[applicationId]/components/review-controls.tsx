@@ -142,7 +142,7 @@ const ReviewControls = ({ applicationId, applicationReviews }: ReviewControlsPro
                     variant={isSelected ? 'default' : 'outline'}
                     onClick={() => handleReviewClick(reviewValue)}
                     disabled={isPending || isLoading}
-                    className='relative h-8 w-8 p-0 disabled:cursor-not-allowed'
+                    className='relative h-8 w-8 cursor-pointer p-0 disabled:cursor-not-allowed'
                     aria-label={`Vote ${value.toLowerCase().replace('_', ' ')}`}
                   >
                     <Icon className='h-4 w-4' />

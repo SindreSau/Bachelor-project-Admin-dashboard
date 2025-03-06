@@ -33,7 +33,7 @@ const ApplicationStudentsGrid = ({ students, studentRepresentativeId }: Students
       <CardHeader className='py-3'>
         <CardTitle className='text-xl'>Studenter</CardTitle>
       </CardHeader>
-      <CardContent className='pb-3'>
+      <CardContent className='pb-4'>
         <div className='grid grid-cols-1 gap-2 md:grid-cols-2 xl:grid-cols-4'>
           {sortedStudents.map((student) => (
             <Card

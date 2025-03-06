@@ -71,7 +71,7 @@ const Comment = ({ comment, isCurrentUser }: CommentProps) => {
             <Button
               variant='ghost'
               size='icon'
-              className='text-destructive hover:bg-destructive/60 h-7 w-7 -translate-y-1'
+              className='text-destructive hover:bg-destructive/60 h-7 w-7 -translate-y-1 cursor-pointer'
               onClick={handleDelete}
               disabled={isDeleting}
             >
