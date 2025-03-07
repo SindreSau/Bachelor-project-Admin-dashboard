@@ -70,8 +70,8 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
                     </TableCell>
                     <TableCell>
                       <Link
-                        href={`/applications/${application.id.toString()}`}
-                        className='flex cursor-pointer items-center justify-center hover:text-primary'
+                        href={`/soknader/${application.id.toString()}`}
+                        className='hover:text-primary flex cursor-pointer items-center justify-center'
                       >
                         <ExternalLink />
                       </Link>

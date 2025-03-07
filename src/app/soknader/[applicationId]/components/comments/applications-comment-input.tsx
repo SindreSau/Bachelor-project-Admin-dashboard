@@ -6,17 +6,24 @@ import { Textarea } from '@/components/ui/textarea';
 import { addComment } from '@/actions/applications/comment-actions';
 import { toast } from 'sonner';
 
+interface User {
+  id: string;
+  given_name: string;
+  family_name: string;
+  picture: string;
+}
+
 interface CommentInputFieldProps {
   applicationId: number;
-  userId: string;
+  user: User;
   maxLength?: number;
 }
 
-const CommentInputField = ({ applicationId, userId, maxLength = 400 }: CommentInputFieldProps) => {
+const CommentInputField = ({ applicationId, user, maxLength = 400 }: CommentInputFieldProps) => {
   const [comment, setComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Basic validation
@@ -31,35 +38,36 @@ const CommentInputField = ({ applicationId, userId, maxLength = 400 }: CommentIn
 
     setIsSubmitting(true);
 
-    // Using promise chain instead of async/await
-    addComment({
-      applicationId,
-      commentText: comment,
-      userId,
-    })
-      .then((result) => {
-        if (result.success) {
-          setComment(''); // Clear input field
-          toast.success('Kommentar sendt');
-        } else {
-          toast.error('Kunne ikke sende kommentar');
-          console.error(result.error);
-        }
-      })
-      .catch((err) => {
-        toast.error('Kunne ikke sende kommentar');
-        console.error(err);
-      })
-      .finally(() => {
-        setIsSubmitting(false);
+    try {
+      const result = await addComment({
+        applicationId,
+        commentText: comment,
+        kindeUserId: user.id,
+        kindeGivenName: user.given_name,
+        kindeFamilyName: user.family_name,
+        kindeUserImage: user.picture || '',
       });
+
+      if (result.success) {
+        setComment(''); // Clear input field
+        toast.success('Kommentar sendt');
+      } else {
+        toast.error('Kunne ikke sende kommentar');
+        console.error(result.error);
+      }
+    } catch (err) {
+      toast.error('Kunne ikke sende kommentar');
+      console.error(err);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const charCount = comment.length;
   const isOverLimit = charCount > maxLength;
 
   return (
-    <div className='border-t p-4'>
+    <div className='p-4'>
       <form onSubmit={handleSubmit}>
         <div className='relative'>
           <Textarea
@@ -69,6 +77,11 @@ const CommentInputField = ({ applicationId, userId, maxLength = 400 }: CommentIn
             className={`mb-2 min-h-[80px] w-full ${isOverLimit ? 'border-red-500' : ''}`}
             disabled={isSubmitting}
           />
+          <div
+            className={`text-right text-xs ${isOverLimit ? 'text-red-500' : 'text-muted-foreground'}`}
+          >
+            {charCount}/{maxLength}
+          </div>
         </div>
 
         <Button

@@ -7,7 +7,9 @@ import { revalidatePath } from 'next/cache';
 export async function submitReview(
   applicationId: number,
   review: ReviewStatus | null,
-  userId: string
+  kindeUserId: string,
+  kindeGivenName: string = '',
+  kindeUserImage: string = ''
 ) {
   try {
     let result;
@@ -17,9 +19,9 @@ export async function submitReview(
       result = await db.review
         .delete({
           where: {
-            applicationId_userId: {
+            applicationId_kindeUserId: {
               applicationId,
-              userId,
+              kindeUserId,
             },
           },
         })
@@ -27,28 +29,34 @@ export async function submitReview(
           // If no record exists to delete, that's fine
           return null;
         });
+      console.log('deleted result:', result);
     } else {
       // Otherwise, proceed with upsert as before
       result = await db.review.upsert({
         where: {
-          applicationId_userId: {
+          applicationId_kindeUserId: {
             applicationId,
-            userId,
+            kindeUserId,
           },
         },
         update: {
           review,
+          kindeGivenName,
+          kindeUserImage,
         },
         create: {
           applicationId,
-          userId,
+          kindeUserId,
+          kindeGivenName,
+          kindeUserImage,
           review,
         },
       });
+      console.log('upserted result:', result);
     }
 
-    revalidatePath(`/applications`);
-    revalidatePath(`/applications/${applicationId}`);
+    revalidatePath(`/soknader`);
+    revalidatePath(`/soknader/${applicationId}`);
     return { success: true, data: result };
   } catch (error) {
     console.error('Error submitting review:', error);

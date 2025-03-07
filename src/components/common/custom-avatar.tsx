@@ -1,43 +1,66 @@
 'use client';
-import Link from 'next/link';
+
+import { nameToInitials } from '@/utils/name-to-initials';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuLabel,
   DropdownMenuTrigger,
-  DropdownMenuSeparator,
   DropdownMenuItem,
 } from '../ui/dropdown-menu';
+
+import { LogoutLink, useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
+import { LogOut } from 'lucide-react';
+
+interface User {
+  id: string;
+  given_name?: string;
+  family_name?: string;
+  picture?: string;
+}
 
 interface CustomAvatarProps {
   clickable?: boolean;
   size?: 'xs' | 'sm' | 'default' | 'lg';
+  user?: User; // Optional user prop
 }
 
 const sizeClasses = {
-  xs: 'h-5 w-5',
-  sm: 'h-6 w-6',
+  xs: 'h-5 w-5 text-xs',
+  sm: 'h-6 w-6 text-sm',
   default: 'h-8 w-8',
   lg: 'h-12 w-12',
 };
 
-export default function CustomAvatar({ clickable = false, size = 'default' }: CustomAvatarProps) {
-  const initials = 'SS';
+export default function CustomAvatar({
+  clickable = false,
+  size = 'default',
+  user,
+}: CustomAvatarProps) {
+  const { user: kindeUser, isLoading } = useKindeBrowserClient();
+
+  // Use provided user or fall back to Kinde user
+  const displayUser = user || kindeUser;
+  const loading = !user && isLoading;
+
+  const initials = nameToInitials(displayUser?.given_name || '', displayUser?.family_name || '');
+
+  // Use the picture URL if it exists and is not empty
+  const avatarImageUrl = displayUser?.picture || '';
+
   const avatarSizeClass = sizeClasses[size];
-  const avatar = (
-    <Avatar className={`${avatarSizeClass} border border-primary/30 dark:border-primary/50`}>
-      <AvatarImage
-        src='https://images.unsplash.com/photo-1527980965255-d3b416303d12?q=70&w=128&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-        alt={initials}
-        width={35}
-        height={35}
-      />
+
+  const avatar = loading ? (
+    <div className={`${avatarSizeClass}`}></div>
+  ) : (
+    <Avatar className={`${avatarSizeClass} border-primary/30 dark:border-primary/50 border`}>
+      <AvatarImage src={avatarImageUrl} alt={initials} width={35} height={35} />
       <AvatarFallback>{initials}</AvatarFallback>
     </Avatar>
   );
 
-  if (!clickable) {
+  // Only make clickable if no specific user is provided (meaning it's the current user)
+  if (!clickable || user) {
     return avatar;
   }
 
@@ -45,12 +68,10 @@ export default function CustomAvatar({ clickable = false, size = 'default' }: Cu
     <DropdownMenu>
       <DropdownMenuTrigger>{avatar}</DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem className='p-0'>
-          <Link href='/account' className='w-full'>
-            <DropdownMenuLabel>Min konto</DropdownMenuLabel>
-          </Link>
+        <DropdownMenuItem className='flex items-center justify-between'>
+          <LogoutLink>Logg ut</LogoutLink>
+          <LogOut />
         </DropdownMenuItem>
-        <DropdownMenuSeparator />
       </DropdownMenuContent>
     </DropdownMenu>
   );

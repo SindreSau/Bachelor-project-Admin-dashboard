@@ -24,9 +24,9 @@ const ThemeSwitcher = ({ className }: ThemeSwitcherProps) => {
       {mounted && (
         <>
           {resolvedTheme === 'dark' ? (
-            <Sun className={cn('rounded-full border border-accent p-1 ' + className)} />
+            <Sun className={cn('border-accent rounded-full border p-1 ' + className)} />
           ) : (
-            <Moon className={cn('rounded-full border border-accent p-1 ' + className)} />
+            <Moon className={cn('border-accent rounded-full border p-1 ' + className)} />
           )}
         </>
       )}

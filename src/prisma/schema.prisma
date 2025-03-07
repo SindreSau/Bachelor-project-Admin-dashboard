@@ -69,24 +69,29 @@ enum ReviewStatus {
 }
 
 model Review {
-  id            Int           @id @default(autoincrement())
-  applicationId Int
-  userId        String
-  review        ReviewStatus?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  application   Application   @relation(fields: [applicationId], references: [id])
+  id             Int           @id @default(autoincrement())
+  applicationId  Int
+  kindeUserId    String
+  kindeGivenName String //"Cached" name
+  kindeUserImage String //"Cached" image
+  review         ReviewStatus?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  application    Application   @relation(fields: [applicationId], references: [id])
 
-  @@unique([applicationId, userId], name: "applicationId_userId")
+  @@unique([applicationId, kindeUserId], name: "applicationId_kindeUserId")
 }
 
 model Comment {
-  id            Int         @id @default(autoincrement())
-  commentText   String
-  userId        String
-  applicationId Int
-  createdAt     DateTime    @default(now())
-  application   Application @relation(fields: [applicationId], references: [id])
+  id              Int         @id @default(autoincrement())
+  commentText     String
+  kindeUserId     String
+  kindeGivenName  String //"Cached" name
+  kindeFamilyName String //"Cached" family name
+  kindeUserImage  String //"Cached" image
+  applicationId   Int
+  createdAt       DateTime    @default(now())
+  application     Application @relation(fields: [applicationId], references: [id])
 
   @@index([applicationId])
 }
