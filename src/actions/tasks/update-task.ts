@@ -2,6 +2,7 @@
 
 import { db } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
+import triggerRevalidation from './trigger-revalidate';
 
 export async function updateTask(id: number, data: { taskName: string; taskDescription: string }) {
   const { taskName, taskDescription } = data;
@@ -16,5 +17,7 @@ export async function updateTask(id: number, data: { taskName: string; taskDescr
     },
   });
 
+  // Trigger revalidation of the /prosjekter page
+  await triggerRevalidation();
   revalidatePath('/prosjekter');
 }
