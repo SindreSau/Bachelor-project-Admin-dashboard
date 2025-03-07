@@ -3,7 +3,6 @@ import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 
 const HelloName = () => {
   const { user, isLoading } = useKindeBrowserClient();
-  console.log(user);
 
   if (isLoading) {
     return <div></div>;

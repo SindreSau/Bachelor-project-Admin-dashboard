@@ -18,7 +18,6 @@ export default async function ApplicationPage({
   // Get user session on the server
   const { getUser } = getKindeServerSession();
   const user = await getUser();
-  console.log(user);
 
   const application = await getOneApplication(parsedApplicationId);
 
@@ -27,7 +26,7 @@ export default async function ApplicationPage({
   }
 
   return (
-    <div className='flex flex-col gap-2'>
+    <div className='flex h-full flex-col gap-2'>
       {/* Application Details Card */}
       <ApplicationDetailsCard
         applicationId={application.id}
@@ -39,9 +38,9 @@ export default async function ApplicationPage({
       />
 
       {/* Main content area with ResizablePanelGroup for larger screens */}
-      <div>
+      <div className='flex h-full w-full'>
         {/* Mobile view - stacked layout */}
-        <div className='flex flex-col gap-2 xl:hidden'>
+        <div className='flex w-full flex-col gap-2 xl:hidden'>
           <ApplicationCoverLetter
             coverLetter={application.coverLetterText}
             tasks={application.tasks}
@@ -63,7 +62,7 @@ export default async function ApplicationPage({
         </div>
 
         {/* Desktop view - resizable panels */}
-        <div className='hidden xl:flex'>
+        <div className='hidden grow xl:flex'>
           <ResizablePanelGroup direction='horizontal'>
             {/* Cover Letter Panel - 66% default */}
             <ResizablePanel defaultSize={66} minSize={35}>
