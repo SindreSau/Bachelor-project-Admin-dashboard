@@ -66,7 +66,7 @@ export default async function ApplicationPage({
           <ResizablePanelGroup direction='horizontal'>
             {/* Cover Letter Panel - 66% default */}
             <ResizablePanel defaultSize={66} minSize={35}>
-              <div className='h-full p-1'>
+              <div className='h-full pr-1'>
                 <ApplicationCoverLetter
                   coverLetter={application.coverLetterText}
                   tasks={application.tasks}
@@ -78,7 +78,7 @@ export default async function ApplicationPage({
 
             {/* Comments Panel - 33% default */}
             <ResizablePanel defaultSize={34} minSize={22}>
-              <div className='h-full p-1'>
+              <div className='h-full pl-1'>
                 <ApplicationComments
                   applicationId={application.id}
                   comments={application.comments}
