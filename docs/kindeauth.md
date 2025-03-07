@@ -14,3 +14,8 @@
 ## Adding images for users
 
 - Images are hosted on Gravatar, so make sure to set up a Gravatar account with the same email as the user
+
+## Controlling tokens
+
+- Tokens can be controlled in an application, under tokens
+  - Refresh expiry is by default set to 15 days.

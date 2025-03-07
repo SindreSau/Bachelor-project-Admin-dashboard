@@ -60,7 +60,6 @@ const CreateTaskForm = () => {
     }
 
     try {
-      console.log(data);
       const deadline = data.deadline ? new Date(data.deadline) : null;
 
       await createTask({

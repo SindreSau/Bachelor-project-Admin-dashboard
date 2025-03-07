@@ -20,7 +20,7 @@ services:
       - '10000:10000'
     command: azurite --blobHost 0.0.0.0 --blobPort 10000 --location /data
     volumes:
-      - ./azurite:/data # Changed to use a local directory for better persistence
+      - ./azurite:/data
 
 volumes:
   postgres_data:
