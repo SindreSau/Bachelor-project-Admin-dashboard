@@ -2,6 +2,7 @@
 
 import { db } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
+import triggerRevalidation from './trigger-revalidate';
 
 interface TaskInput {
   taskName: string;
@@ -24,5 +25,7 @@ export async function createTask({ taskName, taskDescription, deadline, publishe
     },
   });
 
+  // Trigger revalidation of the /prosjekter page in the application-app
+  await triggerRevalidation();
   revalidatePath('/prosjekter');
 }
