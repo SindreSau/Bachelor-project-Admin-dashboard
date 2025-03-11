@@ -1,5 +1,19 @@
 # Dashboard API Routes Documentation
 
+## Table of Contents
+
+- [Authentication](#authentication)
+- [Tasks](#tasks)
+  - [GET `/api/tasks`](#get-apitasks)
+- [Applications](#applications)
+  - [POST `/api/applications`](#post-apiapplications)
+- [Files](#files)
+  - [POST `/api/files`](#post-apifiles)
+- [Integration with Application Project](#integration-with-application-project)
+  - [Revalidation (External)](#revalidation-external)
+- [Environment Variables](#environment-variables)
+- [Error Handling](#error-handling)
+
 ## Authentication
 
 All API routes require authentication unless specifically noted. Authentication is done via an API key sent in the `Authorization` header.
@@ -195,6 +209,117 @@ fetch('/api/applications', {
   .then((response) => response.json())
   .then((data) => console.log(data));
 ```
+
+---
+
+### Files
+
+#### POST `/api/files`
+
+Uploads a PDF document (CV or grades) associated with a student email. Remember to use **Promise.all()** to upload both CV and grades documents in parallel for all students before submitting an application.
+
+**Request Format**: FormData with the following fields:
+
+- `email` (string, required): Student's email address
+- `documentType` (string, required): Type of document - must be either "cv" or "grades"
+- `file` (File, required): PDF document to upload (max 5MB)
+
+**Response Structure**:
+
+- `success` (boolean): Indicates if the upload was successful
+- `data` (object|null): Contains information about the uploaded file when successful
+  - `email` (string): Original student email
+  - `documentType` (string): Type of document uploaded
+  - `filename` (string): Original filename
+  - `size` (number): File size in bytes
+  - `type` (string): File MIME type
+  - `blobUrl` (string): URL to access the uploaded file
+- `message` (string): Description of the operation result
+- `errors` (array|null): Error messages if any
+
+**Response Examples**:
+
+Success Response (201 Created):
+
+```json
+{
+  "success": true,
+  "data": {
+    "email": "student@example.com",
+    "documentType": "cv",
+    "filename": "resume.pdf",
+    "size": 245789,
+    "type": "application/pdf",
+    "blobUrl": "https://example.com/files/student_example_com_cv_1615478956789.pdf"
+  },
+  "message": "File uploaded successfully",
+  "errors": null
+}
+```
+
+Validation Error Response (400 Bad Request):
+
+```json
+{
+  "success": false,
+  "data": null,
+  "message": "Validation failed",
+  "errors": ["File size exceeds the limit of 5MB"]
+}
+```
+
+Unauthorized Response (401 Unauthorized):
+
+```json
+{
+  "success": false,
+  "data": null,
+  "message": "Unauthorized",
+  "errors": ["Invalid or missing API key"]
+}
+```
+
+Server Error Response (500 Internal Server Error):
+
+```json
+{
+  "success": false,
+  "data": null,
+  "message": "Failed to process file upload",
+  "errors": ["Error message details"]
+}
+```
+
+**Example Usage**:
+
+```javascript
+// Example of creating FormData for file upload
+const formData = new FormData();
+formData.append('email', 'student@example.com');
+formData.append('documentType', 'cv');
+
+// Get file from file input element
+const fileInput = document.getElementById('fileUpload');
+formData.append('file', fileInput.files[0]);
+
+// Send the request
+fetch('/api/files', {
+  method: 'POST',
+  headers: {
+    Authorization: 'Bearer your-secret-api-token',
+  },
+  body: formData,
+})
+  .then((response) => response.json())
+  .then((data) => console.log(data));
+```
+
+**Notes**:
+
+- Files must be in PDF format
+- Maximum file size is 5MB
+- Each student must upload both CV and grades documents before submitting an application
+- The returned blob URL must be included in the application submission
 
 ---
 
