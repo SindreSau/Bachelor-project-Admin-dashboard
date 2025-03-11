@@ -1,3 +1,4 @@
+import submitApplication from '@/actions/applications/submit-application';
 import isValidKeyFromHeaders from '@/utils/api/validate-request';
 import { headers } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
@@ -44,7 +45,7 @@ const applicationSchema = z.object({
 });
 
 // Type for validated data
-type ApplicationData = z.infer<typeof applicationSchema>;
+export type ApplicationData = z.infer<typeof applicationSchema>;
 
 export async function POST(request: NextRequest) {
   // Authenticate with api keys
@@ -84,13 +85,28 @@ export async function POST(request: NextRequest) {
     }
 
     const applicationData: ApplicationData = validationResult.data;
-    console.log('Application data:', applicationData);
+
+    // Submit the application to the database
+    const result = await submitApplication(applicationData);
+
+    if (!result.success) {
+      return NextResponse.json(
+        {
+          success: false,
+          data: null,
+          message: result.message,
+          errors: [result.message],
+        },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json(
       {
         success: true,
         data: validationResult.data,
-        message: 'Application received successfully!',
+        message: result.message,
+        errors: null,
       },
       {
         status: 201,

@@ -2,6 +2,7 @@ import isValidKeyFromHeaders from '@/utils/api/validate-request';
 import { headers } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 import { MAX_FILE_SIZE } from '@/lib/constants';
+import { uploadPdf } from '@/utils/blobstorage/file-upload';
 
 export async function POST(request: NextRequest) {
   // Authenticate with API key
@@ -89,15 +90,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create a sanitized email for the filename (remove special chars)
-    const sanitizedEmail = email.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase();
-
-    // Create a filename using the email and document type
-    const timestamp = Date.now();
-    const filename = `${sanitizedEmail}_${documentType}_${timestamp}.pdf`;
-
-    // TODO: Implement blob-storage service here
-    const blobUrl = `https://example.com/files/${filename}`;
+    const blobUrl = await uploadPdf(file, documentType, email);
 
     return NextResponse.json(
       {
