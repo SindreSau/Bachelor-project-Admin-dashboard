@@ -42,18 +42,13 @@ Retrieves all published tasks available in the system.
 
 #### POST `/api/applications`
 
-Submits a new application. Currently implemented as a dummy endpoint that always returns success.
+Submits a new application as formdata.
 
-**Authentication Required**: No
+**Authentication Required**: Yes (`X-API-Key` header)
 
-**Response:**
+**Example usage:**
 
-```json
-{
-  "success": true,
-  "message": "Application received"
-}
-```
+![Form submission structure](./form-submit.png)
 
 ## Integration with Application Project
 
