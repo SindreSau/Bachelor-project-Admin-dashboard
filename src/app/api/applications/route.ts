@@ -1,3 +1,4 @@
+import isValidKeyFromHeaders from '@/utils/api/validate-request';
 import { headers } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
@@ -13,7 +14,7 @@ const studentSchema = z.object({
 
 // Create a unified validation schema for FormData
 const applicationSchema = z.object({
-  school: z.string(),
+  school: z.string().min(1),
   students: z.string().transform((str, ctx) => {
     try {
       const parsed = JSON.parse(str);
@@ -46,13 +47,17 @@ const applicationSchema = z.object({
 type ApplicationData = z.infer<typeof applicationSchema>;
 
 export async function POST(request: NextRequest) {
-  // Get the API key from request headers
-  const headersList = await headers();
-  const secretApiTokenFromClient = headersList.get('X-API-Key');
-
-  // Check if API key is provided and valid
-  if (!secretApiTokenFromClient || secretApiTokenFromClient !== process.env.SECRET_API_TOKEN) {
-    return NextResponse.json({ error: 'Unauthorized', success: false }, { status: 401 });
+  // Authenticate with api keys
+  if (!isValidKeyFromHeaders(await headers())) {
+    return NextResponse.json(
+      {
+        success: false,
+        data: null,
+        message: 'Unauthorized',
+        errors: ['Invalid or missing API key'],
+      },
+      { status: 401 }
+    );
   }
 
   try {
@@ -69,8 +74,10 @@ export async function POST(request: NextRequest) {
     if (!validationResult.success) {
       return NextResponse.json(
         {
-          error: validationResult.error.format(),
           success: false,
+          data: null,
+          message: 'Validation failed',
+          errors: validationResult.error.format(),
         },
         { status: 400 }
       );
@@ -93,8 +100,10 @@ export async function POST(request: NextRequest) {
     console.error('Error processing request:', error);
     return NextResponse.json(
       {
-        error: 'Failed to process request',
         success: false,
+        data: null,
+        message: 'Failed to process request',
+        errors: [error instanceof Error ? error.message : 'Unknown error'],
       },
       { status: 500 }
     );
