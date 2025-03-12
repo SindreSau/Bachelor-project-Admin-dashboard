@@ -11,6 +11,7 @@ interface CommentData {
   kindeGivenName: string;
   kindeFamilyName: string;
   kindeUserImage: string;
+  deletedAt?: Date;
 }
 
 // Server action to add a comment to the database
@@ -71,13 +72,18 @@ export async function deleteComment(commentId: number) {
     }
 
     // Delete the comment
-    await db.comment.delete({
+    const updatedComment = await db.comment.update({
       where: { id: commentId },
-    });
+      data: { deletedAt: new Date() },
+    })
 
+    // Verify update was successful
+    if (!updatedComment.deletedAt) {
+      return { success: false, error: 'Failed to delete comment' };
+    }
+    
     // Revalidate the application path
     revalidatePath(`/soknader/${comment.applicationId}`);
-
     return { success: true };
   } catch (error) {
     console.error('Failed to delete comment:', error);
@@ -87,3 +93,34 @@ export async function deleteComment(commentId: number) {
     };
   }
 }
+
+export async function restoreComment(commentId: number){
+  try {
+    // get the comment
+    const comment = await db.comment.findUnique({
+      where: { id: commentId },
+      select: { applicationId: true },
+    });
+
+    if (!comment) {
+      return { success: false, error: 'Comment not found' };
+    }
+
+    // Restore the comment
+    const updatedComment = await db.comment.update({
+      where: { id: commentId },
+      data: { deletedAt: null },
+    })
+
+    // Revalidate the application path
+    revalidatePath(`/soknader/${comment.applicationId}`);
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to restore comment:', error);
+    return {
+      success: false,
+      error: 'Failed to restore comment. Please try again.',
+    };
+  }
+  }
+

@@ -5,7 +5,7 @@ import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import CustomAvatar from '@/components/common/custom-avatar';
 import { Button } from '@/components/ui/button';
 import { Trash2 } from 'lucide-react';
-import { deleteComment } from '@/actions/applications/comment-actions';
+import { restoreComment, deleteComment } from '@/actions/applications/comment-actions';
 import { toast } from 'sonner';
 import { Comment as CommentType } from '@prisma/client';
 
@@ -23,7 +23,16 @@ const Comment = ({ comment, isCurrentUser }: CommentProps) => {
     try {
       const result = await deleteComment(comment.id);
       if (result.success) {
-        toast.info('Kommentar slettet');
+        toast('Kommentar slettet', {
+          duration: 10000,
+          action: {
+            label: 'Angre',
+            onClick: async () => {
+              await restoreComment(comment.id);
+              console.log('Angre slett kommentar');
+            },
+          },
+        });
       } else {
         toast.error('Kunne ikke slette kommentar');
         console.error(result.error);

@@ -92,6 +92,7 @@ model Comment {
   applicationId   Int
   createdAt       DateTime    @default(now())
   application     Application @relation(fields: [applicationId], references: [id])
+  deletedAt       DateTime?
 
   @@index([applicationId])
 }
