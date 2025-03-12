@@ -60,6 +60,7 @@ model Task {
   maxStudents     Int           @default(5)
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
+  deletedAt       DateTime?
   applications    Application[] @relation("ApplicationToTask")
 }
 
@@ -93,6 +94,7 @@ model Comment {
   applicationId   Int
   createdAt       DateTime    @default(now())
   application     Application @relation(fields: [applicationId], references: [id])
+  deletedAt       DateTime?
 
   @@index([applicationId])
 }

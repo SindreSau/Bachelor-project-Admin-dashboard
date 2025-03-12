@@ -1,12 +1,24 @@
 import { getTasks } from '@/actions/tasks/get-tasks';
 import TaskCard from './task-card';
+import Link from 'next/link';
+import { Trash } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const TaskList = async () => {
   const tasks = await getTasks();
 
   return (
     <div className='bg-card rounded-lg border p-6 shadow-xs'>
-      <h2 className='mb-4 text-xl font-bold'>Oppgaveliste</h2>
+      <div className='mb-4 flex items-center justify-between'>
+        <div className='w-[70px]'></div> {/* Spacer to balance the layout */}
+        <h2 className='text-xl font-bold'>Oppgaveliste</h2>
+        <Button asChild variant='outline' size='sm'>
+          <Link href='/prosjekter/bin'>
+            <Trash className='h-4 w-4' />
+            Søppel
+          </Link>
+        </Button>
+      </div>
       <div className='grid gap-4 sm:grid-cols-1 lg:grid-cols-1'>
         {tasks.length > 0 ? (
           tasks.map((task) => (

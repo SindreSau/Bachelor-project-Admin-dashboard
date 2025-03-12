@@ -11,9 +11,11 @@ import {
 import { Trash2 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { deleteTask } from '@/actions/tasks/delete-task';
+import { restoreTask } from '@/actions/tasks/restore-task';
 import { useEffect } from 'react';
 import { getTask } from '@/actions/tasks/get-task';
 import Spinner from '@/components/common/spinner';
+import { toast } from 'sonner';
 
 export default function ConfirmDeleteModal({ taskId }: { taskId: number }) {
   const [hasApplications, setHasApplications] = useState(false);
@@ -28,18 +30,48 @@ export default function ConfirmDeleteModal({ taskId }: { taskId: number }) {
         setHasApplications(result);
       }
     };
-
     fetchTask();
   }, [taskId, isOpen]);
 
+  // Separated the restore functionality into its own handler
+  const handleRestore = async (id: number) => {
+    try {
+      const result = await restoreTask(id);
+      if (result.success) {
+        toast.success('Oppgave gjenopprettet');
+      } else {
+        toast.error('Kunne ikke gjenopprette oppgave');
+        console.error(result.error);
+      }
+    } catch (err) {
+      toast.error('Kunne ikke gjenopprette oppgave');
+      console.error(err);
+    }
+  };
+
   const handleDelete = async (taskId: number) => {
     setIsDeleting(true);
-
     try {
-      await deleteTask(taskId);
-      setIsOpen(false);
-    } catch (error) {
-      console.error('Error deleting task:', error);
+      const result = await deleteTask(taskId);
+      if (result.success) {
+        toast('Oppgave slettet', {
+          duration: 10000,
+          action: {
+            label: 'Angre',
+            onClick: () => {
+              // Call the handler instead of directly calling the server action
+              handleRestore(taskId);
+              console.log('Angre slett oppgave');
+            },
+          },
+        });
+      } else {
+        toast.error('Kunne ikke slette oppgave');
+        console.error(result.error);
+      }
+    } catch (err) {
+      toast.error('Kunne ikke slette oppgave');
+      console.error(err);
     } finally {
       setIsDeleting(false);
     }
