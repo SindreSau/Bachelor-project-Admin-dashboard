@@ -8,30 +8,25 @@ interface ApplicationCoverLetterProps {
 }
 
 const ApplicationCoverLetter = ({ coverLetter, tasks }: ApplicationCoverLetterProps) => {
-  // Add test tasks
-  tasks = [
-    ...tasks,
-    // @ts-expect-error - This is a test task for demo purposes
-    { id: 'test-task', taskName: 'Test task here for demo purposes' } as Task,
-    // @ts-expect-error - This is another test task for demo purposes
-    { id: 'test-task2', taskName: 'This is a random nother task' } as Task,
-  ];
-
   return (
     <Card className='@container h-full w-full flex-col'>
       <CardHeader>
         <CardTitle>
           <div className='flex flex-col @xl:flex-row @xl:items-center @xl:justify-between @xl:gap-6'>
             <div className='mb-2 @xl:mb-0'>Søknad</div>
-            <div className='flex max-w-[36rem] flex-col items-start gap-2 @xl:flex-row @xl:items-center'>
+            <div className='flex flex-col items-start gap-2 @xl:flex-row @xl:items-center'>
               {/* Tasks Section */}
-              <h3 className='text-muted-foreground mb-1 text-sm font-medium @xl:mb-0'>
-                Oppgaver søkt på:
-              </h3>
+              <h3 className='text-muted-foreground mb-1 text-sm font-medium @xl:mb-0'>Oppgaver:</h3>
               <div className='flex flex-wrap gap-2'>
                 {tasks.length > 0 ? (
-                  tasks.map((task) => (
-                    <div key={task.id} className='bg-secondary rounded-md px-3 py-1 text-sm'>
+                  tasks.map((task, index) => (
+                    <div
+                      key={task.id}
+                      className={`bg-secondary flex items-center rounded-md px-3 py-1 text-sm ${index === 0 ? 'border-primary border' : ''}`}
+                    >
+                      <span className='bg-primary text-primary-foreground mr-2 flex h-5 w-5 items-center justify-center rounded-full text-xs'>
+                        {index + 1}
+                      </span>
                       {task.taskName}
                     </div>
                   ))

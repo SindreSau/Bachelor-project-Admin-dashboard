@@ -29,12 +29,12 @@ export default async function ApplicationPage({
     <div className='flex h-full flex-col gap-2'>
       {/* Application Details Card */}
       <ApplicationDetailsCard
-        applicationId={application.id}
+        applicationId={application.id || 0}
         groupName={concatGroupName(application.students)}
-        school={application.school}
-        createdAt={application.createdAt}
-        updatedAt={application.updatedAt}
-        applicationReviews={application.reviews}
+        school={application.school || null}
+        createdAt={application.createdAt || new Date()}
+        updatedAt={application.updatedAt || new Date()}
+        applicationReviews={application.reviews || []}
       />
 
       {/* Main content area with ResizablePanelGroup for larger screens */}
@@ -42,12 +42,12 @@ export default async function ApplicationPage({
         {/* Mobile view - stacked layout */}
         <div className='flex w-full flex-col gap-2 xl:hidden'>
           <ApplicationCoverLetter
-            coverLetter={application.coverLetterText}
-            tasks={application.tasks}
+            coverLetter={application.coverLetterText || ''}
+            tasks={application.tasks || []}
           />
           <ApplicationComments
-            applicationId={application.id}
-            comments={application.comments}
+            applicationId={application.id || 0}
+            comments={application.comments || []}
             currentUser={
               user
                 ? {
@@ -68,8 +68,8 @@ export default async function ApplicationPage({
             <ResizablePanel defaultSize={66} minSize={35}>
               <div className='h-full pr-1'>
                 <ApplicationCoverLetter
-                  coverLetter={application.coverLetterText}
-                  tasks={application.tasks}
+                  coverLetter={application.coverLetterText || ''}
+                  tasks={application.tasks || []}
                 />
               </div>
             </ResizablePanel>
@@ -80,8 +80,8 @@ export default async function ApplicationPage({
             <ResizablePanel defaultSize={34} minSize={22}>
               <div className='h-full pl-1'>
                 <ApplicationComments
-                  applicationId={application.id}
-                  comments={application.comments}
+                  applicationId={application.id || 0}
+                  comments={application.comments || []}
                   currentUser={
                     user
                       ? {
@@ -101,8 +101,8 @@ export default async function ApplicationPage({
 
       {/* Students Grid */}
       <ApplicationStudentsGrid
-        students={application.students}
-        studentRepresentativeId={application.studentRepresentativeId}
+        students={application.students || []}
+        studentRepresentativeId={application.studentRepresentativeId || null}
       />
     </div>
   );

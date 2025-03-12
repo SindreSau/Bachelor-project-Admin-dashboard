@@ -1,3 +1,4 @@
-// I am a file that contains all the constants used in the application
-// I am used to avoid hardcoding values in the application
-export const USE_ME_ANYWHERE = 'I am a constant that can be used anywhere in the application';
+// ===== GLOBAL VARIABLES ===== //
+
+export const MAX_STUDENTS = 5;
+export const MAX_FILE_SIZE = 1024 * 1024 * 5; // 5MB

@@ -93,7 +93,7 @@ const ApplicationStudentsGrid = ({ students, studentRepresentativeId }: Students
                         key={file.id}
                         onClick={handleClick}
                         disabled={isLoading}
-                        className='bg-primary/50 hover:bg-primary/70 disabled:bg-primary/25 flex items-center justify-center rounded px-2 py-1 text-xs text-inherit transition-colors disabled:cursor-not-allowed'
+                        className='bg-primary/50 hover:bg-primary/70 disabled:bg-primary/25 flex cursor-pointer items-center justify-center rounded px-2 py-1 text-xs text-inherit transition-colors disabled:cursor-not-allowed'
                       >
                         <span>{file.documentType === 'CV' ? 'CV' : 'Karakterer'}</span>
                         {isLoading ? (

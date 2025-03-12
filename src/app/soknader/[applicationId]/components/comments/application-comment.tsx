@@ -80,9 +80,7 @@ const Comment = ({ comment, isCurrentUser }: CommentProps) => {
           )}
         </CardHeader>
 
-        <CardContent className='text-muted-foreground px-3 pt-0 pb-3 text-sm'>
-          {comment.commentText}
-        </CardContent>
+        <CardContent className='px-3 pt-0 pb-3 text-sm'>{comment.commentText}</CardContent>
       </Card>
     </div>
   );

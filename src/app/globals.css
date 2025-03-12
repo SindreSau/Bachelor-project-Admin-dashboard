@@ -28,96 +28,114 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 224 71.4% 4.1%;
-    --card: 0 0% 100%;
-    --card-foreground: 224 71.4% 4.1%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 224 71.4% 4.1%;
+    /* Dimmed down light mode with reduced brightness */
+    --background: 240 15% 90%;
+    --foreground: 240 10% 12%;
+    --card: 0 0% 95%;
+    --card-foreground: 240 10% 12%;
+    --popover: 0 0% 98%;
+    --popover-foreground: 240 10% 12%;
+
+    /* Primary and accent remain unchanged as requested */
     --primary: 278 100% 50%;
     --primary-foreground: 210 20% 98%;
-    --secondary: 220 14.3% 95.9%;
-    --secondary-foreground: 220.9 39.3% 11%;
-    --muted: 220 14.3% 95.9%;
-    --muted-foreground: 220 8.9% 46.1%;
-    --accent: 220 14.3% 95.9%;
-    --accent-foreground: 220.9 39.3% 11%;
-    --destructive: 0 84.2% 60.2%;
+    --accent: 260 30% 92%;
+    --accent-foreground: 240 5.9% 10%;
+
+    /* Dimmed down secondary and muted tones */
+    --secondary: 220 12% 90%;
+    --secondary-foreground: 240 8% 15%;
+    --muted: 220 12% 90%;
+    --muted-foreground: 240 4% 40%;
+
+    /* Status colors with slight adjustments */
+    --destructive: 0 75% 55%;
     --destructive-foreground: 210 20% 98%;
-    --warning: 45 93% 47%; /* Yellow/amber color */
-    --warning-foreground: 0 0% 10%; /* Dark text on yellow */
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 262.1 83.3% 57.8%;
-    --radius: 0.5rem;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --warning: 38 85% 48%;
+    --warning-foreground: 0 0% 10%;
 
-    /* CUSTOM ADDED */
-    --confirm-foreground: 142 77% 65%;
-    --confirm: 142 67% 36%;
+    /* Softer borders and inputs */
+    --border: 220 13% 85%;
+    --input: 220 13% 85%;
+    --ring: 262 80% 50%;
+    --radius: 0.6rem;
 
-    --action-color: 221 83% 53%; /* Blue-600 */
-    --action-hover: 224 76% 48%; /* Blue-700 */
-    --danger-color: 0 71% 51%; /* Red-600 */
-    --danger-hover: 0 74% 42%; /* Red-700 */
+    /* Modern Chart Colors - Slightly muted */
+    --chart-1: 262 70% 55%; /* Muted purple */
+    --chart-2: 196 70% 50%; /* Muted cyan */
+    --chart-3: 340 70% 55%; /* Muted pink */
+    --chart-4: 160 60% 42%; /* Muted emerald */
+    --chart-5: 25 80% 52%; /* Muted orange */
+
+    /* Sidebar styling - slightly dimmed */
+    --sidebar-background: 260 30% 95%;
+    --sidebar-foreground: 240 10% 20%;
+    --sidebar-primary: 262 80% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 260 40% 90%;
+    --sidebar-accent-foreground: 240 10% 20%;
+    --sidebar-border: 260 20% 85%;
+    --sidebar-ring: 262 80% 50%;
+
+    /* Custom additions */
+    --confirm-foreground: 142 70% 95%;
+    --confirm: 142 60% 40%;
+
+    --action-color: 222 75% 52%;
+    --action-hover: 222 75% 45%;
+    --danger-color: 0 70% 52%;
+    --danger-hover: 0 70% 42%;
   }
 
   .dark {
-    --background: 224 71.4% 4.1%;
+    /* Dark Mode - Modern Color Palette */
+    --background: 240 14% 10%;
     --foreground: 210 20% 98%;
-    --card: 224 71.4% 4.1%;
+    --card: 240 10% 14%;
     --card-foreground: 210 20% 98%;
-    --popover: 224 71.4% 4.1%;
+    --popover: 240 10% 12%;
     --popover-foreground: 210 20% 98%;
     --primary: 278 100% 50%;
     --primary-foreground: 210 20% 98%;
-    --secondary: 215 27.9% 16.9%;
+    --secondary: 240 6% 18%;
     --secondary-foreground: 210 20% 98%;
-    --muted: 215 27.9% 16.9%;
-    --muted-foreground: 217.9 10.6% 64.9%;
-    --accent: 215 27.9% 16.9%;
+    --muted: 240 6% 18%;
+    --muted-foreground: 240 5% 65%;
+    --accent: 240 25% 20%;
     --accent-foreground: 210 20% 98%;
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 70% 45%;
     --destructive-foreground: 210 20% 98%;
-    --warning: 45 93% 47%; /* Yellow/amber color */
-    --warning-foreground: 0 0% 10%; /* Dark text on yellow */
-    --border: 215 27.9% 16.9%;
-    --input: 215 27.9% 16.9%;
-    --ring: 263.4 70% 50.4%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 10%;
+    --border: 240 6% 20%;
+    --input: 240 6% 20%;
+    --ring: 262 80% 60%;
+
+    /* Modern Chart Colors - Vibrant and distinguishable in dark mode */
+    --chart-1: 262 80% 65%; /* Lighter purple */
+    --chart-2: 196 80% 65%; /* Lighter cyan */
+    --chart-3: 340 80% 70%; /* Lighter pink */
+    --chart-4: 160 70% 55%; /* Lighter emerald */
+    --chart-5: 25 90% 65%; /* Lighter orange */
+
+    /* Sidebar styling - dark mode */
+    --sidebar-background: 240 10% 14%;
+    --sidebar-foreground: 210 20% 98%;
+    --sidebar-primary: 262 80% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 240 10% 16%;
+    --sidebar-accent-foreground: 210 20% 98%;
+    --sidebar-border: 240 10% 16%;
+    --sidebar-ring: 262 80% 60%;
 
-    /* CUSTOM ADDED */
-    --confirm-foreground: 142 77% 65%;
-    --confirm: 142 57% 40%;
+    /* Custom additions */
+    --confirm-foreground: 142 70% 95%;
+    --confirm: 142 55% 45%;
 
-    --action-color: 221 83% 53%; /* Blue-600 */
-    --action-hover: 224 76% 48%; /* Blue-700 */
-    --danger-color: 0 71% 51%; /* Red-600 */
-    --danger-hover: 0 74% 42%; /* Red-700 */
+    --action-color: 222 85% 65%;
+    --action-hover: 222 85% 58%;
+    --danger-color: 0 75% 60%;
+    --danger-hover: 0 75% 50%;
   }
 }
 
