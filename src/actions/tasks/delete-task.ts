@@ -17,7 +17,7 @@ export async function deleteTask(id: number) {
     // Delete the comment
     const updatedTask = await db.task.update({
       where: { id: id },
-      data: { deletedAt: new Date() },
+      data: { deletedAt: new Date(), published: false },
     });
 
     // Verify update was successful
