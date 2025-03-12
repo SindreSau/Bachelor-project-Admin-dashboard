@@ -73,6 +73,9 @@ export default async function submitApplication(
           tasks: {
             connect: applicationData.prioritizedTasks.map((taskId) => ({ id: taskId })),
           },
+          taskpriorityids: {
+            set: applicationData.prioritizedTasks,
+          },
         },
       });
 

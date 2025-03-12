@@ -137,6 +137,7 @@ async function main() {
       tasks: {
         connect: [{ id: task1.id }],
       },
+      taskpriorityids: [task1.id],
       // comments: {
       //   createMany: {
       //     data: [
@@ -178,6 +179,7 @@ async function main() {
         tasks: {
           connect: connectedTasks,
         },
+        taskpriorityids: faker.helpers.shuffle(connectedTasks.map((task) => task.id)),
       },
     });
     console.log(
