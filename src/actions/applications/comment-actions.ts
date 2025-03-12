@@ -75,13 +75,13 @@ export async function deleteComment(commentId: number) {
     const updatedComment = await db.comment.update({
       where: { id: commentId },
       data: { deletedAt: new Date() },
-    })
+    });
 
     // Verify update was successful
     if (!updatedComment.deletedAt) {
       return { success: false, error: 'Failed to delete comment' };
     }
-    
+
     // Revalidate the application path
     revalidatePath(`/soknader/${comment.applicationId}`);
     return { success: true };
@@ -94,7 +94,7 @@ export async function deleteComment(commentId: number) {
   }
 }
 
-export async function restoreComment(commentId: number){
+export async function restoreComment(commentId: number) {
   try {
     // get the comment
     const comment = await db.comment.findUnique({
@@ -107,10 +107,10 @@ export async function restoreComment(commentId: number){
     }
 
     // Restore the comment
-    const updatedComment = await db.comment.update({
+    await db.comment.update({
       where: { id: commentId },
       data: { deletedAt: null },
-    })
+    });
 
     // Revalidate the application path
     revalidatePath(`/soknader/${comment.applicationId}`);
@@ -122,5 +122,4 @@ export async function restoreComment(commentId: number){
       error: 'Failed to restore comment. Please try again.',
     };
   }
-  }
-
+}

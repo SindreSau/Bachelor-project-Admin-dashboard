@@ -10,6 +10,7 @@ export const getTasks = async () => {
             select: { applications: true },
           },
         },
+        where: { deletedAt: null },
         orderBy: {
           createdAt: 'desc',
         },
