@@ -10,7 +10,8 @@ import {
 } from '@/components/ui/table';
 import { Card, CardTitle, CardHeader, CardContent } from '@/components/ui/card';
 import { Application, Student, Review } from '@prisma/client';
-import { ExternalLink } from 'lucide-react';
+import { BookOpenText } from 'lucide-react';
+// import { ExternalLink } from 'lucide-react';
 import { concatGroupName } from '@/lib/utils';
 import Link from 'next/link';
 import getApplicationStatus from '@/utils/applications/get-application-status';
@@ -71,9 +72,10 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
                     <TableCell>
                       <Link
                         href={`/soknader/${application.id.toString()}`}
-                        className='hover:text-primary flex cursor-pointer items-center justify-center'
+                        className='group flex cursor-pointer items-center justify-center'
                       >
-                        <ExternalLink />
+                        {/* <ExternalLink className='hover:text-primary h-6 w-6' /> */}
+                        <BookOpenText className='hover:text-primary h-6 w-6' />
                       </Link>
                     </TableCell>
                   </TableRow>
