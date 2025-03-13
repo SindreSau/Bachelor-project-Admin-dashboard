@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowBigLeft } from 'lucide-react';
 
+export const dynamic = 'force-dynamic';
+
 export default async function TrashPage() {
   const archivedTasks = await getDeletedTasks();
 

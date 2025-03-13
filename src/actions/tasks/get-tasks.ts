@@ -75,7 +75,7 @@ export const getDeletedTasks = async () => {
         return [];
       });
 
-    return tasks;
+    return tasks.length ? tasks : [];
   } catch (error) {
     console.error('Database error:', error);
     // Return empty array instead of failing
