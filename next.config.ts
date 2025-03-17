@@ -12,6 +12,14 @@ const nextConfig: NextConfig = {
     },
   },
   output: 'standalone',
+  logging: {
+    fetches: {
+      fullUrl: false,
+      hmrRefreshes: false,
+    },
+    incomingRequests: false,
+  },
+  serverExternalPackages: ['pino', 'pino-pretty'],
 };
 
 export default nextConfig;
