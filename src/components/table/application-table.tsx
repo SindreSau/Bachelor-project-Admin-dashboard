@@ -27,6 +27,7 @@ import { Application, Student, Review } from '@prisma/client';
 import { concatGroupName } from '@/lib/utils';
 import Link from 'next/link';
 import getApplicationStatus from '@/utils/applications/get-application-status';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 type ApplicationWithStudentsAndReviews = Application & {
   students: Student[];
@@ -236,14 +237,48 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
         <CardTitle>Søknader</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className='flex items-center py-4'>
+        <div className='flex items-center gap-8 py-4'>
           <Input
             placeholder='Filtrer på navn...'
             value={(table.getColumn('groupName')?.getFilterValue() as string) ?? ''}
             onChange={(event) => table.getColumn('groupName')?.setFilterValue(event.target.value)}
             className='max-w-sm'
           />
+
+          <Select
+            onValueChange={(value) =>
+              table.getColumn('school')?.setFilterValue(value === 'all' ? undefined : value)
+            }
+            defaultValue='all'
+          >
+            <SelectTrigger className='w-[180px]'>
+              <SelectValue placeholder='Skole' />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value='all'>Alle skoler</SelectItem>
+              <SelectItem value='oslomet'>OsloMet</SelectItem>
+              <SelectItem value='kristiania'>Høyskolen Kristiania</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select
+            onValueChange={(value) =>
+              table.getColumn('statusText')?.setFilterValue(value === 'all' ? undefined : value)
+            }
+            defaultValue='all'
+          >
+            <SelectTrigger className='w-[180px]'>
+              <SelectValue placeholder='Status' />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value='all'>Alle statuser</SelectItem>
+              <SelectItem value='ikke begynt'>Ikke begynt</SelectItem>
+              <SelectItem value='påbegynt'>Påbegynt</SelectItem>
+              <SelectItem value='ferdig'>Ferdig</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
+
         <div className='rounded border'>
           <Table>
             <TableHeader>
