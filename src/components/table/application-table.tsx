@@ -11,7 +11,7 @@ import {
   getFilteredRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { ArrowUpDown, ArrowUp, ArrowDown, BookOpenText } from 'lucide-react';
+import { ArrowUpDown, ArrowUp, ArrowDown, BookOpenText, RotateCcw } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -212,6 +212,8 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const [schoolFilter, setSchoolFilter] = React.useState<string>('all');
+  const [statusFilter, setStatusFilter] = React.useState<string>('all');
 
   const table = useReactTable({
     data: processedApplications,
@@ -231,6 +233,17 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
     return `/soknader/${row.id.toString()}`;
   }
 
+  function resetFilters() {
+    const columns = table.getAllColumns();
+
+    columns.forEach((column) => {
+      column.setFilterValue(undefined);
+    });
+
+    setSchoolFilter('all');
+    setStatusFilter('all');
+  }
+
   return (
     <Card className='h-full flex-col'>
       <CardHeader>
@@ -246,9 +259,11 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
           />
 
           <Select
-            onValueChange={(value) =>
-              table.getColumn('school')?.setFilterValue(value === 'all' ? undefined : value)
-            }
+            value={schoolFilter}
+            onValueChange={(value) => {
+              setSchoolFilter(value);
+              table.getColumn('school')?.setFilterValue(value === 'all' ? undefined : value);
+            }}
             defaultValue='all'
           >
             <SelectTrigger className='w-[180px]'>
@@ -262,9 +277,11 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
           </Select>
 
           <Select
-            onValueChange={(value) =>
-              table.getColumn('statusText')?.setFilterValue(value === 'all' ? undefined : value)
-            }
+            value={statusFilter}
+            onValueChange={(value) => {
+              setStatusFilter(value);
+              table.getColumn('statusText')?.setFilterValue(value === 'all' ? undefined : value);
+            }}
             defaultValue='all'
           >
             <SelectTrigger className='w-[180px]'>
@@ -277,6 +294,11 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
               <SelectItem value='ferdig'>Ferdig</SelectItem>
             </SelectContent>
           </Select>
+
+          <Button onClick={resetFilters} variant='outline' size='sm' className='cursor-pointer'>
+            Nullstill
+            <RotateCcw />
+          </Button>
         </div>
 
         <div className='rounded border'>
