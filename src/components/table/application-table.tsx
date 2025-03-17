@@ -242,6 +242,7 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
 
     setSchoolFilter('all');
     setStatusFilter('all');
+    setSorting([]);
   }
 
   return (
