@@ -185,7 +185,7 @@ const columns: ColumnDef<ApplicationWithStudentsAndReviews>[] = [
           href={`/soknader/${application.id.toString()}`}
           className='group flex cursor-pointer items-center justify-center'
         >
-          <BookOpenText className='hover:text-primary h-6 w-6' />
+          <BookOpenText className='group-hover:text-primary h-6 w-6' />
         </Link>
       );
     },
@@ -226,6 +226,10 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
     },
   });
 
+  function getLink(row: ApplicationWithStudentsAndReviews) {
+    return `/soknader/${row.id.toString()}`;
+  }
+
   return (
     <Card className='h-full flex-col'>
       <CardHeader>
@@ -258,7 +262,12 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
             <TableBody>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                  <TableRow
+                    onClick={() => (window.location.href = getLink(row.original))}
+                    key={row.id}
+                    data-state={row.getIsSelected() && 'selected'}
+                    className='group hover:bg-muted/50 cursor-pointer'
+                  >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
