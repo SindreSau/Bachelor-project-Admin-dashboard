@@ -308,7 +308,7 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
 
           <Select
             value={schoolFilter}
-            onValueChange={(value) => {
+            onValueChange={(value: React.SetStateAction<string>) => {
               setSchoolFilter(value);
               table.getColumn('school')?.setFilterValue(value === 'all' ? undefined : value);
             }}
@@ -326,7 +326,7 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
 
           <Select
             value={statusFilter}
-            onValueChange={(value) => {
+            onValueChange={(value: React.SetStateAction<string>) => {
               setStatusFilter(value);
               table.getColumn('statusText')?.setFilterValue(value === 'all' ? undefined : value);
             }}
@@ -345,7 +345,7 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
 
           <Select
             value={ratingFilter}
-            onValueChange={(value) => {
+            onValueChange={(value: React.SetStateAction<string>) => {
               setRatingFilter(value);
               table.getColumn('rating')?.setFilterValue(value === 'all' ? undefined : value);
             }}
