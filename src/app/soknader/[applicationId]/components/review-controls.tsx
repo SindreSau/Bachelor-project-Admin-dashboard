@@ -18,9 +18,10 @@ const REVIEW_TYPES = [
 interface ReviewControlsProps {
   applicationId: number;
   applicationReviews: Review[];
+  readOnly: boolean;
 }
 
-const ReviewControls = ({ applicationId, applicationReviews }: ReviewControlsProps) => {
+const ReviewControls = ({ applicationId, applicationReviews, readOnly }: ReviewControlsProps) => {
   const { user, isLoading } = useKindeBrowserClient();
   const currentUserId = user?.id || '';
   const currentUserName = user?.given_name || '';
@@ -137,25 +138,43 @@ const ReviewControls = ({ applicationId, applicationReviews }: ReviewControlsPro
             return (
               <Tooltip key={value} delayDuration={500}>
                 <TooltipTrigger asChild>
-                  <Button
-                    size='sm'
-                    variant={isSelected ? 'default' : 'outline'}
-                    onClick={() => handleReviewClick(reviewValue)}
-                    disabled={isPending || isLoading}
-                    className='relative h-8 w-8 cursor-pointer p-0 disabled:cursor-not-allowed'
-                    aria-label={`Vote ${value.toLowerCase().replace('_', ' ')}`}
-                  >
-                    <Icon className='h-4 w-4' />
-                    {count > 0 && (
-                      <span
-                        className={`absolute -top-2 -right-2 ${
-                          isSelected ? 'text-primary bg-white' : 'bg-primary text-white'
-                        } flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold`}
-                      >
-                        {count}
-                      </span>
-                    )}
-                  </Button>
+                  {!readOnly ? (
+                    <Button
+                      size='sm'
+                      variant={isSelected ? 'default' : 'outline'}
+                      onClick={() => handleReviewClick(reviewValue)}
+                      disabled={isPending || isLoading}
+                      className='relative h-8 w-8 cursor-pointer p-0 disabled:cursor-not-allowed'
+                      aria-label={`Vote ${value.toLowerCase().replace('_', ' ')}`}
+                    >
+                      <Icon className='h-4 w-4' />
+                      {count > 0 && (
+                        <span
+                          className={`absolute -top-2 -right-2 ${isSelected ? 'text-primary bg-white' : 'bg-primary text-white'
+                            } flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold`}
+                        >
+                          {count}
+                        </span>
+                      )}
+                    </Button>
+                  ) : (
+                    <div
+                      className={`relative flex h-8 w-8 items-center justify-center rounded-md border p-0 ${isSelected
+                          ? 'bg-primary text-primary-foreground'
+                          : 'text-muted-foreground bg-transparent'
+                        }`}
+                    >
+                      <Icon className='h-4 w-4' />
+                      {count > 0 && (
+                        <span
+                          className={`absolute -top-2 -right-2 ${isSelected ? 'text-primary bg-white' : 'bg-primary text-white'
+                            } flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold`}
+                        >
+                          {count}
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </TooltipTrigger>
                 {shouldShowTooltip && (
                   <TooltipContent side='bottom' className='max-w-none p-2'>

@@ -11,7 +11,16 @@ import {
   getFilteredRowModel,
   useReactTable,
 } from '@tanstack/react-table';
-import { ArrowUpDown, ArrowUp, ArrowDown, BookOpenText, RotateCcw } from 'lucide-react';
+import {
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
+  BookOpenText,
+  RotateCcw,
+  ThumbsDown,
+  ThumbsUp,
+  Star,
+} from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -28,6 +37,7 @@ import { concatGroupName } from '@/lib/utils';
 import Link from 'next/link';
 import getApplicationStatus from '@/utils/applications/get-application-status';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import ReviewControls from '@/app/soknader/[applicationId]/components/review-controls';
 
 type ApplicationWithStudentsAndReviews = Application & {
   students: Student[];
@@ -178,6 +188,39 @@ const columns: ColumnDef<ApplicationWithStudentsAndReviews>[] = [
     },
   },
   {
+    accessorKey: 'rating',
+    header: ({ column }) => {
+      const sortDirection = column.getIsSorted();
+      return (
+        <Button
+          variant='ghost'
+          onClick={() => column.toggleSorting(sortDirection === 'asc')}
+          className='px-0 hover:bg-transparent'
+        >
+          Vurdering
+          {sortDirection === 'asc' ? (
+            <ArrowUp className='ml-2 h-4 w-4' />
+          ) : sortDirection === 'desc' ? (
+            <ArrowDown className='ml-2 h-4 w-4' />
+          ) : (
+            <ArrowUpDown className='ml-2 h-4 w-4' />
+          )}
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const application: ApplicationWithStudentsAndReviews = row.original;
+      const reviews = application.reviews || [];
+      return (
+        <ReviewControls
+          applicationId={application.id}
+          applicationReviews={reviews}
+          readOnly={true}
+        />
+      );
+    },
+  },
+  {
     id: 'actions',
     cell: ({ row }) => {
       const application = row.original;
@@ -200,11 +243,13 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
       applications.map((app) => {
         const reviews = app.reviews || [];
         const status = getApplicationStatus(reviews);
+        const rating = reviews.length > 0 ? reviews[0].review : null;
 
         return {
           ...app,
           groupName: concatGroupName(app.students), // Add this for sorting
-          statusText: status.text, // Add the status text as a direct property for sorting
+          statusText: status.text,
+          rating, // Add the status text as a direct property for sorting
         };
       }),
     [applications]
@@ -214,6 +259,7 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [schoolFilter, setSchoolFilter] = React.useState<string>('all');
   const [statusFilter, setStatusFilter] = React.useState<string>('all');
+  const [ratingFilter, setRatingFilter] = React.useState<string>('all');
 
   const table = useReactTable({
     data: processedApplications,
@@ -242,6 +288,7 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
 
     setSchoolFilter('all');
     setStatusFilter('all');
+    setRatingFilter('all');
     setSorting([]);
   }
 
@@ -296,6 +343,31 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
             </SelectContent>
           </Select>
 
+          <Select
+            value={ratingFilter}
+            onValueChange={(value) => {
+              setRatingFilter(value);
+              table.getColumn('rating')?.setFilterValue(value === 'all' ? undefined : value);
+            }}
+            defaultValue='all'
+          >
+            <SelectTrigger className='w-[180px]'>
+              <SelectValue placeholder='Vurderinger' />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value='all'>Alle vurderinger</SelectItem>
+              <SelectItem value='THUMBS_DOWN'>
+                <ThumbsDown />
+              </SelectItem>
+              <SelectItem value='THUMBS_UP'>
+                <ThumbsUp />
+              </SelectItem>
+              <SelectItem value='STAR'>
+                <Star />
+              </SelectItem>
+            </SelectContent>
+          </Select>
+
           <Button onClick={resetFilters} variant='outline' size='sm' className='cursor-pointer'>
             Nullstill
             <RotateCcw />
@@ -321,7 +393,9 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
                   <TableRow
-                    onClick={() => (window.location.href = getLink(row.original))}
+                    onClick={() => {
+                      window.location.href = getLink(row.original);
+                    }}
                     key={row.id}
                     data-state={row.getIsSelected() && 'selected'}
                     className='group hover:bg-muted/50 cursor-pointer'

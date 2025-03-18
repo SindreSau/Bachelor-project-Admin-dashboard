@@ -71,6 +71,7 @@ const ApplicationDetailsCard = ({
               <ReviewControls
                 applicationId={applicationId}
                 applicationReviews={applicationReviews}
+                readOnly={false}
               />
             </div>
           </div>
