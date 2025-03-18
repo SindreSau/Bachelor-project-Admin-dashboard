@@ -1,7 +1,7 @@
 'use server';
 
 import { db } from '@/lib/prisma';
-import { withRequestLogger, RequestLogger } from '@/lib/logger';
+import { withRequestLogger, RequestLogger } from '@/lib/logger.server';
 import { Application, Student, Review } from '@prisma/client';
 
 // Define return type for the function
@@ -14,8 +14,6 @@ type ApplicationWithRelations = Application & {
 const getAllApplications = withRequestLogger<ApplicationWithRelations[], []>(
   async (logger: RequestLogger): Promise<ApplicationWithRelations[]> => {
     try {
-      logger.info({}, 'Fetching all applications');
-
       const applications = await db.application.findMany({
         include: {
           students: true,
@@ -26,7 +24,7 @@ const getAllApplications = withRequestLogger<ApplicationWithRelations[], []>(
         },
       });
 
-      logger.info({ count: applications.length }, 'Successfully fetched all applications');
+      logger.info({ count: applications.length }, 'Fetched all applications');
       return applications;
     } catch (error) {
       const errorObject: {
