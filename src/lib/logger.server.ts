@@ -1,4 +1,4 @@
-// lib/logger.ts
+// lib/logger.server.ts
 import pino, { Logger } from 'pino';
 import { RequestContext } from '../utils/request-context';
 
@@ -29,12 +29,30 @@ const baseLogger: Logger = pino({
           options: {
             colorize: true,
             translateTime: 'SYS:standard',
+            // Customize format to put important info first
+            messageFormat: '{msg} [id={requestId}]',
+            // Remove noisy fields from pretty output
+            ignore: 'pid,hostname',
           },
         }
       : undefined,
+  // Convert numeric time to ISO string
+  formatters: {
+    level(label) {
+      return { level: label };
+    },
+    // Format time as a string
+    log(object) {
+      // Convert numeric timestamps to readable format
+      if (object.time && typeof object.time === 'number') {
+        object.time = new Date(object.time).toISOString();
+      }
+      return object;
+    },
+  },
 });
 
-// Export the default logger for non-request contexts
+// Export the default logger
 export const logger: RequestLogger = baseLogger as RequestLogger;
 
 // Function types for the withRequestLogger wrapper
@@ -57,11 +75,25 @@ export function withRequestLogger<T, Args extends unknown[]>(
 
     try {
       return await fn(requestLogger, ...args);
-    } catch (error) {
+    } catch (error: unknown) {
       const errorObject: ErrorObject = {
         message: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
       };
+
+      // Add code if available (type guard for objects with code property)
+      if (
+        error !== null &&
+        typeof error === 'object' &&
+        'code' in error &&
+        typeof error.code === 'string'
+      ) {
+        errorObject.code = error.code;
+      }
+
+      // Only add stack trace in development
+      if (process.env.NODE_ENV !== 'production' && error instanceof Error && error.stack) {
+        errorObject.stack = error.stack;
+      }
 
       requestLogger.error({ error: errorObject }, 'Error in request handler');
       throw error;

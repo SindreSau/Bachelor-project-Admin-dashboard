@@ -60,6 +60,7 @@ const ApplicationStudentsGrid = ({ students, studentRepresentativeId }: Students
                     <ScrollBar orientation='horizontal' />
                   </ScrollArea>
                 </div>
+
                 <div className='mt-auto flex items-end gap-2'>
                   {student.files.map((file: File) => {
                     const isLoading = loadingFiles[file.id] || false;
