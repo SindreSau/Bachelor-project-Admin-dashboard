@@ -60,10 +60,12 @@ export const addComment = withRequestLogger<CommentResponse, [CommentData]>(
       // Log success
       logger.info(
         {
-          action: 'addComment',
-          applicationId,
-          userId: kindeUserId,
-          commentId: comment.id,
+          details: {
+            action: 'addComment',
+            applicationId,
+            userId: kindeUserId,
+            commentId: comment.id,
+          },
         },
         'Comment added successfully'
       );
@@ -128,9 +130,7 @@ export const deleteComment = withRequestLogger<DeleteRestoreResponse, [number]>(
       // Log success
       logger.info(
         {
-          action: 'deleteComment',
-          commentId,
-          applicationId: comment.applicationId,
+          details: { action: 'deleteComment', commentId, applicationId: comment.applicationId },
         },
         'Comment deleted successfully'
       );
@@ -185,9 +185,7 @@ export const restoreComment = withRequestLogger<DeleteRestoreResponse, [number]>
       // Log success
       logger.info(
         {
-          action: 'restoreComment',
-          commentId,
-          applicationId: comment.applicationId,
+          details: { action: 'restoreComment', commentId, applicationId: comment.applicationId },
         },
         'Comment restored successfully'
       );

@@ -24,8 +24,15 @@ const getAllApplications = withRequestLogger<ApplicationWithRelations[], []>(
         },
       });
 
-      const applicationsDetails = { count: applications.length };
-      logger.info(applicationsDetails, 'Fetched all applications');
+      logger.info(
+        {
+          details: {
+            count: applications.length,
+            includes: ['students', 'reviews'],
+          },
+        },
+        'Fetched all applications'
+      );
       return applications;
     } catch (error) {
       const errorObject: {

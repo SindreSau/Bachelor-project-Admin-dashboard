@@ -62,7 +62,7 @@ export const getOneApplication = withRequestLogger<ApplicationWithRelations | nu
       // Log success with useful metrics
       logger.info(
         {
-          applicationDetails: {
+          details: {
             action: 'getOneApplication',
             applicationId,
             studentsCount: applicationWithSortedTasks.students.length,
