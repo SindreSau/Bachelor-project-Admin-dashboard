@@ -25,7 +25,7 @@ const ApplicationComments = ({
   const hasComments = comments && comments.length > 0;
 
   return (
-    <Card className='flex h-full w-full flex-col'>
+    <Card className='flex h-full w-full flex-col justify-between'>
       <CardHeader className='flex-none'>
         <CardTitle className='text-lg font-normal'>
           Kommentarer ({hasComments ? comments.length : 0})
