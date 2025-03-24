@@ -1,11 +1,20 @@
-// actions/applications/get-all-applications.ts
 'use server';
-import { db } from '@/lib/prisma';
 
-export default async function getAllApplications() {
-  try {
-    const applications = await db.application
-      .findMany({
+import { db } from '@/lib/prisma';
+import { withRequestLogger, RequestLogger } from '@/lib/logger.server';
+import { Application, Student, Review } from '@prisma/client';
+
+// Define return type for the function
+type ApplicationWithRelations = Application & {
+  students: Student[];
+  reviews: Review[];
+};
+
+// Wrap the function with our logger middleware
+const getAllApplications = withRequestLogger<ApplicationWithRelations[], []>(
+  async (logger: RequestLogger): Promise<ApplicationWithRelations[]> => {
+    try {
+      const applications = await db.application.findMany({
         include: {
           students: true,
           reviews: true,
@@ -13,16 +22,28 @@ export default async function getAllApplications() {
         orderBy: {
           createdAt: 'desc',
         },
-      })
-      .catch((err) => {
-        console.error('Database query failed:', err);
-        return [];
       });
 
-    return applications;
-  } catch (error) {
-    console.error('Database error:', error);
-    // Return empty array instead of failing
-    return [];
+      logger.info({ count: applications.length }, 'Fetched all applications');
+      return applications;
+    } catch (error) {
+      const errorObject: {
+        message: string;
+        code?: string;
+        stack?: string;
+      } = {
+        message: error instanceof Error ? error.message : String(error),
+        code: (error as { code?: string })?.code,
+        stack:
+          process.env.NODE_ENV !== 'production' && error instanceof Error ? error.stack : undefined,
+      };
+
+      logger.error({ error: errorObject }, 'Failed to fetch applications');
+
+      // Return empty array instead of failing
+      return [];
+    }
   }
-}
+);
+
+export default getAllApplications;

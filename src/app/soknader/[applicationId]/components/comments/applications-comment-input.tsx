@@ -87,7 +87,7 @@ const CommentInputField = ({ applicationId, user, maxLength = 400 }: CommentInpu
         <Button
           type='submit'
           disabled={isSubmitting || isOverLimit || !comment.trim()}
-          className='w-full'
+          className='w-full cursor-pointer'
         >
           {isSubmitting ? 'Sender...' : 'Send kommentar'}
         </Button>
