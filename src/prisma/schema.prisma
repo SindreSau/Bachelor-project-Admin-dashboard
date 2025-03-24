@@ -48,6 +48,7 @@ model Application {
   comments                Comment[]
   studentRepresentative   Student?  @relation(fields: [studentRepresentativeId], references: [id])
   studentRepresentativeId Int?
+  status                  String    @default("Ikke påbegynt")
 }
 
 model Task {

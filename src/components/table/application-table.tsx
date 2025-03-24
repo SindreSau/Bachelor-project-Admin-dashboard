@@ -111,9 +111,9 @@ const columns: ColumnDef<ApplicationWithStudentsAndReviews>[] = [
     },
     cell: ({ row }) => {
       const application = row.original;
-      const reviews = application.reviews || [];
-      const status = getApplicationStatus(reviews);
-      return <span className={status.className}>{status.text}</span>;
+      //const reviews = application.reviews || [];
+      const status = application.status;
+      return <span>{status}</span>;
     },
   },
   {
@@ -193,22 +193,28 @@ const columns: ColumnDef<ApplicationWithStudentsAndReviews>[] = [
 ];
 
 const ApplicationTable = ({ applications }: ApplicationViewProps) => {
-  // Pre-process applications to add the derived values for sorting
-  const processedApplications = React.useMemo(
-    () =>
-      applications.map((app) => {
-        const reviews = app.reviews || [];
-        const status = getApplicationStatus(reviews);
+  const [processedApplications, setProcessedApplications] = React.useState<
+    ApplicationWithStudentsAndReviews[]
+  >([]);
 
-        return {
-          ...app,
-          groupName: concatGroupName(app.students), // Add this for sorting
-          statusText: status.text, // Add the status text as a direct property for sorting
-        };
-      }),
-    [applications]
-  );
+  // Fetch application statuses and process applications
+  React.useEffect(() => {
+    const fetchStatuses = async () => {
+      const updatedApplications = await Promise.all(
+        applications.map(async (app) => {
+          const status = await getApplicationStatus(app.id); // Fetch status for each application
+          return {
+            ...app,
+            groupName: concatGroupName(app.students), // Add this for sorting
+            statusText: status, // Add the status text as a direct property for sorting
+          };
+        })
+      );
+      setProcessedApplications(updatedApplications); // Update state with processed applications
+    };
 
+    fetchStatuses();
+  }, [applications]); // Re-run if `applications` changes
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 

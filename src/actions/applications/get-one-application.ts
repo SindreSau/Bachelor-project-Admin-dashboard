@@ -12,7 +12,6 @@ export async function getOneApplication(applicationId: number) {
       },
       studentRepresentative: true,
       reviews: true,
-
       tasks: true,
       comments: {
         where: {

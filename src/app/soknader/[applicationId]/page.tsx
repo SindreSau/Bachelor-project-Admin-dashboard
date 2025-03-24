@@ -35,6 +35,7 @@ export default async function ApplicationPage({
         createdAt={application.createdAt || new Date()}
         updatedAt={application.updatedAt || new Date()}
         applicationReviews={application.reviews || []}
+        applicationStatus={application.status || ''}
       />
 
       {/* Main content area with ResizablePanelGroup for larger screens */}
@@ -51,11 +52,11 @@ export default async function ApplicationPage({
             currentUser={
               user
                 ? {
-                    id: user.id,
-                    given_name: user.given_name || '',
-                    family_name: user.family_name || '',
-                    picture: user.picture || '',
-                  }
+                  id: user.id,
+                  given_name: user.given_name || '',
+                  family_name: user.family_name || '',
+                  picture: user.picture || '',
+                }
                 : undefined
             }
           />
@@ -85,11 +86,11 @@ export default async function ApplicationPage({
                   currentUser={
                     user
                       ? {
-                          id: user.id,
-                          given_name: user.given_name || '',
-                          family_name: user.family_name || '',
-                          picture: user.picture || '',
-                        }
+                        id: user.id,
+                        given_name: user.given_name || '',
+                        family_name: user.family_name || '',
+                        picture: user.picture || '',
+                      }
                       : undefined
                   }
                 />
