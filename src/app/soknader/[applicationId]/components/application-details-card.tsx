@@ -8,7 +8,6 @@ import getApplicationStatus from '@/utils/applications/get-application-status';
 import setApplicationStatus from '@/utils/applications/set-application-status';
 import ReviewControls from './review-controls';
 import { Button } from '@/components/ui/button';
-import { ArrowDown, Edit, Pencil } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -17,6 +16,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
+import StatusBadge from '@/components/table/status-badge';
 
 interface ApplicationDetailsCardProps {
   applicationId: number;
@@ -38,6 +38,7 @@ const ApplicationDetailsCard = ({
   applicationStatus: initialStatus,
 }: ApplicationDetailsCardProps) => {
   const [applicationStatus, setApplicationStatusState] = useState(initialStatus);
+  const [isOpen, setIsOpen] = useState(false);
 
   // Format date with a reusable function
   const formatDate = (date: Date) => {
@@ -84,12 +85,11 @@ const ApplicationDetailsCard = ({
                   <p className='text-muted-foreground text-sm font-medium'>{item.label}</p>
                   {item.onClick ? (
                     <div className='flex items-center'>
-                      <p className={`text-sm`}>{item.value}</p>
-                      <DropdownMenu>
+                      <DropdownMenu onOpenChange={(open) => setIsOpen(open)}>
                         <DropdownMenuTrigger asChild>
-                          <Button variant='ghost' size='sm' className='h-8 w-8 cursor-pointer p-0'>
-                            <Edit className='h-4 w-4' />
-                          </Button>
+                          <div className='cursor-pointer'>
+                            <StatusBadge status={item.value} icon={isOpen ? 'close' : 'open'} />
+                          </div>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
                           <DropdownMenuLabel>Endre status</DropdownMenuLabel>

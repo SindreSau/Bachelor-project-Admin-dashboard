@@ -38,6 +38,8 @@ import Link from 'next/link';
 import getApplicationStatus from '@/utils/applications/get-application-status';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import ReviewControls from '@/app/soknader/[applicationId]/components/review-controls';
+import { Badge } from '../ui/badge';
+import StatusBadge from './status-badge';
 
 type ApplicationWithStudentsAndReviews = Application & {
   students: Student[];
@@ -124,7 +126,7 @@ const columns: ColumnDef<ApplicationWithStudentsAndReviews>[] = [
       const application = row.original;
       //const reviews = application.reviews || [];
       const status = application.status;
-      return <span>{status}</span>;
+      return <StatusBadge status={status} />;
     },
   },
   {
@@ -259,6 +261,7 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
 
     fetchStatuses();
   }, [applications]); // Re-run if `applications` changes
+
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [schoolFilter, setSchoolFilter] = React.useState<string>('all');
