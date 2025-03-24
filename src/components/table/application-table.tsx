@@ -40,6 +40,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import ReviewControls from '@/app/soknader/[applicationId]/components/review-controls';
 import { Badge } from '../ui/badge';
 import StatusBadge from './status-badge';
+import { STATUS_OPTIONS } from '@/lib/constants';
 
 type ApplicationWithStudentsAndReviews = Application & {
   students: Student[];
@@ -344,9 +345,13 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value='all'>Alle statuser</SelectItem>
-              <SelectItem value='ikke begynt'>Ikke begynt</SelectItem>
-              <SelectItem value='påbegynt'>Påbegynt</SelectItem>
-              <SelectItem value='ferdig'>Ferdig</SelectItem>
+              {Object.entries(STATUS_OPTIONS).map(([key, status]) => (
+                <div key={key}>
+                  <SelectItem key={key} value={status}>
+                    {status}
+                  </SelectItem>
+                </div>
+              ))}
             </SelectContent>
           </Select>
 

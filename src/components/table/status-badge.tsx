@@ -5,9 +5,8 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 
 export default function StatusBadge({ status, icon }: { status: string, icon?: string }) {
   const statusColor: { [key: string]: string } = {
-    'Avslag sendt': 'bg-destructive/70 hover:bg-destructive/30',
-    'Takket nei': 'bg-destructive/70 hover:bg-destructive/30',
-    'Ikke påbegynt': 'bg-gray-500 hover:bg-gray-400',
+    'Avslag': 'bg-destructive/70 hover:bg-destructive/30',
+    'Ikke begynt': 'bg-gray-500 hover:bg-gray-400',
     'Påbegynt': 'bg-warning/80 hover:bg-warning/70',
     'Kalles inn til intervju': 'bg-warning/80 hover:bg-warning/70',
     'Intervju satt opp': 'bg-warning/80 hover:bg-warning/70',

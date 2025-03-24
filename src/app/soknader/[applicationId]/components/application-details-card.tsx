@@ -17,6 +17,7 @@ import {
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
 import StatusBadge from '@/components/table/status-badge';
+import { STATUS_OPTIONS } from '@/lib/constants';
 
 interface ApplicationDetailsCardProps {
   applicationId: number;
@@ -94,25 +95,11 @@ const ApplicationDetailsCard = ({
                         <DropdownMenuContent>
                           <DropdownMenuLabel>Endre status</DropdownMenuLabel>
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            onClick={() => handleStatusChange('Innkalt til intervju')}
-                          >
-                            Innkalt til intervju
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => handleStatusChange('Intervju gjennomført')}
-                          >
-                            Intervju gjennomført
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleStatusChange('Tilbud gitt')}>
-                            Tilbud gitt
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleStatusChange('Takket nei')}>
-                            Takket nei
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleStatusChange('Avslag sendt')}>
-                            Avslag sendt
-                          </DropdownMenuItem>
+                          {Object.entries(STATUS_OPTIONS).map(([key, status]) => (
+                            <DropdownMenuItem key={key} onClick={() => handleStatusChange(status)}>
+                              {status}
+                            </DropdownMenuItem>
+                          ))}
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
