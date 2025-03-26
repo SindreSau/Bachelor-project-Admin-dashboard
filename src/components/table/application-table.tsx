@@ -10,6 +10,7 @@ import {
   getSortedRowModel,
   getFilteredRowModel,
   useReactTable,
+  filterFns,
 } from '@tanstack/react-table';
 import {
   ArrowUpDown,
@@ -50,6 +51,17 @@ type ApplicationWithStudentsAndReviews = Application & {
 interface ApplicationViewProps {
   applications: ApplicationWithStudentsAndReviews[];
 }
+
+const exactMatchFilter: FilterFn<ApplicationWithStudentsAndReviews> = (
+  row,
+  columnId,
+  filterValue
+) => {
+  if (filterValue === undefined || filterValue === null || filterValue === '') return true;
+
+  const value = row.getValue(columnId) as string;
+  return value === filterValue;
+};
 
 // Define column structure for tanstack/react-table
 const columns: ColumnDef<ApplicationWithStudentsAndReviews>[] = [
@@ -129,7 +141,9 @@ const columns: ColumnDef<ApplicationWithStudentsAndReviews>[] = [
       const status = application.status;
       return <StatusBadge status={status} />;
     },
+    filterFn: exactMatchFilter,
   },
+
   {
     accessorKey: 'createdAt',
     header: ({ column }) => {
@@ -277,6 +291,9 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    filterFns: {
+      exactMatch: exactMatchFilter,
+    },
     state: {
       sorting,
       columnFilters,
