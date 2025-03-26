@@ -7,10 +7,10 @@ import {
   ColumnFiltersState,
   flexRender,
   getCoreRowModel,
+  FilterFn,
   getSortedRowModel,
   getFilteredRowModel,
   useReactTable,
-  filterFns,
 } from '@tanstack/react-table';
 import {
   ArrowUpDown,
