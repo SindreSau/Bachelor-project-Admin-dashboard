@@ -159,9 +159,7 @@ const ReviewControls = ({ applicationId, applicationReviews, readOnly }: ReviewC
                       )}
                     </Button>
                   ) : (
-                    <div
-                      className={`relative flex h-8 w-8 items-center justify-center rounded-md border p-0 ${
-                        isSelected
+                    <div className={`relative flex h-8 w-8 items-center justify-center rounded-md p-0 ${isSelected
                           ? 'bg-primary text-primary-foreground'
                           : 'text-muted-foreground bg-transparent'
                       }`}

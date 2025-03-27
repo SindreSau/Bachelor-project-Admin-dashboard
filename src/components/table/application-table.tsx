@@ -7,6 +7,7 @@ import {
   ColumnFiltersState,
   flexRender,
   getCoreRowModel,
+  FilterFn,
   getSortedRowModel,
   getFilteredRowModel,
   useReactTable,
@@ -38,6 +39,9 @@ import Link from 'next/link';
 import getApplicationStatus from '@/utils/applications/get-application-status';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import ReviewControls from '@/app/soknader/[applicationId]/components/review-controls';
+import { Badge } from '../ui/badge';
+import StatusBadge from './status-badge';
+import { STATUS_OPTIONS } from '@/lib/constants';
 
 type ApplicationWithStudentsAndReviews = Application & {
   students: Student[];
@@ -47,6 +51,17 @@ type ApplicationWithStudentsAndReviews = Application & {
 interface ApplicationViewProps {
   applications: ApplicationWithStudentsAndReviews[];
 }
+
+const exactMatchFilter: FilterFn<ApplicationWithStudentsAndReviews> = (
+  row,
+  columnId,
+  filterValue
+) => {
+  if (filterValue === undefined || filterValue === null || filterValue === '') return true;
+
+  const value = row.getValue(columnId) as string;
+  return value === filterValue;
+};
 
 // Define column structure for tanstack/react-table
 const columns: ColumnDef<ApplicationWithStudentsAndReviews>[] = [
@@ -122,11 +137,13 @@ const columns: ColumnDef<ApplicationWithStudentsAndReviews>[] = [
     },
     cell: ({ row }) => {
       const application = row.original;
-      const reviews = application.reviews || [];
-      const status = getApplicationStatus(reviews);
-      return <span className={status.className}>{status.text}</span>;
+      //const reviews = application.reviews || [];
+      const status = application.status;
+      return <StatusBadge status={status} />;
     },
+    filterFn: exactMatchFilter,
   },
+
   {
     accessorKey: 'createdAt',
     header: ({ column }) => {
@@ -237,23 +254,28 @@ const columns: ColumnDef<ApplicationWithStudentsAndReviews>[] = [
 ];
 
 const ApplicationTable = ({ applications }: ApplicationViewProps) => {
-  // Pre-process applications to add the derived values for sorting
-  const processedApplications = React.useMemo(
-    () =>
-      applications.map((app) => {
-        const reviews = app.reviews || [];
-        const status = getApplicationStatus(reviews);
-        const rating = reviews.length > 0 ? reviews[0].review : null;
+  const [processedApplications, setProcessedApplications] = React.useState<
+    ApplicationWithStudentsAndReviews[]
+  >([]);
 
-        return {
-          ...app,
-          groupName: concatGroupName(app.students), // Add this for sorting
-          statusText: status.text,
-          rating, // Add the status text as a direct property for sorting
-        };
-      }),
-    [applications]
-  );
+  // Fetch application statuses and process applications
+  React.useEffect(() => {
+    const fetchStatuses = async () => {
+      const updatedApplications = await Promise.all(
+        applications.map(async (app) => {
+          const status = await getApplicationStatus(app.id); // Fetch status for each application
+          return {
+            ...app,
+            groupName: concatGroupName(app.students), // Add this for sorting
+            statusText: status, // Add the status text as a direct property for sorting
+          };
+        })
+      );
+      setProcessedApplications(updatedApplications); // Update state with processed applications
+    };
+
+    fetchStatuses();
+  }, [applications]); // Re-run if `applications` changes
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -269,6 +291,9 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    filterFns: {
+      exactMatch: exactMatchFilter,
+    },
     state: {
       sorting,
       columnFilters,
@@ -337,9 +362,13 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value='all'>Alle statuser</SelectItem>
-              <SelectItem value='ikke begynt'>Ikke begynt</SelectItem>
-              <SelectItem value='påbegynt'>Påbegynt</SelectItem>
-              <SelectItem value='ferdig'>Ferdig</SelectItem>
+              {Object.entries(STATUS_OPTIONS).map(([key, status]) => (
+                <div key={key}>
+                  <SelectItem key={key} value={status}>
+                    {status}
+                  </SelectItem>
+                </div>
+              ))}
             </SelectContent>
           </Select>
 
