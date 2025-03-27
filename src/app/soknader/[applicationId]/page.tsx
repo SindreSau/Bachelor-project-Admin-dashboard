@@ -52,11 +52,11 @@ export default async function ApplicationPage({
             currentUser={
               user
                 ? {
-                  id: user.id,
-                  given_name: user.given_name || '',
-                  family_name: user.family_name || '',
-                  picture: user.picture || '',
-                }
+                    id: user.id,
+                    given_name: user.given_name || '',
+                    family_name: user.family_name || '',
+                    picture: user.picture || '',
+                  }
                 : undefined
             }
           />
@@ -86,11 +86,11 @@ export default async function ApplicationPage({
                   currentUser={
                     user
                       ? {
-                        id: user.id,
-                        given_name: user.given_name || '',
-                        family_name: user.family_name || '',
-                        picture: user.picture || '',
-                      }
+                          id: user.id,
+                          given_name: user.given_name || '',
+                          family_name: user.family_name || '',
+                          picture: user.picture || '',
+                        }
                       : undefined
                   }
                 />

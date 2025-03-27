@@ -1,13 +1,11 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Review } from '@prisma/client';
-import getApplicationStatus from '@/utils/applications/get-application-status';
 import setApplicationStatus from '@/utils/applications/set-application-status';
 import ReviewControls from './review-controls';
-import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
