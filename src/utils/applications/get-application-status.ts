@@ -7,7 +7,6 @@ const getApplicationStatus = async (applicationId: number) => {
     where: { id: applicationId },
   });
 
-  console.log(`Application ${applicationId} status is ${application?.status}`);
   return application?.status;
 };
 
