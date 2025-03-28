@@ -22,8 +22,8 @@ export interface MinimalTiptapProps extends Omit<UseMinimalTiptapEditorProps, 'o
   editorContentClassName?: string;
 }
 
-const Toolbar = ({ editor }: { editor: Editor }) => (
-  <div className='border-border shrink-0 overflow-x-auto border-b p-2'>
+const Toolbar = ({ editor, className }: { editor: Editor; className?: string }) => (
+  <div className={cn('border-border shrink-0 overflow-x-auto border-b p-2', className)}>
     <div className='flex w-max items-center gap-px'>
       <SectionOne editor={editor} activeLevels={[1, 2, 3, 4, 5, 6]} />
 
@@ -70,20 +70,30 @@ export const MinimalTiptapEditor = React.forwardRef<HTMLDivElement, MinimalTipta
       return null;
     }
 
+    const handleEditorClick = (e: React.MouseEvent) => {
+      const isToolbarClick = (e.target as HTMLElement).closest('.tiptap-toolbar');
+
+      if (editor && !editor.isFocused && !isToolbarClick) {
+        editor.commands.focus('end');
+      }
+    };
+
     return (
       <MeasuredContainer
         as='div'
         name='editor'
         ref={ref}
         className={cn(
-          'border-input focus-within:border-primary flex h-auto min-h-72 w-full flex-col rounded-md border shadow-sm',
+          'border-input focus-within:border-primary flex h-auto min-h-72 w-full cursor-text flex-col rounded-md border shadow-sm',
           className
         )}
+        onClick={handleEditorClick}
       >
-        <Toolbar editor={editor} />
+        <Toolbar editor={editor} className='tiptap-toolbar' />
         <EditorContent
           editor={editor}
-          className={cn('minimal-tiptap-editor', editorContentClassName)}
+          className={cn('minimal-tiptap-editor flex-grow cursor-text', editorContentClassName)}
+          onClick={handleEditorClick}
         />
         <LinkBubbleMenu editor={editor} />
       </MeasuredContainer>
