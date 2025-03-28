@@ -123,7 +123,7 @@ const CreateTaskForm = () => {
                         const htmlString = typeof newContent === 'string' ? newContent : '';
                         field.onChange(htmlString);
                       }}
-                      className='w-full'
+                      className='bg-background w-full'
                       editorContentClassName='p-4 min-h-[150px]'
                       output='html'
                       placeholder='Beskrivelse av oppgaven...'
