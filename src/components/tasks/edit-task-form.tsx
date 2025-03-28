@@ -15,7 +15,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '../ui/textarea';
 import { Task } from '@prisma/client';
 import { updateTask } from '@/actions/tasks/update-task';
 import { useRouter } from 'next/navigation';

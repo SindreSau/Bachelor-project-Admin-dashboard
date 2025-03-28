@@ -73,7 +73,7 @@ const TaskCard = ({ task }: { task: TaskWithApplicationCount }) => {
         <ScrollArea className=''>
           {task.taskDescription ? (
             <div
-              className='text-muted-foreground prose prose-sm max-w-none text-sm'
+              className='text-muted-foreground prose prose-sm max-w-none space-y-4 text-sm'
               dangerouslySetInnerHTML={{ __html: task.taskDescription }}
             />
           ) : (
