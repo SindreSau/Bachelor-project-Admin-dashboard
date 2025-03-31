@@ -47,13 +47,13 @@ const Toolbar = ({ editor, className }: { editor: Editor; className?: string }) 
         mainActionCount={0}
       />
 
-      <Separator orientation='vertical' className='mx-2 h-7' />
+      {/* <Separator orientation='vertical' className='mx-2 h-7' /> */}
 
-      <SectionFive
+      {/* <SectionFive
         editor={editor}
         activeActions={['codeBlock', 'blockquote', 'horizontalRule']}
         mainActionCount={0}
-      />
+      /> */}
     </div>
   </div>
 );
