@@ -3,6 +3,7 @@ import { ApplicationData } from '@/app/api/applications/route';
 import { DocumentType } from '@prisma/client';
 import { withRequestLogger, RequestLogger } from '@/lib/logger.server';
 import { db } from '@/lib/prisma';
+import { sendConfirmationEmail } from '../email/send-email';
 
 const submitApplication = withRequestLogger<
   { success: boolean; message: string },
@@ -13,6 +14,7 @@ const submitApplication = withRequestLogger<
     applicationData: ApplicationData
   ): Promise<{ success: boolean; message: string }> => {
     try {
+      throw new Error('Test error'); // For testing error handling
       // Using a transaction to ensure all operations succeed or fail together
       await db.$transaction(async (tx) => {
         // 1. Process all students in the array (handles any number of students)
@@ -94,6 +96,26 @@ const submitApplication = withRequestLogger<
             },
           },
           'Application submitted successfully'
+        );
+
+        // Send confirmation email
+        const { data, error } = await sendConfirmationEmail(
+          applicationData.students[0].email,
+          applicationData.students[0].firstName
+        );
+        if (error) {
+          throw new Error('Failed to send confirmation email');
+        }
+        logger.info(
+          {
+            details: {
+              action: 'sendConfirmationEmail',
+              data: data,
+              email: applicationData.students[0].email,
+              studentName: applicationData.students[0].firstName,
+            },
+          },
+          'Confirmation email sent successfully'
         );
       });
 

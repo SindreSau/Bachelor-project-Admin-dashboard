@@ -46,6 +46,25 @@ async function uploadFileFromPublic(fileName: string): Promise<string> {
   }
 }
 
+// Function to generate school-based email
+function generateSchoolEmail(firstName: string, lastName: string, school: string): string {
+  // Normalize to lowercase and remove special characters
+  const normalizedFirstName = firstName
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+  const normalizedLastName = lastName
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .split(/\s+/)
+    .join('-');
+
+  // Create the email address based on school
+  const domain = school === 'OsloMet' ? 'oslomet.no' : 'kristiania.no';
+  return `${normalizedFirstName}-${normalizedLastName}@${domain}`;
+}
+
 async function main() {
   // Create first task (fixed)
   const task1 = await prisma.task.upsert({
@@ -73,31 +92,34 @@ async function main() {
   });
   console.log('Created task 2.');
 
-  // Create fixed students (they will only be used in the first application)
+  // The first application is from OsloMet (as set in the original code)
+  const schoolForFixedStudents = 'OsloMet';
+
+  // Create fixed students with emails based on school
   const fixedStudents = await Promise.all([
     prisma.student.upsert({
-      where: { email: 'aadne@example.com' },
+      where: { email: 'aadne-longva-nilsen@oslomet.no' },
       update: {},
       create: {
-        email: 'aadne@example.com',
+        email: generateSchoolEmail('Ådne', 'Longva Nilsen', schoolForFixedStudents),
         firstName: 'Ådne',
         lastName: 'Longva Nilsen',
       },
     }),
     prisma.student.upsert({
-      where: { email: 'alex@example.com' },
+      where: { email: 'alex-mccorkle@oslomet.no' },
       update: {},
       create: {
-        email: 'alex@example.com',
+        email: generateSchoolEmail('Alex', 'McCorkle', schoolForFixedStudents),
         firstName: 'Alex',
         lastName: 'McCorkle',
       },
     }),
     prisma.student.upsert({
-      where: { email: 'sindre@example.com' },
+      where: { email: 'sindre-sauarlia@oslomet.no' },
       update: {},
       create: {
-        email: 'sindre@example.com',
+        email: generateSchoolEmail('Sindre', 'Sauarlia', schoolForFixedStudents),
         firstName: 'Sindre',
         lastName: 'Sauarlia',
       },
@@ -105,28 +127,22 @@ async function main() {
   ]);
   console.log('Upserted fixed students.');
 
-  // Create additional students using faker (create 50 so that we can partition them uniquely)
-  const additionalStudentsPromises = [];
+  // Create additional students but don't assign emails yet since we don't know their school
+  const additionalStudentsData = [];
   for (let i = 0; i < 50; i++) {
-    additionalStudentsPromises.push(
-      prisma.student.create({
-        data: {
-          email: faker.internet.email(),
-          firstName: faker.person.firstName(),
-          lastName: faker.person.lastName(),
-        },
-      })
-    );
+    additionalStudentsData.push({
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+    });
   }
-  const additionalStudents = await Promise.all(additionalStudentsPromises);
-  console.log('Created additional students.');
+  console.log('Prepared additional student data.');
 
   // First application remains as is with fixed students
   await prisma.application.upsert({
     where: { id: 1 },
     update: {},
     create: {
-      school: 'OsloMet',
+      school: schoolForFixedStudents,
       coverLetterText: 'We are applying for the position because we are a great fit.',
       students: {
         connect: fixedStudents.map((student) => ({ id: student.id })),
@@ -138,27 +154,40 @@ async function main() {
         connect: [{ id: task1.id }],
       },
       taskpriorityids: [task1.id],
-      // comments: {
-      //   createMany: {
-      //     data: [
-      //       { commentText: 'Ganske bra.', userId: 'Daniel' },
-      //       { commentText: 'Veldig bra.', userId: 'William' },
-      //     ],
-      //   },
-      // },
     },
   });
   console.log('Upserted application 1.');
 
-  // Partition additional students into 9 unique groups (each group gets 3 to 5 students)
-  const additionalPool = [...additionalStudents];
+  // Partition additional students into 9 unique groups and create them with school-based emails
+  const additionalStudents = [];
+  let studentIndex = 0;
+
   for (let i = 0; i < 9; i++) {
     const groupSize = faker.number.int({ min: 3, max: 5 });
-    // Remove the first groupSize students from the pool; this ensures each student is used only once.
-    const selectedStudents = additionalPool.splice(0, groupSize);
-    if (selectedStudents.length === 0) break; // stop if we run out
+    if (studentIndex + groupSize > additionalStudentsData.length) break; // stop if we run out
 
-    const studentRepresentative = selectedStudents[0];
+    // Select the school for this application
+    const school = faker.helpers.arrayElement(['OsloMet', 'Høyskolen Kristiania']);
+
+    // Create the students with school-based emails
+    const studentsInGroup = [];
+    for (let j = 0; j < groupSize; j++) {
+      const studentData = additionalStudentsData[studentIndex++];
+      const email = generateSchoolEmail(studentData.firstName, studentData.lastName, school);
+
+      const student = await prisma.student.create({
+        data: {
+          email: email,
+          firstName: studentData.firstName,
+          lastName: studentData.lastName,
+        },
+      });
+
+      studentsInGroup.push(student);
+      additionalStudents.push(student);
+    }
+
+    const studentRepresentative = studentsInGroup[0];
 
     // 50/50 chance: either connect both tasks or only one randomly selected task.
     const applyBoth = faker.datatype.boolean();
@@ -168,10 +197,10 @@ async function main() {
 
     await prisma.application.create({
       data: {
-        school: faker.helpers.arrayElement(['OsloMet', 'Høyskolen Kristiania']),
+        school: school,
         coverLetterText: faker.lorem.words(faker.number.int({ min: 150, max: 400 })),
         students: {
-          connect: selectedStudents.map((student) => ({ id: student.id })),
+          connect: studentsInGroup.map((student) => ({ id: student.id })),
         },
         studentRepresentative: {
           connect: { id: studentRepresentative.id },
@@ -183,7 +212,7 @@ async function main() {
       },
     });
     console.log(
-      `Created application ${i + 2} with ${selectedStudents.length} student(s), applying for ${
+      `Created application ${i + 2} with ${studentsInGroup.length} student(s) from ${school}, applying for ${
         connectedTasks.length === 2 ? 'both tasks' : 'one task'
       }.`
     );
