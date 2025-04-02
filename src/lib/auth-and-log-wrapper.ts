@@ -1,7 +1,6 @@
 // lib/auth-and-log-wrapper.ts
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { RequestLogger, withRequestLogger } from './logger.server';
-import { KindeUser } from '@kinde-oss/kinde-auth-nextjs/types';
 
 // Error class for auth errors
 export class AuthError extends Error {
@@ -17,7 +16,6 @@ export class AuthError extends Error {
 // Function types for the withAuthAndLog wrapper
 type AuthLoggerFunction<T, Args extends unknown[]> = (
   logger: RequestLogger,
-  user: KindeUser<Record<string, unknown>>,
   ...args: Args
 ) => Promise<T>;
 
@@ -50,11 +48,8 @@ export function withAuthAndLog<T, Args extends unknown[]>(
         throw new AuthError('User data not available');
       }
 
-      // Add user context to logger
-      // logger.debug({ userId: user.id, email: user.email }, 'User authenticated');
-
       // Execute the wrapped function with user context
-      return await fn(logger, user, ...args);
+      return await fn(logger, ...args);
     } catch (err) {
       // If it's already an AuthError, just rethrow it
       // (it would have already been logged by withRequestLogger)

@@ -4,7 +4,6 @@ import { db } from '@/lib/prisma';
 import { RequestLogger } from '@/lib/logger.server';
 import { withAuthAndLog } from '@/lib/auth-and-log-wrapper';
 import { Application, Student, Review } from '@prisma/client';
-import { KindeUser } from '@kinde-oss/kinde-auth-nextjs/types';
 
 // Define return type for the function
 type ApplicationWithRelations = Application & {
@@ -13,10 +12,7 @@ type ApplicationWithRelations = Application & {
 };
 
 const getAllApplications = withAuthAndLog<ApplicationWithRelations[], []>(
-  async (
-    logger: RequestLogger,
-    user: KindeUser<Record<string, unknown>>
-  ): Promise<ApplicationWithRelations[]> => {
+  async (logger: RequestLogger): Promise<ApplicationWithRelations[]> => {
     try {
       const applications = await db.application.findMany({
         include: {
@@ -30,7 +26,6 @@ const getAllApplications = withAuthAndLog<ApplicationWithRelations[], []>(
 
       logger.info(
         {
-          userId: user.id,
           details: {
             count: applications.length,
             includes: ['students', 'reviews'],
