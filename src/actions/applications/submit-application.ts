@@ -14,7 +14,7 @@ const submitApplication = withRequestLogger<
     applicationData: ApplicationData
   ): Promise<{ success: boolean; message: string }> => {
     try {
-      throw new Error('Test error'); // For testing error handling
+      // throw new Error('Test error'); // For testing error handling
       // Using a transaction to ensure all operations succeed or fail together
       await db.$transaction(async (tx) => {
         // 1. Process all students in the array (handles any number of students)

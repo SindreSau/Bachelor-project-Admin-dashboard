@@ -37,6 +37,7 @@ export async function sendConfirmationEmail(to: string, studentContactFirstName:
         />
       ),
     });
+
     if (error) {
       console.error('Error sending confirmation email:', error);
       return { data: null, error };
