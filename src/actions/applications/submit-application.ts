@@ -62,6 +62,14 @@ const submitApplication = withRequestLogger<
           })
         );
 
+        const groupLeaderbyStudentId = (groupLeader: number) => {
+          for (let i = 0; i < studentIds.length; i++) {
+            if (i === groupLeader) {
+              return studentIds[i];
+            }
+          }
+        };
+
         // 3. Create the application record
         const application = await tx.application.create({
           data: {
@@ -71,8 +79,8 @@ const submitApplication = withRequestLogger<
             students: {
               connect: studentIds.map((id) => ({ id })),
             },
-            // Set first student as representative (optional)
-            studentRepresentativeId: studentIds[0],
+            // Set student representative to the group leader
+            studentRepresentativeId: groupLeaderbyStudentId(applicationData.groupLeader),
             // Connect all prioritized tasks to this application
             tasks: {
               connect: applicationData.prioritizedTasks.map((taskId) => ({ id: taskId })),
