@@ -2,8 +2,10 @@
 
 import { db } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
-import { withRequestLogger, RequestLogger } from '@/lib/logger.server';
+import { RequestLogger } from '@/lib/logger.server';
+import { withAuthAndLog } from '@/lib/auth-and-log-wrapper';
 import { Comment } from '@prisma/client';
+import { KindeUser } from '@kinde-oss/kinde-auth-nextjs/types';
 
 // Updated interface to match the new model
 interface CommentData {
@@ -28,8 +30,12 @@ interface DeleteRestoreResponse {
 }
 
 // Server action to add a comment to the database
-export const addComment = withRequestLogger<CommentResponse, [CommentData]>(
-  async (logger: RequestLogger, data: CommentData): Promise<CommentResponse> => {
+export const addComment = withAuthAndLog<CommentResponse, [CommentData]>(
+  async (
+    logger: RequestLogger,
+    user: KindeUser<Record<string, unknown>>,
+    data: CommentData
+  ): Promise<CommentResponse> => {
     const {
       applicationId,
       commentText,
@@ -42,6 +48,18 @@ export const addComment = withRequestLogger<CommentResponse, [CommentData]>(
     // Validate inputs
     if (!commentText?.trim()) {
       return { success: false, error: 'Comment text is required' };
+    }
+
+    // Verify that the Kinde user ID matches the authenticated user
+    if (kindeUserId !== user.id) {
+      logger.warn(
+        {
+          authenticatedUserId: user.id,
+          providedUserId: kindeUserId,
+        },
+        'User ID mismatch when adding comment'
+      );
+      return { success: false, error: 'Unauthorized' };
     }
 
     try {
@@ -77,12 +95,12 @@ export const addComment = withRequestLogger<CommentResponse, [CommentData]>(
         success: true,
         comment,
       };
-    } catch (error) {
+    } catch (err) {
       const errorObject = {
-        message: error instanceof Error ? error.message : String(error),
-        code: (error as { code?: string })?.code,
+        message: err instanceof Error ? err.message : String(err),
+        code: (err as { code?: string })?.code,
         stack:
-          process.env.NODE_ENV !== 'production' && error instanceof Error ? error.stack : undefined,
+          process.env.NODE_ENV !== 'production' && err instanceof Error ? err.stack : undefined,
       };
 
       logger.error(
@@ -103,17 +121,35 @@ export const addComment = withRequestLogger<CommentResponse, [CommentData]>(
   }
 );
 
-export const deleteComment = withRequestLogger<DeleteRestoreResponse, [number]>(
-  async (logger: RequestLogger, commentId: number): Promise<DeleteRestoreResponse> => {
+export const deleteComment = withAuthAndLog<DeleteRestoreResponse, [number]>(
+  async (
+    logger: RequestLogger,
+    user: KindeUser<Record<string, unknown>>,
+    commentId: number
+  ): Promise<DeleteRestoreResponse> => {
     try {
-      // First get the comment to know which application to revalidate
+      // First get the comment to know which application to revalidate and to check ownership
       const comment = await db.comment.findUnique({
         where: { id: commentId },
-        select: { applicationId: true },
+        select: { applicationId: true, kindeUserId: true },
       });
 
       if (!comment) {
         return { success: false, error: 'Comment not found' };
+      }
+
+      // Security check: Verify that the user can delete this comment
+      // Allow the comment author or potentially add admin role check here
+      if (comment.kindeUserId !== user.id) {
+        logger.warn(
+          {
+            commentId,
+            commentOwnerId: comment.kindeUserId,
+            requestingUserId: user.id,
+          },
+          'Unauthorized attempt to delete comment'
+        );
+        return { success: false, error: 'Unauthorized' };
       }
 
       // Delete the comment
@@ -130,7 +166,12 @@ export const deleteComment = withRequestLogger<DeleteRestoreResponse, [number]>(
       // Log success
       logger.info(
         {
-          details: { action: 'deleteComment', commentId, applicationId: comment.applicationId },
+          details: {
+            action: 'deleteComment',
+            commentId,
+            applicationId: comment.applicationId,
+            userId: user.id,
+          },
         },
         'Comment deleted successfully'
       );
@@ -138,18 +179,19 @@ export const deleteComment = withRequestLogger<DeleteRestoreResponse, [number]>(
       // Revalidate the application path
       revalidatePath(`/soknader/${comment.applicationId}`);
       return { success: true };
-    } catch (error) {
+    } catch (err) {
       const errorObject = {
-        message: error instanceof Error ? error.message : String(error),
-        code: (error as { code?: string })?.code,
+        message: err instanceof Error ? err.message : String(err),
+        code: (err as { code?: string })?.code,
         stack:
-          process.env.NODE_ENV !== 'production' && error instanceof Error ? error.stack : undefined,
+          process.env.NODE_ENV !== 'production' && err instanceof Error ? err.stack : undefined,
       };
 
       logger.error(
         {
           action: 'deleteComment',
           commentId,
+          userId: user.id,
           error: errorObject,
         },
         'Failed to delete comment'
@@ -163,17 +205,35 @@ export const deleteComment = withRequestLogger<DeleteRestoreResponse, [number]>(
   }
 );
 
-export const restoreComment = withRequestLogger<DeleteRestoreResponse, [number]>(
-  async (logger: RequestLogger, commentId: number): Promise<DeleteRestoreResponse> => {
+export const restoreComment = withAuthAndLog<DeleteRestoreResponse, [number]>(
+  async (
+    logger: RequestLogger,
+    user: KindeUser<Record<string, unknown>>,
+    commentId: number
+  ): Promise<DeleteRestoreResponse> => {
     try {
-      // get the comment
+      // Get the comment
       const comment = await db.comment.findUnique({
         where: { id: commentId },
-        select: { applicationId: true },
+        select: { applicationId: true, kindeUserId: true },
       });
 
       if (!comment) {
         return { success: false, error: 'Comment not found' };
+      }
+
+      // Security check: Verify that the user can restore this comment
+      // Allow the comment author or potentially add admin role check here
+      if (comment.kindeUserId !== user.id) {
+        logger.warn(
+          {
+            commentId,
+            commentOwnerId: comment.kindeUserId,
+            requestingUserId: user.id,
+          },
+          'Unauthorized attempt to restore comment'
+        );
+        return { success: false, error: 'Unauthorized' };
       }
 
       // Restore the comment
@@ -185,7 +245,12 @@ export const restoreComment = withRequestLogger<DeleteRestoreResponse, [number]>
       // Log success
       logger.info(
         {
-          details: { action: 'restoreComment', commentId, applicationId: comment.applicationId },
+          details: {
+            action: 'restoreComment',
+            commentId,
+            applicationId: comment.applicationId,
+            userId: user.id,
+          },
         },
         'Comment restored successfully'
       );
@@ -193,18 +258,19 @@ export const restoreComment = withRequestLogger<DeleteRestoreResponse, [number]>
       // Revalidate the application path
       revalidatePath(`/soknader/${comment.applicationId}`);
       return { success: true };
-    } catch (error) {
+    } catch (err) {
       const errorObject = {
-        message: error instanceof Error ? error.message : String(error),
-        code: (error as { code?: string })?.code,
+        message: err instanceof Error ? err.message : String(err),
+        code: (err as { code?: string })?.code,
         stack:
-          process.env.NODE_ENV !== 'production' && error instanceof Error ? error.stack : undefined,
+          process.env.NODE_ENV !== 'production' && err instanceof Error ? err.stack : undefined,
       };
 
       logger.error(
         {
           action: 'restoreComment',
           commentId,
+          userId: user.id,
           error: errorObject,
         },
         'Failed to restore comment'

@@ -1,8 +1,10 @@
 'use server';
 
 import { db } from '@/lib/prisma';
-import { withRequestLogger, RequestLogger } from '@/lib/logger.server';
+import { RequestLogger } from '@/lib/logger.server';
+import { withAuthAndLog } from '@/lib/auth-and-log-wrapper';
 import { Application, Student, Review } from '@prisma/client';
+import { KindeUser } from '@kinde-oss/kinde-auth-nextjs/types';
 
 // Define return type for the function
 type ApplicationWithRelations = Application & {
@@ -10,9 +12,11 @@ type ApplicationWithRelations = Application & {
   reviews: Review[];
 };
 
-// Wrap the function with our logger middleware
-const getAllApplications = withRequestLogger<ApplicationWithRelations[], []>(
-  async (logger: RequestLogger): Promise<ApplicationWithRelations[]> => {
+const getAllApplications = withAuthAndLog<ApplicationWithRelations[], []>(
+  async (
+    logger: RequestLogger,
+    user: KindeUser<Record<string, unknown>>
+  ): Promise<ApplicationWithRelations[]> => {
     try {
       const applications = await db.application.findMany({
         include: {
@@ -26,6 +30,7 @@ const getAllApplications = withRequestLogger<ApplicationWithRelations[], []>(
 
       logger.info(
         {
+          userId: user.id,
           details: {
             count: applications.length,
             includes: ['students', 'reviews'],
@@ -33,20 +38,11 @@ const getAllApplications = withRequestLogger<ApplicationWithRelations[], []>(
         },
         'Fetched all applications'
       );
+
       return applications;
     } catch (error) {
-      const errorObject: {
-        message: string;
-        code?: string;
-        stack?: string;
-      } = {
-        message: error instanceof Error ? error.message : String(error),
-        code: (error as { code?: string })?.code,
-        stack:
-          process.env.NODE_ENV !== 'production' && error instanceof Error ? error.stack : undefined,
-      };
-
-      logger.error({ error: errorObject }, 'Failed to fetch applications');
+      const err = error instanceof Error ? error : new Error(String(error));
+      logger.error({ error: err }, 'Failed to fetch all applications');
 
       // Return empty array instead of failing
       return [];
