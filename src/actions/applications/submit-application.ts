@@ -58,6 +58,16 @@ export default async function submitApplication(
         })
       );
 
+      console.log('Application Data: ', applicationData);
+
+      const groupLeaderbyStudentId = (groupLeader: number) => {
+        for (let i = 0; i < studentIds.length; i++) {
+          if (i === groupLeader) {
+            return studentIds[i];
+          }
+        }
+      };
+
       // 3. Create the application record
       const application = await tx.application.create({
         data: {
@@ -68,7 +78,7 @@ export default async function submitApplication(
             connect: studentIds.map((id) => ({ id })),
           },
           // Set first student as representative (optional)
-          studentRepresentativeId: studentIds[0],
+          studentRepresentativeId: groupLeaderbyStudentId(applicationData.groupLeader),
           // Connect all prioritized tasks to this application
           tasks: {
             connect: applicationData.prioritizedTasks.map((taskId) => ({ id: taskId })),
