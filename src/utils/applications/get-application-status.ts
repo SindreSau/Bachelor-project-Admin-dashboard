@@ -1,24 +1,13 @@
-import { Review } from '@prisma/client';
+'use server';
 
-const getApplicationStatus = (reviews: Review[]) => {
-  const reviewCount = reviews.length;
+import { db } from '@/lib/prisma';
 
-  if (reviewCount === 0) {
-    return {
-      text: 'Ikke begynt',
-      className: 'text-danger',
-    };
-  }
-  if (reviewCount >= 3) {
-    return {
-      text: 'Ferdig',
-      className: 'text-confirm',
-    };
-  }
-  return {
-    text: 'Påbegynt',
-    className: 'text-warning',
-  };
+const getApplicationStatus = async (applicationId: number) => {
+  const application = await db.application.findUnique({
+    where: { id: applicationId },
+  });
+
+  return application?.status;
 };
 
 export default getApplicationStatus;

@@ -16,6 +16,7 @@ const studentSchema = z.object({
 // Create a unified validation schema for FormData
 const applicationSchema = z.object({
   school: z.string().min(1),
+  groupLeader: z.number(),
   students: z.string().transform((str, ctx) => {
     try {
       const parsed = JSON.parse(str);
@@ -63,11 +64,15 @@ export async function POST(request: NextRequest) {
 
   try {
     const formData = await request.formData();
+    console.log('Received form data:', formData);
+
+    const groupLeaderAsInt = Number(formData.get('groupLeader'));
 
     // Parse and validate form data
     const validationResult = applicationSchema.safeParse({
       school: formData.get('school'),
       students: formData.get('students'),
+      groupLeader: groupLeaderAsInt,
       coverLetter: formData.get('coverLetter'),
       prioritizedTasks: formData.getAll('prioritizedTasks'),
     });

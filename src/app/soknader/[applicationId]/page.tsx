@@ -35,6 +35,7 @@ export default async function ApplicationPage({
         createdAt={application.createdAt || new Date()}
         updatedAt={application.updatedAt || new Date()}
         applicationReviews={application.reviews || []}
+        applicationStatus={application.status || ''}
       />
 
       {/* Main content area with ResizablePanelGroup for larger screens */}

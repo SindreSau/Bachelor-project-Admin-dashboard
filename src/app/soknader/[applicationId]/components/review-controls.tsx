@@ -153,6 +153,9 @@ const ReviewControls = ({ applicationId, applicationReviews, readOnly }: ReviewC
                           className={`absolute -top-2 -right-2 ${
                             isSelected ? 'text-primary bg-white' : 'bg-primary text-white'
                           } flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold`}
+                          className={`absolute -top-2 -right-2 ${
+                            isSelected ? 'text-primary bg-white' : 'bg-primary text-white'
+                          } flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold`}
                         >
                           {count}
                         </span>
@@ -169,6 +172,9 @@ const ReviewControls = ({ applicationId, applicationReviews, readOnly }: ReviewC
                       <Icon className='h-4 w-4' />
                       {count > 0 && (
                         <span
+                          className={`absolute -top-2 -right-2 ${
+                            isSelected ? 'text-primary bg-white' : 'bg-primary text-white'
+                          } flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold`}
                           className={`absolute -top-2 -right-2 ${
                             isSelected ? 'text-primary bg-white' : 'bg-primary text-white'
                           } flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold`}

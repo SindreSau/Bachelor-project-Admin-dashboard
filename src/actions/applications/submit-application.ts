@@ -62,6 +62,19 @@ const submitApplication = withRequestLogger<
             return student.id;
           })
         );
+          return student.id;
+        })
+      );
+
+      console.log('Application Data: ', applicationData);
+
+      const groupLeaderbyStudentId = (groupLeader: number) => {
+        for (let i = 0; i < studentIds.length; i++) {
+          if (i === groupLeader) {
+            return studentIds[i];
+          }
+        }
+      };
 
         // 3. Create the application record
         const application = await tx.application.create({
