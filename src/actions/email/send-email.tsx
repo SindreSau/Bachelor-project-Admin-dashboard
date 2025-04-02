@@ -24,7 +24,7 @@ export async function sendTestEmail(
   }
 }
 
-export async function sendConfirmationEmail(to: string, studentContactFirstName: string) {
+export const sendConfirmationEmail = async (to: string, studentContactFirstName: string) => {
   try {
     const { data, error } = await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || '',
@@ -49,4 +49,4 @@ export async function sendConfirmationEmail(to: string, studentContactFirstName:
     console.error('Error sending confirmation email:', error);
     return { data: null, error };
   }
-}
+};

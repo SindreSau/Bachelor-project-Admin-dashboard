@@ -7,6 +7,9 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
+  // bypass auth for testing purposes
+  // return NextResponse.next();
+
   return withAuth(req);
 }
 
