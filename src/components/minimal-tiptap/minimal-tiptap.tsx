@@ -10,7 +10,6 @@ import { SectionOne } from './components/section/one';
 import { SectionTwo } from './components/section/two';
 import { SectionThree } from './components/section/three';
 import { SectionFour } from './components/section/four';
-import { SectionFive } from './components/section/five';
 import { LinkBubbleMenu } from './components/bubble-menu/link-bubble-menu';
 import { useMinimalTiptapEditor } from './hooks/use-minimal-tiptap';
 import { MeasuredContainer } from './components/measured-container';

@@ -115,8 +115,7 @@ const ApplicationDetailsCard = ({
                 readOnly={false}
                 onStatusChange={(newStatus) => {
                   setApplicationStatusState(newStatus);
-                }
-                }
+                }}
               />
             </div>
           </div>

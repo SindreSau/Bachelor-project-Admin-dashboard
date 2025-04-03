@@ -24,7 +24,13 @@ interface ReviewControlsProps {
   onStatusChange?: (newStatus: string) => void;
 }
 
-const ReviewControls = ({ applicationId, applicationReviews, applicationStatus, readOnly, onStatusChange }: ReviewControlsProps) => {
+const ReviewControls = ({
+  applicationId,
+  applicationReviews,
+  applicationStatus,
+  readOnly,
+  onStatusChange,
+}: ReviewControlsProps) => {
   const { user, isLoading } = useKindeBrowserClient();
   const currentUserId = user?.id || '';
   const currentUserName = user?.given_name || '';
@@ -159,8 +165,9 @@ const ReviewControls = ({ applicationId, applicationReviews, applicationStatus, 
                       <Icon className='h-4 w-4' />
                       {count > 0 && (
                         <span
-                          className={`absolute -top-2 -right-2 ${isSelected ? 'text-primary bg-white' : 'bg-primary text-white'
-                            } flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold`}
+                          className={`absolute -top-2 -right-2 ${
+                            isSelected ? 'text-primary bg-white' : 'bg-primary text-white'
+                          } flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold`}
                         >
                           {count}
                         </span>
@@ -168,16 +175,18 @@ const ReviewControls = ({ applicationId, applicationReviews, applicationStatus, 
                     </Button>
                   ) : (
                     <div
-                      className={`relative flex h-8 w-8 items-center justify-center rounded-md border p-0 ${isSelected
-                        ? 'bg-primary text-primary-foreground'
-                        : 'text-muted-foreground bg-transparent'
-                        }`}
+                      className={`relative flex h-8 w-8 items-center justify-center rounded-md border p-0 ${
+                        isSelected
+                          ? 'bg-primary text-primary-foreground'
+                          : 'text-muted-foreground bg-transparent'
+                      }`}
                     >
                       <Icon className='h-4 w-4' />
                       {count > 0 && (
                         <span
-                          className={`absolute -top-2 -right-2 ${isSelected ? 'text-primary bg-white' : 'bg-primary text-white'
-                            } flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold`}
+                          className={`absolute -top-2 -right-2 ${
+                            isSelected ? 'text-primary bg-white' : 'bg-primary text-white'
+                          } flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold`}
                         >
                           {count}
                         </span>
