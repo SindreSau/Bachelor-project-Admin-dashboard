@@ -35,14 +35,12 @@ export default function CustomAvatar({
 
   // Use provided user or fall back to Kinde user
   const displayUser = user || kindeUser;
-  console.log('Display user:', displayUser);
   const loading = !user && isLoading;
 
   const initials = nameToInitials(displayUser?.given_name || '', displayUser?.family_name || '');
 
   // Use the picture URL if it exists and is not empty
   const avatarImageUrl = displayUser?.picture || '';
-  console.log('Avatar image URL:', avatarImageUrl);
 
   const avatarSizeClass = sizeClasses[size];
 

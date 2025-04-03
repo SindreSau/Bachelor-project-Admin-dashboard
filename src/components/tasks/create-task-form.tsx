@@ -71,8 +71,7 @@ const CreateTaskForm = () => {
         published: publish,
       });
       form.reset();
-      setEditorKey(prev => prev + 1); // Reset editor state
-
+      setEditorKey((prev) => prev + 1); // Reset editor state
     } catch (error) {
       console.error(error);
     } finally {
@@ -120,6 +119,7 @@ const CreateTaskForm = () => {
                 <FormControl>
                   <Card className='overflow-hidden border'>
                     <MinimalTiptapEditor
+                      immediatelyRenderer={false}
                       key={editorKey}
                       value={field.value}
                       onChange={(newContent: Content) => {

@@ -170,12 +170,8 @@ export const useMinimalTiptapEditor = ({
   onBlur,
   ...props
 }: UseMinimalTiptapEditorProps) => {
-  // Fix: Add type assertion to make the function compatible with useThrottle
-  const throttledSetValue = useThrottle((value: unknown) => {
-    if (onUpdate && typeof value === 'object') {
-      onUpdate(value as Content);
-    }
-  }, throttleDelay);
+  // @ts-expect-error !ts-error comes with library
+  const throttledSetValue = useThrottle((value: Content) => onUpdate?.(value), throttleDelay);
 
   const handleUpdate = React.useCallback(
     (editor: Editor) => throttledSetValue(getOutput(editor, output)),
