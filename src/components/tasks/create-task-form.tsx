@@ -119,7 +119,7 @@ const CreateTaskForm = () => {
                 <FormControl>
                   <Card className='overflow-hidden border'>
                     <MinimalTiptapEditor
-                      immediatelyRenderer={false}
+                      immediatelyRender={false}
                       key={editorKey}
                       value={field.value}
                       onChange={(newContent: Content) => {
