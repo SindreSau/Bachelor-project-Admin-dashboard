@@ -15,10 +15,12 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '../ui/textarea';
 import { createTask } from '@/actions/tasks/create-task';
 import { DatePicker } from './date-picker';
 import Spinner from '@/components/common/spinner';
+import { MinimalTiptapEditor } from '../minimal-tiptap';
+import { Card } from '../ui/card';
+import { Content } from '@tiptap/react';
 
 const formSchema = z.object({
   taskName: z.string().min(2, {
@@ -113,7 +115,21 @@ const CreateTaskForm = () => {
               <FormItem>
                 <FormLabel>Beskrivelse</FormLabel>
                 <FormControl>
-                  <Textarea placeholder='Beskrivelse' {...field} value={field.value || ''} />
+                  <Card className='overflow-hidden border'>
+                    <MinimalTiptapEditor
+                      value={field.value}
+                      onChange={(newContent: Content) => {
+                        // For HTML output, cast to string for form value
+                        const htmlString = typeof newContent === 'string' ? newContent : '';
+                        field.onChange(htmlString);
+                      }}
+                      className='bg-background w-full'
+                      editorContentClassName='p-4 min-h-[150px]'
+                      output='html'
+                      placeholder='Beskrivelse av oppgaven...'
+                      editorClassName='focus:outline-none'
+                    />
+                  </Card>
                 </FormControl>
                 <FormMessage />
               </FormItem>

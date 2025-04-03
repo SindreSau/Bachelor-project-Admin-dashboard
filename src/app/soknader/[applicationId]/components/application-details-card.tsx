@@ -111,7 +111,12 @@ const ApplicationDetailsCard = ({
               <ReviewControls
                 applicationId={applicationId}
                 applicationReviews={applicationReviews}
+                applicationStatus={applicationStatus}
                 readOnly={false}
+                onStatusChange={(newStatus) => {
+                  setApplicationStatusState(newStatus);
+                }
+                }
               />
             </div>
           </div>
