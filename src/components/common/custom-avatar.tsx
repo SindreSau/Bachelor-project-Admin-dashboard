@@ -49,7 +49,9 @@ export default function CustomAvatar({
   const avatar = loading ? (
     <div className={`${avatarSizeClass}`}></div>
   ) : (
-    <Avatar className={`${avatarSizeClass} border-primary/30 dark:border-primary/50 border`}>
+    <Avatar
+      className={`${avatarSizeClass} border-primary/30 dark:border-primary/50 border ${clickable && 'cursor-pointer'}`}
+    >
       <AvatarImage src={avatarImageUrl} alt={initials} width={35} height={35} />
       <AvatarFallback>{initials}</AvatarFallback>
     </Avatar>
@@ -64,7 +66,7 @@ export default function CustomAvatar({
     <DropdownMenu>
       <DropdownMenuTrigger>{avatar}</DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem className='flex items-center justify-between'>
+        <DropdownMenuItem className='flex cursor-pointer items-center justify-between'>
           <LogoutLink>Logg ut</LogoutLink>
           <LogOut />
         </DropdownMenuItem>

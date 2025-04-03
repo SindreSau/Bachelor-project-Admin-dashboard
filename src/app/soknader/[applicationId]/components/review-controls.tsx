@@ -184,15 +184,7 @@ const ReviewControls = ({ applicationId, applicationReviews, readOnly }: ReviewC
                     <div className='flex flex-col space-y-2'>
                       {usersWithThisReview.map((review) => (
                         <div key={review.kindeUserId} className='flex items-center gap-2'>
-                          <CustomAvatar
-                            size='sm'
-                            user={{
-                              id: review.kindeUserId,
-                              given_name: review.kindeGivenName,
-                              family_name: '',
-                              picture: review.kindeUserImage || '',
-                            }}
-                          />
+                          <CustomAvatar size='sm' user={user} />
                           <span className='text-sm whitespace-nowrap'>
                             {review.kindeGivenName || 'User'}
                           </span>
