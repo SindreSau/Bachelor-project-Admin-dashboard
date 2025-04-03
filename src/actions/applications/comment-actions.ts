@@ -30,12 +30,8 @@ interface DeleteRestoreResponse {
 }
 
 // Server action to add a comment to the database
-export const addComment = withAuthAndLog<CommentResponse, [CommentData]>(
-  async (
-    logger: RequestLogger,
-    user: KindeUser<Record<string, unknown>>,
-    data: CommentData
-  ): Promise<CommentResponse> => {
+export const addComment = withAuthAndLog<CommentResponse, [CommentData, KindeUser]>(
+  async (logger: RequestLogger, data: CommentData, user: KindeUser): Promise<CommentResponse> => {
     const {
       applicationId,
       commentText,
@@ -121,11 +117,11 @@ export const addComment = withAuthAndLog<CommentResponse, [CommentData]>(
   }
 );
 
-export const deleteComment = withAuthAndLog<DeleteRestoreResponse, [number]>(
+export const deleteComment = withAuthAndLog<DeleteRestoreResponse, [number, KindeUser]>(
   async (
     logger: RequestLogger,
-    user: KindeUser<Record<string, unknown>>,
-    commentId: number
+    commentId: number,
+    user: KindeUser
   ): Promise<DeleteRestoreResponse> => {
     try {
       // First get the comment to know which application to revalidate and to check ownership
@@ -205,11 +201,11 @@ export const deleteComment = withAuthAndLog<DeleteRestoreResponse, [number]>(
   }
 );
 
-export const restoreComment = withAuthAndLog<DeleteRestoreResponse, [number]>(
+export const restoreComment = withAuthAndLog<DeleteRestoreResponse, [number, KindeUser]>(
   async (
     logger: RequestLogger,
-    user: KindeUser<Record<string, unknown>>,
-    commentId: number
+    commentId: number,
+    user: KindeUser
   ): Promise<DeleteRestoreResponse> => {
     try {
       // Get the comment
