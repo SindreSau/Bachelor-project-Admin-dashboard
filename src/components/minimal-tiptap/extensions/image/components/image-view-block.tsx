@@ -209,7 +209,7 @@ export const ImageViewBlock: React.FC<NodeViewProps> = ({
       >
         <div
           className={cn('relative flex h-full cursor-default flex-col items-center gap-2 rounded', {
-            'outline-primary outline outline-2 outline-offset-1': selected || isResizing,
+            'outline-primary outline outline-offset-1': selected || isResizing,
           })}
         >
           <div className='h-full contain-paint'>
