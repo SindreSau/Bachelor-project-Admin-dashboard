@@ -18,7 +18,7 @@ const ThemeSwitcher = ({ className }: ThemeSwitcherProps) => {
 
   return (
     <button
-      className='flex items-center justify-center gap-2'
+      className='flex cursor-pointer items-center justify-center gap-2'
       onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
     >
       {mounted && (
