@@ -114,6 +114,7 @@ export const columns: ColumnDef<ApplicationWithStudentsAndReviews>[] = [
           applicationId={application.id}
           applicationReviews={reviews}
           readOnly={true}
+          applicationStatus={application.status}
         />
       );
     },
