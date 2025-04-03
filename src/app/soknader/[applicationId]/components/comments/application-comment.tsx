@@ -8,27 +8,29 @@ import { Trash2 } from 'lucide-react';
 import { restoreComment, deleteComment } from '@/actions/applications/comment-actions';
 import { toast } from 'sonner';
 import { Comment as CommentType } from '@prisma/client';
+import { KindeUser } from '@kinde-oss/kinde-auth-nextjs/types';
 
 interface CommentProps {
   comment: CommentType;
   isCurrentUser: boolean;
+  user: KindeUser<Record<string, unknown>>;
 }
 
-const Comment = ({ comment, isCurrentUser }: CommentProps) => {
+const Comment = ({ comment, isCurrentUser, user }: CommentProps) => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
     setIsDeleting(true);
 
     try {
-      const result = await deleteComment(comment.id);
+      const result = await deleteComment(comment.id, user as KindeUser<void>);
       if (result.success) {
         toast('Kommentar slettet', {
           duration: 10000,
           action: {
             label: 'Angre',
             onClick: async () => {
-              await restoreComment(comment.id);
+              await restoreComment(comment.id, user as KindeUser<void>);
               console.log('Angre slett kommentar');
             },
           },
@@ -59,15 +61,7 @@ const Comment = ({ comment, isCurrentUser }: CommentProps) => {
       <Card className={`w-4/5 ${isCurrentUser ? 'bg-accent dark:bg-accent/50 border' : ''}`}>
         <CardHeader className='flex flex-row items-center justify-between px-3 py-2'>
           <div className='flex items-center gap-3'>
-            <CustomAvatar
-              size='sm'
-              user={{
-                id: comment.kindeUserId,
-                given_name: comment.kindeGivenName,
-                family_name: comment.kindeFamilyName,
-                picture: comment.kindeUserImage,
-              }}
-            />
+            <CustomAvatar size='sm' user={user} />
             <div className='font-medium'>
               <span className='@sm:hidden'>{comment.kindeGivenName}</span>
               <span className='hidden @sm:inline'>

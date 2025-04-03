@@ -5,17 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { addComment } from '@/actions/applications/comment-actions';
 import { toast } from 'sonner';
-
-interface User {
-  id: string;
-  given_name: string;
-  family_name: string;
-  picture: string;
-}
+import { KindeUser } from '@kinde-oss/kinde-auth-nextjs/types';
 
 interface CommentInputFieldProps {
   applicationId: number;
-  user: User;
+  user: KindeUser<Record<string, unknown>>;
   maxLength?: number;
 }
 
@@ -39,14 +33,17 @@ const CommentInputField = ({ applicationId, user, maxLength = 400 }: CommentInpu
     setIsSubmitting(true);
 
     try {
-      const result = await addComment({
-        applicationId,
-        commentText: comment,
-        kindeUserId: user.id,
-        kindeGivenName: user.given_name,
-        kindeFamilyName: user.family_name,
-        kindeUserImage: user.picture || '',
-      });
+      const result = await addComment(
+        {
+          applicationId,
+          commentText: comment,
+          kindeUserId: user.id,
+          kindeGivenName: user.given_name || '',
+          kindeFamilyName: user.family_name || '',
+          kindeUserImage: user.picture || '',
+        },
+        user as KindeUser<void>
+      );
 
       if (result.success) {
         setComment(''); // Clear input field

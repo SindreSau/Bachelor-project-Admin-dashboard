@@ -3,18 +3,12 @@ import Comment from './application-comment';
 import CommentInputField from './applications-comment-input';
 import { Comment as CommentType } from '@prisma/client';
 import { ScrollArea } from '@/components/ui/scroll-area';
-
-interface User {
-  id: string;
-  given_name: string;
-  family_name: string;
-  picture: string;
-}
+import { KindeUser } from '@kinde-oss/kinde-auth-nextjs/types';
 
 interface ApplicationCommentsProps {
   applicationId: number;
   comments: CommentType[];
-  currentUser?: User;
+  currentUser: KindeUser<Record<string, unknown>>;
 }
 
 const ApplicationComments = ({
@@ -44,6 +38,7 @@ const ApplicationComments = ({
                   key={comment.id}
                   comment={comment}
                   isCurrentUser={currentUser?.id === comment.kindeUserId}
+                  user={currentUser}
                 />
               ))
             )}

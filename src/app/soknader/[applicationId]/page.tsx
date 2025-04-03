@@ -49,16 +49,7 @@ export default async function ApplicationPage({
           <ApplicationComments
             applicationId={application.id || 0}
             comments={application.comments || []}
-            currentUser={
-              user
-                ? {
-                    id: user.id,
-                    given_name: user.given_name || '',
-                    family_name: user.family_name || '',
-                    picture: user.picture || '',
-                  }
-                : undefined
-            }
+            currentUser={user}
           />
         </div>
 
@@ -83,16 +74,7 @@ export default async function ApplicationPage({
                 <ApplicationComments
                   applicationId={application.id || 0}
                   comments={application.comments || []}
-                  currentUser={
-                    user
-                      ? {
-                          id: user.id,
-                          given_name: user.given_name || '',
-                          family_name: user.family_name || '',
-                          picture: user.picture || '',
-                        }
-                      : undefined
-                  }
+                  currentUser={user}
                 />
               </div>
             </ResizablePanel>

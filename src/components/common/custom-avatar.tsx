@@ -11,18 +11,12 @@ import {
 
 import { LogoutLink, useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import { LogOut } from 'lucide-react';
-
-interface User {
-  id: string;
-  given_name?: string;
-  family_name?: string;
-  picture?: string;
-}
+import { KindeUser } from '@kinde-oss/kinde-auth-nextjs/types';
 
 interface CustomAvatarProps {
   clickable?: boolean;
   size?: 'xs' | 'sm' | 'default' | 'lg';
-  user?: User; // Optional user prop
+  user?: KindeUser<Record<string, unknown>>;
 }
 
 const sizeClasses = {
@@ -41,12 +35,14 @@ export default function CustomAvatar({
 
   // Use provided user or fall back to Kinde user
   const displayUser = user || kindeUser;
+  console.log('Display user:', displayUser);
   const loading = !user && isLoading;
 
   const initials = nameToInitials(displayUser?.given_name || '', displayUser?.family_name || '');
 
   // Use the picture URL if it exists and is not empty
   const avatarImageUrl = displayUser?.picture || '';
+  console.log('Avatar image URL:', avatarImageUrl);
 
   const avatarSizeClass = sizeClasses[size];
 
