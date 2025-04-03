@@ -36,6 +36,7 @@ const CreateTaskForm = () => {
   // Track loading states for both buttons
   const [isDraftLoading, setIsDraftLoading] = useState(false);
   const [isPublishLoading, setIsPublishLoading] = useState(false);
+  const [editorKey, setEditorKey] = useState(0);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -70,6 +71,8 @@ const CreateTaskForm = () => {
         published: publish,
       });
       form.reset();
+      setEditorKey(prev => prev + 1); // Reset editor state
+
     } catch (error) {
       console.error(error);
     } finally {
@@ -117,6 +120,7 @@ const CreateTaskForm = () => {
                 <FormControl>
                   <Card className='overflow-hidden border'>
                     <MinimalTiptapEditor
+                      key={editorKey}
                       value={field.value}
                       onChange={(newContent: Content) => {
                         // For HTML output, cast to string for form value
