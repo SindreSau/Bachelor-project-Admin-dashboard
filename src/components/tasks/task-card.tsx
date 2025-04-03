@@ -71,9 +71,14 @@ const TaskCard = ({ task }: { task: TaskWithApplicationCount }) => {
 
       <CardContent className='grow'>
         <ScrollArea className=''>
-          <CardDescription className='text-sm whitespace-pre-wrap'>
-            {task.taskDescription}
-          </CardDescription>
+          {task.taskDescription ? (
+            <div
+              className='text-muted-foreground prose prose-sm max-w-none space-y-4 text-sm'
+              dangerouslySetInnerHTML={{ __html: task.taskDescription }}
+            />
+          ) : (
+            <CardDescription className='text-sm'>Ingen beskrivelse</CardDescription>
+          )}
         </ScrollArea>
       </CardContent>
 

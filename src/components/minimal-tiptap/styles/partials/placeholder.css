@@ -1,0 +1,7 @@
+.minimal-tiptap-editor .ProseMirror > p.is-editor-empty::before {
+  content: attr(data-placeholder);
+  pointer-events: none;
+  float: left;
+  height: 0;
+  color: var(--mt-secondary);
+}
