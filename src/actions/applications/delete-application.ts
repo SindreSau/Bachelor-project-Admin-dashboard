@@ -15,7 +15,7 @@ export const deleteApplication = withRequestLogger<DeleteApplicationResult, [num
       await db.$transaction(async (tx) => {
         logger.info(
           { action: 'deleteApplication', applicationId, step: 'started' },
-          'Starting GDPR-compliant application deletion transaction'
+          'Starting delete process'
         );
 
         // 1. see if application exists and get all students
@@ -82,7 +82,7 @@ export const deleteApplication = withRequestLogger<DeleteApplicationResult, [num
 
               logger.info(
                 { action: 'deleteApplication', studentId: student.id, count: deletedFilesCount },
-                'Deleted student files as part of GDPR compliance'
+                'Deleted student files'
               );
             }
 
@@ -91,10 +91,7 @@ export const deleteApplication = withRequestLogger<DeleteApplicationResult, [num
               where: { id: student.id },
             });
 
-            logger.info(
-              { action: 'deleteApplication', studentId: student.id },
-              'Deleted student as part of GDPR compliance'
-            );
+            logger.info({ action: 'deleteApplication', studentId: student.id }, 'Deleted student');
           } else {
             // 4c. If student has other applications, just disconnect from this one
             logger.info(
@@ -103,7 +100,7 @@ export const deleteApplication = withRequestLogger<DeleteApplicationResult, [num
                 studentId: student.id,
                 otherApplicationsCount: student.applications.length,
               },
-              'Student retained due to other application associations'
+              'Student retained due being linked to other applications'
             );
           }
         }
