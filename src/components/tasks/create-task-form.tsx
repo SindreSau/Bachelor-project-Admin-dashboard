@@ -44,6 +44,8 @@ const CreateTaskForm = () => {
       taskName: '',
       taskDescription: '',
       deadline: null,
+      minStudents: 3,
+      maxStudents: 5,
     },
   });
 
@@ -52,6 +54,8 @@ const CreateTaskForm = () => {
       taskName: string;
       taskDescription: string;
       deadline: Date | null;
+      minStudents: number;
+      maxStudents: number;
     },
     publish: boolean
   ) => {
@@ -139,22 +143,50 @@ const CreateTaskForm = () => {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name='deadline'
-            render={({ field }) => (
-              <FormItem className='flex flex-col'>
-                <FormLabel>Søknadsfrist</FormLabel>
-                <FormControl>
-                  <DatePicker
-                    value={field.value ? new Date(field.value) : null}
-                    onChange={(date) => field.onChange(date)}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className='flex space-x-4'>
+            <FormField
+              control={form.control}
+              name='deadline'
+              render={({ field }) => (
+                <FormItem className='flex flex-col'>
+                  <FormLabel>Søknadsfrist</FormLabel>
+                  <FormControl>
+                    <DatePicker
+                      value={field.value ? new Date(field.value) : null}
+                      onChange={(date) => field.onChange(date)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='minStudents'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Min. studenter</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder='Minimum ' {...field} value={field.value || ''} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='maxStudents'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Maks studenter</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder='Maksimum' {...field} value={field.value || ''} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           <div className='flex space-x-2'>
             <Button
               type='button'
