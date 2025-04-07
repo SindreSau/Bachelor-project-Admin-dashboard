@@ -167,7 +167,12 @@ const CreateTaskForm = () => {
                 <FormItem>
                   <FormLabel>Min. studenter</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder='Minimum ' {...field} value={field.value || ''} />
+                    <Input
+                      type='number'
+                      placeholder='Minimum '
+                      {...field}
+                      value={field.value || ''}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -180,7 +185,12 @@ const CreateTaskForm = () => {
                 <FormItem>
                   <FormLabel>Maks studenter</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder='Maksimum' {...field} value={field.value || ''} />
+                    <Input
+                      type='number'
+                      placeholder='Maksimum'
+                      {...field}
+                      value={field.value || ''}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -192,7 +202,7 @@ const CreateTaskForm = () => {
               type='button'
               onClick={handleSaveClick}
               disabled={isDraftLoading || isPublishLoading}
-              className='bg-confirm hover:bg-confirm/80 disabled:bg-confirm/50 inline-flex items-center cursor-pointer'
+              className='bg-confirm hover:bg-confirm/80 disabled:bg-confirm/50 inline-flex cursor-pointer items-center'
             >
               {isDraftLoading ? (
                 <>
@@ -207,7 +217,7 @@ const CreateTaskForm = () => {
               type='button'
               onClick={handleSaveAndPublishClick}
               disabled={isDraftLoading || isPublishLoading}
-              className='inline-flex items-center cursor-pointer'
+              className='inline-flex cursor-pointer items-center'
             >
               {isPublishLoading ? (
                 <>

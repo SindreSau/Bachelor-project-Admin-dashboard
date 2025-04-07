@@ -11,9 +11,7 @@ import {
 import { Button } from '../ui/button';
 import { Calendar, Pencil, Users, Globe, Hourglass } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { changePublishStatus } from '@/actions/tasks/change-publish-status';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useState } from 'react';
 import { Task } from '@prisma/client';
 import ConfirmDeleteModal from './confirm-delete-modal';
 import ConfirmPublishModal from './confirm-publish-modal';
@@ -94,7 +92,6 @@ const TaskCard = ({ task }: { task: TaskWithApplicationCount }) => {
         </div>
 
         <ConfirmPublishModal task={task} />
-
       </CardFooter>
     </Card>
   );
