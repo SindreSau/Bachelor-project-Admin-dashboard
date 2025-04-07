@@ -16,6 +16,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import StatusBadge from '@/components/table/status-badge';
 import { STATUS_OPTIONS } from '@/lib/constants';
+import { MoreHorizontal } from 'lucide-react';
+import DeleteConfirmationDialog from './delete-application-dialog';
 
 interface ApplicationDetailsCardProps {
   applicationId: number;
@@ -25,6 +27,7 @@ interface ApplicationDetailsCardProps {
   updatedAt: Date;
   applicationReviews: Review[];
   applicationStatus: string;
+  onDeleteApplication?: (id: number) => void;
 }
 
 const ApplicationDetailsCard = ({
@@ -35,9 +38,11 @@ const ApplicationDetailsCard = ({
   updatedAt,
   applicationReviews,
   applicationStatus: initialStatus,
+  onDeleteApplication,
 }: ApplicationDetailsCardProps) => {
   const [applicationStatus, setApplicationStatusState] = useState(initialStatus);
   const [isOpen, setIsOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   // Format date with a reusable function
   const formatDate = (date: Date) => {
@@ -58,6 +63,16 @@ const ApplicationDetailsCard = ({
     }
   };
 
+  const handleDeleteClick = () => {
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (onDeleteApplication) {
+      onDeleteApplication(applicationId);
+    }
+  };
+
   // Define info items to reduce JSX repetition
   const infoItems = [
     { id: 'group', label: 'Gruppenavn', value: groupName },
@@ -73,12 +88,12 @@ const ApplicationDetailsCard = ({
   ];
 
   return (
-    <Card>
-      <CardContent>
-        <ScrollArea>
-          <div className='grid gap-4 pt-6 sm:gap-6'>
+    <>
+      <Card>
+        <CardContent>
+          <ScrollArea>
             {/* Info Section - 2 columns on mobile, 3 on larger screens */}
-            <div className='grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6'>
+            <div className='grid grid-cols-2 gap-4 pt-6 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7'>
               {infoItems.map((item) => (
                 <div key={item.id}>
                   <p className='text-muted-foreground text-sm font-medium'>{item.label}</p>
@@ -117,12 +132,42 @@ const ApplicationDetailsCard = ({
                   setApplicationStatusState(newStatus);
                 }}
               />
+
+              {/* Delete Application Button */}
+              <div className='flex justify-end'>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className='hover:text-primary cursor-pointer rounded-full p-2 focus:outline-none'>
+                      <MoreHorizontal className='h-5 w-5' />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align='end'>
+                    <DropdownMenuLabel>Handlinger</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      onClick={handleDeleteClick}
+                      className='text-destructive/90 focus:text-destructive cursor-pointer'
+                    >
+                      Slett søknad
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
-          </div>
-          <ScrollBar orientation='horizontal' />
-        </ScrollArea>
-      </CardContent>
-    </Card>
+            <ScrollBar orientation='horizontal' />
+          </ScrollArea>
+        </CardContent>
+      </Card>
+
+      {/* Delete Confirmation Dialog */}
+      <DeleteConfirmationDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        onConfirm={handleDeleteConfirm}
+        title='Slett søknad'
+        description={`Er du helt sikker på at du vil slette søknaden til ${groupName}? No backsies!`}
+      />
+    </>
   );
 };
 
