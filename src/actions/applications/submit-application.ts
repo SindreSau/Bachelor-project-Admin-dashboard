@@ -16,78 +16,69 @@ const submitApplication = withRequestLogger<
     try {
       // Using a transaction to ensure all operations succeed or fail together
       await db.$transaction(async (tx) => {
-        // 1. Process all students in the array (handles any number of students)
-        const studentIds = await Promise.all(
+        // 1. Create the application record first
+        const application = await tx.application.create({
+          data: {
+            coverLetterText: applicationData.coverLetter,
+            school: applicationData.school,
+            taskpriorityids: {
+              set: applicationData.prioritizedTasks,
+            },
+            // Connect tasks to this application
+            tasks: {
+              connect: applicationData.prioritizedTasks.map((taskId) => ({ id: taskId })),
+            },
+          },
+        });
+
+        // 2. Process all students in the array and create new records for each
+        const students = await Promise.all(
           applicationData.students.map(async (studentData) => {
-            // Check if student exists by email
-            let student = await tx.student.findUnique({
-              where: { email: studentData.email },
+            // Always create a new student record even if the email already exists
+            const newStudent = await tx.student.create({
+              data: {
+                email: studentData.email,
+                firstName: studentData.firstName,
+                lastName: studentData.lastName,
+                // Connect this student to the application
+                applicationId: application.id,
+              },
             });
 
-            // If student doesn't exist, create a new one
-            if (!student) {
-              student = await tx.student.create({
-                data: {
-                  email: studentData.email,
-                  firstName: studentData.firstName,
-                  lastName: studentData.lastName,
-                },
-              });
-            }
-
-            // 2. Create file records for each student
+            // 3. Create file records for each student
             const timestamp = new Date().toISOString().replace(/[:.-]/g, '_');
 
             // CV file
             await tx.file.create({
               data: {
-                studentId: student.id,
+                studentId: newStudent.id,
                 documentType: DocumentType.CV,
                 storageUrl: studentData.cv_blob,
-                fileName: `${student.firstName}_${student.lastName}_CV_${timestamp}.pdf`,
+                fileName: `${newStudent.firstName}_${newStudent.lastName}_CV_${timestamp}.pdf`,
               },
             });
 
             // Grades file
             await tx.file.create({
               data: {
-                studentId: student.id,
+                studentId: newStudent.id,
                 documentType: DocumentType.GRADES,
                 storageUrl: studentData.grades_blob,
-                fileName: `${student.firstName}_${student.lastName}_Grades_${timestamp}.pdf`,
+                fileName: `${newStudent.firstName}_${newStudent.lastName}_Grades_${timestamp}.pdf`,
               },
             });
 
-            return student.id;
+            return newStudent;
           })
         );
 
-        const groupLeaderbyStudentId = (groupLeader: number) => {
-          for (let i = 0; i < studentIds.length; i++) {
-            if (i === groupLeader) {
-              return studentIds[i];
-            }
-          }
-        };
+        // 4. Update the application with the student representative
+        const groupLeader = students[applicationData.groupLeader];
 
-        // 3. Create the application record
-        const application = await tx.application.create({
+        await tx.application.update({
+          where: { id: application.id },
           data: {
-            coverLetterText: applicationData.coverLetter,
-            school: applicationData.school,
-            // Connect all students to this application
-            students: {
-              connect: studentIds.map((id) => ({ id })),
-            },
-            // Set student representative to the group leader
-            studentRepresentativeId: groupLeaderbyStudentId(applicationData.groupLeader),
-            // Connect all prioritized tasks to this application
-            tasks: {
-              connect: applicationData.prioritizedTasks.map((taskId) => ({ id: taskId })),
-            },
-            taskpriorityids: {
-              set: applicationData.prioritizedTasks,
-            },
+            studentRepresentativeId: groupLeader.id,
           },
         });
 
