@@ -192,7 +192,7 @@ const CreateTaskForm = () => {
               type='button'
               onClick={handleSaveClick}
               disabled={isDraftLoading || isPublishLoading}
-              className='bg-confirm hover:bg-confirm/80 disabled:bg-confirm/50 inline-flex items-center'
+              className='bg-confirm hover:bg-confirm/80 disabled:bg-confirm/50 inline-flex items-center cursor-pointer'
             >
               {isDraftLoading ? (
                 <>
@@ -207,7 +207,7 @@ const CreateTaskForm = () => {
               type='button'
               onClick={handleSaveAndPublishClick}
               disabled={isDraftLoading || isPublishLoading}
-              className='inline-flex items-center'
+              className='inline-flex items-center cursor-pointer'
             >
               {isPublishLoading ? (
                 <>
