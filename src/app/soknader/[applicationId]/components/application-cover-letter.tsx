@@ -1,6 +1,7 @@
 import { Card, CardTitle, CardHeader, CardContent } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Task } from '@prisma/client';
+import DOMPurify from 'isomorphic-dompurify'; // Add this import
 
 interface ApplicationCoverLetterProps {
   coverLetter: string;
@@ -8,6 +9,9 @@ interface ApplicationCoverLetterProps {
 }
 
 const ApplicationCoverLetter = ({ coverLetter, tasks }: ApplicationCoverLetterProps) => {
+  // Sanitize the HTML content to prevent XSS attacks
+  const sanitizedHtml = coverLetter ? DOMPurify.sanitize(coverLetter) : '';
+
   return (
     <Card className='@container h-full w-full flex-col'>
       <CardHeader>
@@ -42,10 +46,17 @@ const ApplicationCoverLetter = ({ coverLetter, tasks }: ApplicationCoverLetterPr
         {/* Divider */}
         <div className='bg-border mb-2 h-px @md:mb-4'></div>
 
-        {/* Cover Letter Section */}
-        <div className='overflow-y-auto whitespace-pre-wrap'>
+        {/* Cover Letter Section - Updated to use dangerouslySetInnerHTML */}
+        <div className='overflow-y-auto'>
           <ScrollArea className='h-full max-h-[calc(100vh-300px)] p-1'>
-            {coverLetter || 'No cover letter provided'}
+            {sanitizedHtml ? (
+              <div
+                className='prose prose-sm max-w-none text-sm'
+                dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
+              />
+            ) : (
+              <p className='text-muted-foreground italic'>Ingen søknadstekst tilgjengelig</p>
+            )}
           </ScrollArea>
         </div>
       </CardContent>
