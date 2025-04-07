@@ -18,6 +18,9 @@ import StatusBadge from '@/components/table/status-badge';
 import { STATUS_OPTIONS } from '@/lib/constants';
 import { MoreHorizontal } from 'lucide-react';
 import DeleteConfirmationDialog from './delete-application-dialog';
+import { deleteApplication } from '@/actions/applications/delete-application';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 interface ApplicationDetailsCardProps {
   applicationId: number;
@@ -27,7 +30,7 @@ interface ApplicationDetailsCardProps {
   updatedAt: Date;
   applicationReviews: Review[];
   applicationStatus: string;
-  onDeleteApplication?: (id: number) => void;
+  onApplicationDeleted?: () => void;
 }
 
 const ApplicationDetailsCard = ({
@@ -38,11 +41,13 @@ const ApplicationDetailsCard = ({
   updatedAt,
   applicationReviews,
   applicationStatus: initialStatus,
-  onDeleteApplication,
+  onApplicationDeleted,
 }: ApplicationDetailsCardProps) => {
   const [applicationStatus, setApplicationStatusState] = useState(initialStatus);
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const router = useRouter();
 
   // Format date with a reusable function
   const formatDate = (date: Date) => {
@@ -67,9 +72,32 @@ const ApplicationDetailsCard = ({
     setIsDeleteDialogOpen(true);
   };
 
-  const handleDeleteConfirm = () => {
-    if (onDeleteApplication) {
-      onDeleteApplication(applicationId);
+  const handleDeleteConfirm = async () => {
+    try {
+      setIsDeleting(true);
+      const result = await deleteApplication(applicationId);
+      if (result.success) {
+        toast.success('Søknad slettet', {
+          description: `Søknaden til ${groupName} er slettet.`,
+        });
+
+        if (onApplicationDeleted) {
+          onApplicationDeleted();
+        }
+
+        // Redirect to the applications page
+        router.push('/');
+      } else {
+        throw new Error(result.error) || 'Failed to delete application';
+      }
+    } catch (error) {
+      console.error('Failed to delete application:', error);
+      toast.error('Noe gikk galt.', {
+        description: 'Kunne ikke slette søknaden. Prøv igjen senere.',
+      });
+    } finally {
+      setIsDeleting(false);
+      setIsDeleteDialogOpen(false);
     }
   };
 
