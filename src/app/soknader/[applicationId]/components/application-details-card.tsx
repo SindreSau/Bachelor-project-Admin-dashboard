@@ -46,7 +46,7 @@ const ApplicationDetailsCard = ({
   const [applicationStatus, setApplicationStatusState] = useState(initialStatus);
   const [isOpen, setIsOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [, setIsDeleting] = useState(false);
   const router = useRouter();
 
   // Format date with a reusable function
