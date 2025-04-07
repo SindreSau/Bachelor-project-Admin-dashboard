@@ -1,19 +1,17 @@
 'use server';
 
 import { db } from '@/lib/prisma';
-import { Task } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 import triggerRevalidation from './trigger-revalidate';
 
-export async function changePublishStatus(task: Task) {
-  const { id, published } = task;
-
+// Changed to accept separate primitive values instead of a complex object
+export async function changePublishStatus(taskId: number, newPublishedState: boolean) {
   await db.task.update({
     where: {
-      id,
+      id: taskId,
     },
     data: {
-      published: !published,
+      published: newPublishedState,
     },
   });
 

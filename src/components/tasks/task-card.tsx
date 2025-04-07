@@ -16,28 +16,19 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useState } from 'react';
 import { Task } from '@prisma/client';
 import ConfirmDeleteModal from './confirm-delete-modal';
+import ConfirmPublishModal from './confirm-publish-modal';
 
-type TaskWithApplicationCount = Task & {
+export type TaskWithApplicationCount = Task & {
   _count?: {
     applications: number;
   };
 };
 
 const TaskCard = ({ task }: { task: TaskWithApplicationCount }) => {
-  const [isPublishing, setIsPublishing] = useState(false);
   const router = useRouter();
 
   const handleEditClick = (id: number) => {
     router.push(`/prosjekter/rediger/${id}`);
-  };
-
-  const handlePublishStatus = async (task: Task) => {
-    setIsPublishing(true);
-    try {
-      await changePublishStatus(task);
-    } finally {
-      setIsPublishing(false);
-    }
   };
 
   const formatDate = (date: Date) => {
@@ -102,24 +93,8 @@ const TaskCard = ({ task }: { task: TaskWithApplicationCount }) => {
           </div>
         </div>
 
-        <Button
-          onClick={() => handlePublishStatus(task)}
-          variant={task.published ? 'outline' : 'default'}
-          size='sm'
-          disabled={isPublishing}
-          className='shrink-0'
-        >
-          {isPublishing ? (
-            <span className='flex items-center gap-2'>
-              <div className='h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent' />
-              Laster...
-            </span>
-          ) : task.published ? (
-            'Avpubliser'
-          ) : (
-            'Publiser'
-          )}
-        </Button>
+        <ConfirmPublishModal task={task} />
+
       </CardFooter>
     </Card>
   );
