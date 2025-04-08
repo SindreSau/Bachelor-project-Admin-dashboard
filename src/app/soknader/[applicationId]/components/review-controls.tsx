@@ -175,10 +175,10 @@ const ReviewControls = ({
                     </Button>
                   ) : (
                     <div
-                      className={`relative flex h-8 w-8 items-center justify-center rounded-md border p-0 ${
+                      className={`relative flex h-6 w-6 items-center justify-center rounded-md p-0 ${
                         isSelected
-                          ? 'bg-primary text-primary-foreground'
-                          : 'text-muted-foreground bg-transparent'
+                          ? 'bg-primary text-primary-foreground hover:bg-primary/80'
+                          : 'text-muted-foreground hover:text-muted-foreground/80 bg-transparent'
                       }`}
                     >
                       <Icon className='h-4 w-4' />

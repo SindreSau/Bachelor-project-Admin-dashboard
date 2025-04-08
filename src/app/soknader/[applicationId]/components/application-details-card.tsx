@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Review } from '@prisma/client';
 import setApplicationStatus from '@/utils/applications/set-application-status';
 import ReviewControls from './review-controls';
@@ -16,6 +15,11 @@ import {
 } from '@/components/ui/dropdown-menu';
 import StatusBadge from '@/components/table/status-badge';
 import { STATUS_OPTIONS } from '@/lib/constants';
+import { MoreHorizontal } from 'lucide-react';
+import DeleteConfirmationDialog from './delete-application-dialog';
+import { deleteApplication } from '@/actions/applications/delete-application';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 interface ApplicationDetailsCardProps {
   applicationId: number;
@@ -25,6 +29,7 @@ interface ApplicationDetailsCardProps {
   updatedAt: Date;
   applicationReviews: Review[];
   applicationStatus: string;
+  onApplicationDeleted?: () => void;
 }
 
 const ApplicationDetailsCard = ({
@@ -35,9 +40,13 @@ const ApplicationDetailsCard = ({
   updatedAt,
   applicationReviews,
   applicationStatus: initialStatus,
+  onApplicationDeleted,
 }: ApplicationDetailsCardProps) => {
   const [applicationStatus, setApplicationStatusState] = useState(initialStatus);
   const [isOpen, setIsOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [, setIsDeleting] = useState(false);
+  const router = useRouter();
 
   // Format date with a reusable function
   const formatDate = (date: Date) => {
@@ -58,6 +67,39 @@ const ApplicationDetailsCard = ({
     }
   };
 
+  const handleDeleteClick = () => {
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    try {
+      setIsDeleting(true);
+      const result = await deleteApplication(applicationId);
+      if (result.success) {
+        toast.success('Søknad slettet', {
+          description: `Søknaden til ${groupName} er slettet.`,
+        });
+
+        if (onApplicationDeleted) {
+          onApplicationDeleted();
+        }
+
+        // Redirect to the applications page
+        router.push('/');
+      } else {
+        throw new Error(result.error) || 'Failed to delete application';
+      }
+    } catch (error) {
+      console.error('Failed to delete application:', error);
+      toast.error('Noe gikk galt.', {
+        description: 'Kunne ikke slette søknaden. Prøv igjen senere.',
+      });
+    } finally {
+      setIsDeleting(false);
+      setIsDeleteDialogOpen(false);
+    }
+  };
+
   // Define info items to reduce JSX repetition
   const infoItems = [
     { id: 'group', label: 'Gruppenavn', value: groupName },
@@ -73,12 +115,12 @@ const ApplicationDetailsCard = ({
   ];
 
   return (
-    <Card>
-      <CardContent>
-        <ScrollArea>
-          <div className='grid gap-4 pt-6 sm:gap-6'>
-            {/* Info Section - 2 columns on mobile, 3 on larger screens */}
-            <div className='grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6'>
+    <>
+      <Card>
+        <CardContent>
+          {/* Info Section - 2 columns on mobile, 3 on larger screens */}
+          <div className='flex flex-row items-center justify-between'>
+            <div className='grid flex-grow grid-cols-2 gap-4 pt-6 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6'>
               {infoItems.map((item) => (
                 <div key={item.id}>
                   <p className='text-muted-foreground text-sm font-medium'>{item.label}</p>
@@ -118,11 +160,40 @@ const ApplicationDetailsCard = ({
                 }}
               />
             </div>
+
+            {/* Delete Application Button */}
+            <div className='flex justify-end'>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className='hover:text-primary cursor-pointer rounded-full p-2 focus:outline-none'>
+                    <MoreHorizontal className='h-5 w-5' />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align='end'>
+                  <DropdownMenuLabel>Handlinger</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={handleDeleteClick}
+                    className='text-destructive/90 focus:text-destructive cursor-pointer'
+                  >
+                    Slett søknad
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
-          <ScrollBar orientation='horizontal' />
-        </ScrollArea>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+
+      {/* Delete Confirmation Dialog */}
+      <DeleteConfirmationDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        onConfirm={handleDeleteConfirm}
+        title='Slett søknad'
+        description={`Er du helt sikker på at du vil slette søknaden til ${groupName}? No backsies!`}
+      />
+    </>
   );
 };
 

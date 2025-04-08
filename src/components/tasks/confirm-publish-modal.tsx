@@ -8,14 +8,12 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '../ui/button';
-import { Task } from '@prisma/client';
 import { useState } from 'react';
 import { changePublishStatus } from '@/actions/tasks/change-publish-status';
 import Spinner from '../common/spinner';
 import { TaskWithApplicationCount } from './task-card';
 
 export default function ConfirmPublishModal({ task }: { task: TaskWithApplicationCount }) {
-
   const [isPublishing, setIsPublishing] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -58,8 +56,7 @@ export default function ConfirmPublishModal({ task }: { task: TaskWithApplicatio
           <DialogDescription>
             {task.published
               ? 'Dette vil skjule oppgaven fra søknadsportalen, men den vil fortsatt være tilgjengelig her. Vil du fortsette?'
-              : 'Dette vil gjøre oppgaven synlig på søknadsportalen. Vil du fortsette?'
-            }
+              : 'Dette vil gjøre oppgaven synlig på søknadsportalen. Vil du fortsette?'}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className='sm:justify-start'>
@@ -75,15 +72,13 @@ export default function ConfirmPublishModal({ task }: { task: TaskWithApplicatio
                 <Spinner size='xs' className='mr-2' />
                 <span>{task.published ? 'Avpubliserer...' : 'Publiserer...'}</span>
               </>
+            ) : task.published ? (
+              'Avpubliser'
             ) : (
-              task.published ? 'Avpubliser' : 'Publiser'
+              'Publiser'
             )}
           </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setDialogOpen(false)}
-          >
+          <Button variant='ghost' size='sm' onClick={() => setDialogOpen(false)}>
             Avbryt
           </Button>
         </DialogFooter>
