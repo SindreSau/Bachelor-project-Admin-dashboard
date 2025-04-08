@@ -32,6 +32,8 @@ export const deleteApplication = withAuthAndLog<DeleteApplicationResult, [number
           return { success: false, error: 'Application not found' };
         }
 
+        //TODO: Delete files from blob
+
         // With cascade delete, deleting the application automatically deletes:
         // - All related students
         // - All related files (via students)
