@@ -2,14 +2,15 @@
 
 import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/prisma';
-import { withRequestLogger, RequestLogger } from '@/lib/logger.server';
+import { RequestLogger } from '@/lib/logger.server';
+import { withAuthAndLog } from '@/lib/auth-and-log-wrapper';
 
 type DeleteApplicationResult = {
   success: boolean;
   error?: string;
 };
 
-export const deleteApplication = withRequestLogger<DeleteApplicationResult, [number]>(
+export const deleteApplication = withAuthAndLog<DeleteApplicationResult, [number]>(
   async (logger: RequestLogger, applicationId: number): Promise<DeleteApplicationResult> => {
     try {
       await db.$transaction(async (tx) => {
@@ -52,23 +53,8 @@ export const deleteApplication = withRequestLogger<DeleteApplicationResult, [num
       revalidatePath('/applications');
 
       return { success: true };
-    } catch (error: unknown) {
-      const errorObject: { message: string } = {
-        message: error instanceof Error ? error.message : String(error),
-      };
-
-      if (
-        error !== null &&
-        typeof error === 'object' &&
-        'code' in error &&
-        typeof error.code === 'string'
-      ) {
-        (errorObject as { message: string; code: string }).code = error.code;
-      }
-
-      if (process.env.NODE_ENV !== 'production' && error instanceof Error && error.stack) {
-        (errorObject as { message: string; stack: string }).stack = error.stack;
-      }
+    } catch (error) {
+      const errorObject = error instanceof Error ? error : new Error(String(error));
 
       logger.error(
         {

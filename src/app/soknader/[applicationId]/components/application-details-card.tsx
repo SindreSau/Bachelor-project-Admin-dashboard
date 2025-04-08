@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Review } from '@prisma/client';
 import setApplicationStatus from '@/utils/applications/set-application-status';
 import ReviewControls from './review-controls';
@@ -119,9 +118,9 @@ const ApplicationDetailsCard = ({
     <>
       <Card>
         <CardContent>
-          <ScrollArea>
-            {/* Info Section - 2 columns on mobile, 3 on larger screens */}
-            <div className='grid grid-cols-2 gap-4 pt-6 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7'>
+          {/* Info Section - 2 columns on mobile, 3 on larger screens */}
+          <div className='flex flex-row items-center justify-between'>
+            <div className='grid flex-grow grid-cols-2 gap-4 pt-6 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6'>
               {infoItems.map((item) => (
                 <div key={item.id}>
                   <p className='text-muted-foreground text-sm font-medium'>{item.label}</p>
@@ -160,30 +159,29 @@ const ApplicationDetailsCard = ({
                   setApplicationStatusState(newStatus);
                 }}
               />
-
-              {/* Delete Application Button */}
-              <div className='flex justify-end'>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button className='hover:text-primary cursor-pointer rounded-full p-2 focus:outline-none'>
-                      <MoreHorizontal className='h-5 w-5' />
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align='end'>
-                    <DropdownMenuLabel>Handlinger</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      onClick={handleDeleteClick}
-                      className='text-destructive/90 focus:text-destructive cursor-pointer'
-                    >
-                      Slett søknad
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
             </div>
-            <ScrollBar orientation='horizontal' />
-          </ScrollArea>
+
+            {/* Delete Application Button */}
+            <div className='flex justify-end'>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className='hover:text-primary cursor-pointer rounded-full p-2 focus:outline-none'>
+                    <MoreHorizontal className='h-5 w-5' />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align='end'>
+                  <DropdownMenuLabel>Handlinger</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={handleDeleteClick}
+                    className='text-destructive/90 focus:text-destructive cursor-pointer'
+                  >
+                    Slett søknad
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
