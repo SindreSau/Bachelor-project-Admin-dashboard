@@ -1,5 +1,5 @@
 import { getDeletedTasks } from '@/actions/tasks/get-tasks';
-import DeletedTaskCard from '@/components/tasks/deleted-task-card';
+import DeletedTaskCard from '@/components/tasks/unpublished-task-card';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowBigLeft } from 'lucide-react';

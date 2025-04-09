@@ -1,17 +1,23 @@
 import CreateTaskForm from '@/components/tasks/create-task-form';
 import TaskList from '@/components/tasks/task-list';
-import UnpublishedTasks from '@/components/tasks/deleted-task-list';
+import { getTasks } from '@/actions/tasks/get-tasks';
 
 export const dynamic = 'force-dynamic';
 
-const Page = () => {
+const Page = async () => {
+  const tasks = await getTasks();
+  const publishedTasks = tasks.filter((task) => task.published);
+  const unpublishedTasks = tasks.filter((task) => task.published === false);
+
   return (
     <div className='space-y-6'>
-      {/* Task lists side by side with responsive layout */}
-      <TaskList />
-      <UnpublishedTasks />
+      {/* Published tasks list */}
+      <TaskList tasks={publishedTasks} isUnpublishedTasks={false} />
 
-      {/* {/* Create task form below both lists */}
+      {/* Unpublished tasks list */}
+      <TaskList tasks={unpublishedTasks} isUnpublishedTasks={true} />
+
+      {/* Create task form below both lists */}
       <CreateTaskForm />
     </div>
   );

@@ -25,10 +25,11 @@
   "dependencies": {
     "@azure/storage-blob": "^12.26.0",
     "@faker-js/faker": "^9.4.0",
+    "@formkit/auto-animate": "^0.8.2",
     "@hookform/resolvers": "^3.10.0",
     "@kinde-oss/kinde-auth-nextjs": "^2.5.3",
     "@next/eslint-plugin-next": "^15.1.6",
-    "@prisma/client": "6.5.0",
+    "@prisma/client": "6.6.0",
     "@radix-ui/react-avatar": "^1.1.2",
     "@radix-ui/react-dialog": "^1.1.5",
     "@radix-ui/react-dropdown-menu": "^2.1.5",
@@ -97,7 +98,7 @@
     "postcss": "^8",
     "prettier": "3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "prisma": "^6.5.0",
+    "prisma": "^6.6.0",
     "tailwindcss": "^4.0.11",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.2",
@@ -108,6 +109,9 @@
       "esbuild@<=0.24.2": ">=0.25.0",
       "@babel/runtime@<7.26.10": ">=7.26.10",
       "@babel/helpers@<7.26.10": ">=7.26.10"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "@prisma/client"
+    ]
   }
 }

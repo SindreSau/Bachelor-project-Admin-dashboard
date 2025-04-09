@@ -72,15 +72,16 @@ enum ReviewStatus {
 }
 
 model Review {
-  id             Int           @id @default(autoincrement())
-  applicationId  Int
-  kindeUserId    String
-  kindeGivenName String //"Cached" name
-  kindeUserImage String //"Cached" image
-  review         ReviewStatus?
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  application    Application   @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  id              Int           @id @default(autoincrement())
+  applicationId   Int
+  kindeUserId     String
+  kindeGivenName  String //"Cached" name
+  kindeFamilyName String //"Cached" family name
+  kindeUserImage  String //"Cached" image
+  review          ReviewStatus?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  application     Application   @relation(fields: [applicationId], references: [id], onDelete: Cascade)
 
   @@unique([applicationId, kindeUserId], name: "applicationId_kindeUserId")
 }

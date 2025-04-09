@@ -11,12 +11,16 @@ import {
 
 import { LogoutLink, useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import { LogOut } from 'lucide-react';
-import { KindeUser } from '@kinde-oss/kinde-auth-nextjs/types';
 
 interface CustomAvatarProps {
   clickable?: boolean;
   size?: 'xs' | 'sm' | 'default' | 'lg';
-  user?: KindeUser<Record<string, unknown>>;
+  userData?: {
+    id: string;
+    given_name: string | null;
+    family_name: string | null;
+    picture: string | null;
+  };
 }
 
 const sizeClasses = {
@@ -29,13 +33,13 @@ const sizeClasses = {
 export default function CustomAvatar({
   clickable = false,
   size = 'default',
-  user,
+  userData,
 }: CustomAvatarProps) {
   const { user: kindeUser, isLoading } = useKindeBrowserClient();
 
   // Use provided user or fall back to Kinde user
-  const displayUser = user || kindeUser;
-  const loading = !user && isLoading;
+  const displayUser = userData || kindeUser;
+  const loading = !userData && isLoading;
 
   const initials = nameToInitials(displayUser?.given_name || '', displayUser?.family_name || '');
 
@@ -56,7 +60,7 @@ export default function CustomAvatar({
   );
 
   // Only make clickable if no specific user is provided (meaning it's the current user)
-  if (!clickable || user) {
+  if (!clickable || userData) {
     return avatar;
   }
 

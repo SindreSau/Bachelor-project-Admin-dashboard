@@ -12,6 +12,7 @@ export const submitReview = withAuthAndLog(
     review: ReviewStatus | null,
     kindeUserId: string,
     kindeGivenName: string = '',
+    kindeFamilyName: string = '',
     kindeUserImage: string = ''
   ) => {
     try {
@@ -79,12 +80,14 @@ export const submitReview = withAuthAndLog(
           update: {
             review,
             kindeGivenName,
+            kindeFamilyName,
             kindeUserImage,
           },
           create: {
             applicationId,
             kindeUserId,
             kindeGivenName,
+            kindeFamilyName,
             kindeUserImage,
             review,
           },

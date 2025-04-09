@@ -61,7 +61,15 @@ const Comment = ({ comment, isCurrentUser, user }: CommentProps) => {
       <Card className={`w-4/5 ${isCurrentUser ? 'bg-accent dark:bg-accent/50 border' : ''}`}>
         <CardHeader className='flex flex-row items-center justify-between px-3 py-2'>
           <div className='flex items-center gap-3'>
-            <CustomAvatar size='sm' user={user} />
+            <CustomAvatar
+              size='sm'
+              userData={{
+                id: isCurrentUser ? user.id : comment.kindeUserId,
+                given_name: isCurrentUser ? user.given_name : comment.kindeGivenName,
+                family_name: isCurrentUser ? user.family_name : comment.kindeFamilyName,
+                picture: isCurrentUser ? user.picture : comment.kindeUserImage,
+              }}
+            />
             <div className='font-medium'>
               <span className='@sm:hidden'>{comment.kindeGivenName}</span>
               <span className='hidden @sm:inline'>

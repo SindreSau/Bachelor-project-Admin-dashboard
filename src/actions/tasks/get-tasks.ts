@@ -12,7 +12,7 @@ export const getTasks = withAuthAndLog(async (logger: RequestLogger) => {
             select: { applications: true },
           },
         },
-        where: { deletedAt: null, published: true },
+        where: { deletedAt: null },
         orderBy: {
           createdAt: 'desc',
         },

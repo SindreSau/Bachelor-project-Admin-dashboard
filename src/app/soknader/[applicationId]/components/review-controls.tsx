@@ -33,7 +33,8 @@ const ReviewControls = ({
 }: ReviewControlsProps) => {
   const { user, isLoading } = useKindeBrowserClient();
   const currentUserId = user?.id || '';
-  const currentUserName = user?.given_name || '';
+  const currentUserGivenName = user?.given_name || '';
+  const currentUserFamilyName = user?.family_name || '';
   const currentUserImage = user?.picture || '';
 
   // Use state to track the current user's review
@@ -61,7 +62,8 @@ const ReviewControls = ({
         id: -1, // Temporary ID for the client-side representation
         applicationId,
         kindeUserId: currentUserId,
-        kindeGivenName: currentUserName,
+        kindeGivenName: currentUserGivenName,
+        kindeFamilyName: currentUserFamilyName,
         kindeUserImage: currentUserImage,
         review: currentUserStatus,
         createdAt: new Date(),
@@ -75,7 +77,8 @@ const ReviewControls = ({
     currentUserId,
     currentUserStatus,
     applicationId,
-    currentUserName,
+    currentUserGivenName,
+    currentUserFamilyName,
     currentUserImage,
   ]);
 
@@ -109,7 +112,8 @@ const ReviewControls = ({
         applicationId,
         shouldRemove ? null : clickedReview,
         currentUserId,
-        currentUserName,
+        currentUserGivenName,
+        currentUserFamilyName,
         currentUserImage
       );
 
@@ -199,9 +203,17 @@ const ReviewControls = ({
                     <div className='flex flex-col space-y-2'>
                       {usersWithThisReview.map((review) => (
                         <div key={review.kindeUserId} className='flex items-center gap-2'>
-                          <CustomAvatar size='sm' user={user} />
+                          <CustomAvatar
+                            size='sm'
+                            userData={{
+                              id: review.kindeUserId,
+                              given_name: review.kindeGivenName,
+                              family_name: review.kindeFamilyName || '',
+                              picture: review.kindeUserImage,
+                            }}
+                          />
                           <span className='text-sm whitespace-nowrap'>
-                            {review.kindeGivenName || 'User'}
+                            {review.kindeGivenName} {review.kindeFamilyName}
                           </span>
                         </div>
                       ))}
