@@ -1,4 +1,3 @@
-
 /* ! tailwindcss disable */
 @import './partials/code.css';
 @import './partials/placeholder.css';
@@ -203,15 +202,4 @@
 
 .minimal-tiptap-editor .ProseMirror s span {
   text-decoration: line-through;
-}
-
-.minimal-tiptap-editor .ProseMirror .selection,
-.minimal-tiptap-editor .ProseMirror *::selection,
-::selection {
-  background-color: hsl(var(--primary) / 0.25);
-}
-
-/* Override native selection when custom selection is present */
-.minimal-tiptap-editor .ProseMirror .selection::selection {
-  background: transparent;
 }
