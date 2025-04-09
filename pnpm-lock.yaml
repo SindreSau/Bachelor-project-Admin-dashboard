@@ -133,6 +133,9 @@ importers:
       isomorphic-dompurify:
         specifier: ^2.23.0
         version: 2.23.0
+      jsdom:
+        specifier: ^26.0.0
+        version: 26.0.0
       lowlight:
         specifier: ^3.3.0
         version: 3.3.0

@@ -1,8 +1,9 @@
 'use server';
 
 import { db } from '@/lib/prisma';
-import { withRequestLogger, RequestLogger } from '@/lib/logger.server';
+import { RequestLogger } from '@/lib/logger.server';
 import { Application, Student, Review, Task, Comment, File } from '@prisma/client';
+import { withAuthAndLog } from '@/lib/auth-and-log-wrapper';
 
 // Define the complete return type with all relations
 type ApplicationWithRelations = Application & {
@@ -15,7 +16,7 @@ type ApplicationWithRelations = Application & {
   comments: Comment[];
 };
 
-export const getOneApplication = withRequestLogger<ApplicationWithRelations | null, [number]>(
+export const getOneApplication = withAuthAndLog<ApplicationWithRelations | null, [number]>(
   async (
     logger: RequestLogger,
     applicationId: number
