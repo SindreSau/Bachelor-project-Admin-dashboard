@@ -5,12 +5,46 @@ import Link from 'next/link';
 import { concatGroupName } from '@/lib/utils';
 import StatusBadge from './status-badge';
 import ReviewControls from '@/app/soknader/[applicationId]/components/review-controls';
-import { Application, Review, Student } from '@prisma/client';
+import { Application, Review, ReviewStatus, Student } from '@prisma/client';
 import { getStatusOrder } from '@/utils/get-status-order';
+import { useMemo } from 'react';
 
 type ApplicationWithStudentsAndReviews = Application & {
   students: Student[];
   reviews: Review[];
+};
+
+// Move this outside of the render cycle to avoid unnecessary recalculations
+const calculateRatingScore = (reviews: Review[]): number => {
+  if (!reviews || reviews.length === 0) return 0;
+
+  return reviews.reduce((total, review) => {
+    // THUMBS_DOWN = 0, THUMBS_UP = 1, STAR = 2
+    const reviewValue = review.review
+      ? review.review === ReviewStatus.THUMBS_DOWN
+        ? 0
+        : review.review === ReviewStatus.THUMBS_UP
+          ? 1
+          : 2
+      : 0;
+
+    return total + reviewValue;
+  }, 0);
+};
+
+// Create a memoized map of application IDs to rating scores
+// This will be used in the ApplicationTable component
+export const useRatingScores = (applications: ApplicationWithStudentsAndReviews[]) => {
+  return useMemo(() => {
+    const scoreMap = new Map<number, number>();
+
+    applications.forEach((app) => {
+      const score = calculateRatingScore(app.reviews);
+      scoreMap.set(app.id, score);
+    });
+
+    return scoreMap;
+  }, [applications]);
 };
 
 // Define a custom filter function for exact matches
@@ -55,8 +89,10 @@ const SortableColumnHeader = ({
   );
 };
 
-// Define column structure for tanstack/react-table
-export const columns: ColumnDef<ApplicationWithStudentsAndReviews>[] = [
+// Factory function to create columns with a rating scores map
+export const createColumns = (
+  ratingScores: Map<number, number>
+): ColumnDef<ApplicationWithStudentsAndReviews>[] => [
   {
     accessorKey: 'groupName',
     header: ({ column }) => <SortableColumnHeader column={column} title='Gruppenavn' />,
@@ -71,7 +107,7 @@ export const columns: ColumnDef<ApplicationWithStudentsAndReviews>[] = [
     cell: ({ row }) => <div>{row.original.school}</div>,
   },
   {
-    accessorKey: 'statusText',
+    accessorKey: 'status',
     header: ({ column }) => <SortableColumnHeader column={column} title='Status' />,
     cell: ({ row }) => {
       const application = row.original;
@@ -115,7 +151,7 @@ export const columns: ColumnDef<ApplicationWithStudentsAndReviews>[] = [
     },
   },
   {
-    accessorKey: 'rating',
+    accessorKey: 'ratingScore',
     header: ({ column }) => <SortableColumnHeader column={column} title='Vurdering' />,
     cell: ({ row }) => {
       const application = row.original;
@@ -128,6 +164,18 @@ export const columns: ColumnDef<ApplicationWithStudentsAndReviews>[] = [
           applicationStatus={application.status}
         />
       );
+    },
+    // Use the pre-computed scores from the map
+    accessorFn: (row) => {
+      return ratingScores.get(row.id) || 0;
+    },
+    sortingFn: (rowA, rowB) => {
+      // Get the rating scores from the pre-computed map
+      const scoreA = ratingScores.get(rowA.original.id) || 0;
+      const scoreB = ratingScores.get(rowB.original.id) || 0;
+
+      // Sort by score (higher score first)
+      return scoreB - scoreA;
     },
   },
   {

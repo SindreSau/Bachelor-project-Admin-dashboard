@@ -14,7 +14,7 @@ import { concatGroupName } from '@/lib/utils';
 import getApplicationStatus from '@/utils/applications/get-application-status';
 import ApplicationFilters from './application-filters';
 import ApplicationTableView from './application-table-view';
-import { columns } from './application-table-columns';
+import { createColumns, useRatingScores } from './application-table-columns';
 import { Application, Review, Student } from '@prisma/client';
 
 type ApplicationWithStudentsAndReviews = Application & {
@@ -49,7 +49,7 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
             return {
               ...app,
               groupName: concatGroupName(app.students),
-              statusText: status,
+              status: status ?? '',
             };
           })
         );
@@ -63,6 +63,12 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
 
     fetchStatuses();
   }, [applications]);
+
+  // Create memoized rating scores map
+  const ratingScores = useRatingScores(processedApplications);
+
+  // Create columns with the rating scores
+  const columns = React.useMemo(() => createColumns(ratingScores), [ratingScores]);
 
   const table = useReactTable({
     data: processedApplications,

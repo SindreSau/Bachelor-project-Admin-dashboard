@@ -70,7 +70,7 @@ const ApplicationFilters = ({
         value={statusFilter}
         onValueChange={(value) => {
           setStatusFilter(value);
-          table.getColumn('statusText')?.setFilterValue(value === 'all' ? undefined : value);
+          table.getColumn('status')?.setFilterValue(value === 'all' ? undefined : value);
         }}
         defaultValue='all'
       >
