@@ -12,26 +12,18 @@ import { Trash2 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { deleteTask } from '@/actions/tasks/delete-task';
 import { restoreTask } from '@/actions/tasks/restore-task';
-import { useEffect } from 'react';
-import { getTask } from '@/actions/tasks/get-task';
 import Spinner from '@/components/common/spinner';
 import { toast } from 'sonner';
 
-export default function ConfirmDeleteModal({ taskId }: { taskId: number }) {
-  const [hasApplications, setHasApplications] = useState(false);
+export default function ConfirmDeleteModal({
+  taskId,
+  hasApplications = false,
+}: {
+  taskId: number;
+  hasApplications?: boolean;
+}) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    const fetchTask = async () => {
-      if (isOpen) {
-        const task = await getTask(taskId);
-        const result = (task?.applications?.length ?? 0) > 0;
-        setHasApplications(result);
-      }
-    };
-    fetchTask();
-  }, [taskId, isOpen]);
 
   // Separated the restore functionality into its own handler
   const handleRestore = async (id: number) => {
@@ -74,6 +66,7 @@ export default function ConfirmDeleteModal({ taskId }: { taskId: number }) {
       console.error(err);
     } finally {
       setIsDeleting(false);
+      setIsOpen(false);
     }
   };
 

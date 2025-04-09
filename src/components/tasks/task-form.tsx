@@ -31,8 +31,8 @@ const taskSchema = z.object({
   taskName: z.string().min(2, { message: 'Tittel må være minst 2 tegn' }),
   taskDescription: z.string().min(2, { message: 'Beskrivelse må være minst 2 tegn' }),
   deadline: z.date().optional().nullable(),
-  minStudents: z.number().min(0).default(3),
-  maxStudents: z.number().min(0).default(5),
+  minStudents: z.number().min(0).max(10).default(3),
+  maxStudents: z.number().min(0).max(15).default(5),
 });
 type TaskFormValues = z.infer<typeof taskSchema>;
 
@@ -113,7 +113,7 @@ export default function TaskForm({ isEditComponent, task }: TaskFormProps) {
 
   // Render the form fields for both create and edit modes
   const renderDeadlineAndStudentsFields = () => (
-    <div className='flex space-x-4'>
+    <div className='flex flex-wrap space-x-4'>
       <FormField
         control={form.control}
         name='deadline'
@@ -142,6 +142,8 @@ export default function TaskForm({ isEditComponent, task }: TaskFormProps) {
                 placeholder='Minimum'
                 {...field}
                 onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                min={0}
+                max={10}
                 value={field.value}
               />
             </FormControl>
@@ -161,6 +163,8 @@ export default function TaskForm({ isEditComponent, task }: TaskFormProps) {
                 placeholder='Maksimum'
                 {...field}
                 onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                min={0}
+                max={15}
                 value={field.value}
               />
             </FormControl>

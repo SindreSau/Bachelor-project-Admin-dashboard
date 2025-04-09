@@ -31,6 +31,9 @@ const TaskCard = ({ task }: { task: TaskWithApplicationCount }) => {
     });
   };
 
+  // Check if the task has any applications
+  const hasApplications = (task._count?.applications || 0) > 0;
+
   return (
     <Card
       className={`flex h-full w-full grow flex-col ${task.published ? 'border-primary border' : ''}`}
@@ -45,7 +48,7 @@ const TaskCard = ({ task }: { task: TaskWithApplicationCount }) => {
             >
               <Pencil className='h-4 w-4' />
             </Link>
-            <ConfirmDeleteModal taskId={task.id} />
+            <ConfirmDeleteModal taskId={task.id} hasApplications={hasApplications} />
           </div>
         </div>
       </CardHeader>
