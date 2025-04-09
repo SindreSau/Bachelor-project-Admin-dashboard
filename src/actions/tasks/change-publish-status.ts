@@ -3,19 +3,48 @@
 import { db } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import triggerRevalidation from './trigger-revalidate';
+import { withAuthAndLog } from '@/lib/auth-and-log-wrapper';
 
-// Changed to accept separate primitive values instead of a complex object
-export async function changePublishStatus(taskId: number, newPublishedState: boolean) {
-  await db.task.update({
-    where: {
-      id: taskId,
-    },
-    data: {
-      published: newPublishedState,
-    },
-  });
+export const changePublishStatus = withAuthAndLog(
+  async (logger, taskId: number, newPublishedState: boolean) => {
+    try {
+      await db.task.update({
+        where: { id: taskId },
+        data: { published: newPublishedState },
+      });
+      logger.info(
+        { action: 'changePublishStatusUpdated', taskId, newPublishedState },
+        'Task publish status updated'
+      );
 
-  // Trigger revalidation of the /prosjekter page in the application-app
-  await triggerRevalidation();
-  revalidatePath('/prosjekter');
-}
+      await triggerRevalidation();
+      revalidatePath('/prosjekter');
+      logger.info(
+        { action: 'changePublishStatusCompleted', taskId },
+        'Revalidation of application portal completed'
+      );
+      return { success: true };
+    } catch (err) {
+      const errorObj = {
+        message: err instanceof Error ? err.message : String(err),
+        code: (err as { code?: string })?.code,
+        stack:
+          process.env.NODE_ENV !== 'production' && err instanceof Error ? err.stack : undefined,
+      };
+
+      logger.error(
+        {
+          action: 'changePublishStatusError',
+          taskId,
+          error: errorObj,
+        },
+        'Error changing publish status'
+      );
+
+      return {
+        success: false,
+        error: 'Failed to change publish status. Please try again.',
+      };
+    }
+  }
+);

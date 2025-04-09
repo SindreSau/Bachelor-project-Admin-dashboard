@@ -8,13 +8,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Button } from '../ui/button';
+
 import { Calendar, Pencil, Users, Globe, Hourglass } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Task } from '@prisma/client';
 import ConfirmDeleteModal from './confirm-delete-modal';
 import ConfirmPublishModal from './confirm-publish-modal';
+import Link from 'next/link';
 
 export type TaskWithApplicationCount = Task & {
   _count?: {
@@ -23,12 +23,6 @@ export type TaskWithApplicationCount = Task & {
 };
 
 const TaskCard = ({ task }: { task: TaskWithApplicationCount }) => {
-  const router = useRouter();
-
-  const handleEditClick = (id: number) => {
-    router.push(`/prosjekter/rediger/${id}`);
-  };
-
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('no-NO', {
       day: '2-digit',
@@ -45,14 +39,12 @@ const TaskCard = ({ task }: { task: TaskWithApplicationCount }) => {
         <div className='flex items-start justify-between gap-4'>
           <CardTitle className='text-xl'>{task.taskName}</CardTitle>
           <div className='flex shrink-0 gap-2'>
-            <Button
-              onClick={() => handleEditClick(task.id)}
-              variant='secondary'
-              size='sm'
-              className='h-8 w-8 p-0'
+            <Link
+              href={`/prosjekter/rediger/${task.id}`}
+              className='border-input bg-secondary text-secondary-foreground hover:bg-secondary/80 focus-visible:ring-ring inline-flex h-8 w-8 items-center justify-center rounded-md border p-0 text-sm font-medium shadow-sm transition-colors focus-visible:ring-1 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50'
             >
               <Pencil className='h-4 w-4' />
-            </Button>
+            </Link>
             <ConfirmDeleteModal taskId={task.id} />
           </div>
         </div>
