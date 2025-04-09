@@ -136,8 +136,11 @@ const ApplicationDetailsCard = ({
                           <DropdownMenuLabel>Endre status</DropdownMenuLabel>
                           <DropdownMenuSeparator />
                           {Object.entries(STATUS_OPTIONS).map(([key, status]) => (
-                            <DropdownMenuItem key={key} onClick={() => handleStatusChange(status)}>
-                              {status}
+                            <DropdownMenuItem
+                              key={key}
+                              onClick={() => handleStatusChange(status.value)}
+                            >
+                              {status.value}
                             </DropdownMenuItem>
                           ))}
                         </DropdownMenuContent>

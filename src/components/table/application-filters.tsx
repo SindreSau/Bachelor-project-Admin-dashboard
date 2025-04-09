@@ -42,12 +42,12 @@ const ApplicationFilters = ({
   resetFilters,
 }: ApplicationFiltersProps) => {
   return (
-    <div className='flex items-center gap-8 py-4'>
+    <div className='flex flex-wrap items-center gap-4 py-4'>
       <Input
         placeholder='Filtrer på navn...'
         value={(table.getColumn('groupName')?.getFilterValue() as string) ?? ''}
         onChange={(event) => table.getColumn('groupName')?.setFilterValue(event.target.value)}
-        className='max-w-sm'
+        className='max-w-xs'
       />
 
       <Select
@@ -83,8 +83,8 @@ const ApplicationFilters = ({
           <SelectItem value='all'>Alle statuser</SelectItem>
           {Object.entries(STATUS_OPTIONS).map(([key, status]) => (
             <div key={key}>
-              <SelectItem key={key} value={status}>
-                {status}
+              <SelectItem key={key} value={status.value}>
+                {status.value}
               </SelectItem>
             </div>
           ))}

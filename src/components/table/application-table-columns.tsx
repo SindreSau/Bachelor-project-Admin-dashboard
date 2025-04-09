@@ -6,6 +6,7 @@ import { concatGroupName } from '@/lib/utils';
 import StatusBadge from './status-badge';
 import ReviewControls from '@/app/soknader/[applicationId]/components/review-controls';
 import { Application, Review, Student } from '@prisma/client';
+import { getStatusOrder } from '@/utils/get-status-order';
 
 type ApplicationWithStudentsAndReviews = Application & {
   students: Student[];
@@ -70,7 +71,7 @@ export const columns: ColumnDef<ApplicationWithStudentsAndReviews>[] = [
     cell: ({ row }) => <div>{row.original.school}</div>,
   },
   {
-    accessorKey: 'statusText',
+    accessorKey: 'status',
     header: ({ column }) => <SortableColumnHeader column={column} title='Status' />,
     cell: ({ row }) => {
       const application = row.original;
@@ -78,6 +79,16 @@ export const columns: ColumnDef<ApplicationWithStudentsAndReviews>[] = [
       return <StatusBadge status={status} />;
     },
     filterFn: exactMatchFilter,
+    // Add a custom sorting function based on our order property
+    sortingFn: (rowA, rowB) => {
+      const statusA = rowA.original.status;
+      const statusB = rowB.original.status;
+
+      const orderA = getStatusOrder(statusA);
+      const orderB = getStatusOrder(statusB);
+
+      return orderA - orderB;
+    },
   },
   {
     accessorKey: 'createdAt',
