@@ -9,7 +9,7 @@ const UnpublishedTasks = async () => {
 
   return (
     <div className='bg-card rounded-lg border p-6 shadow-xs'>
-      <h2 className='mb-4 text-xl font-bold'>Upubliserte Oppgaver</h2>
+      <h2 className='mb-4 text-xl font-bold'>Upubliserte oppgaver</h2>
       <div className='grid gap-4 sm:grid-cols-1 lg:grid-cols-1'>
         {unpublishedTasks.length > 0 ? (
           unpublishedTasks.map((task) => (

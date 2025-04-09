@@ -10,8 +10,7 @@ const TaskList = async () => {
   return (
     <div className='bg-card rounded-lg border p-6 shadow-xs'>
       <div className='mb-4 flex items-center justify-between'>
-        <div className='w-[70px]'></div> {/* Spacer to balance the layout */}
-        <h2 className='text-xl font-bold'>Oppgaveliste</h2>
+        <h2 className='text-xl font-bold'>Publiserte oppgaver</h2>
         <Button asChild variant='outline' size='sm'>
           <Link href='/prosjekter/bin'>
             <Trash className='h-4 w-4' />
