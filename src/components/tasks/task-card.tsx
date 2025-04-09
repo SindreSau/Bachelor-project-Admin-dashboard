@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 
-import { Calendar, Pencil, Users, Globe, Hourglass } from 'lucide-react';
+import { Calendar, Pencil, Users, Globe, Hourglass, UserPlus, UserMinus } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Task } from '@prisma/client';
 import ConfirmDeleteModal from './confirm-delete-modal';
@@ -73,13 +73,25 @@ const TaskCard = ({ task }: { task: TaskWithApplicationCount }) => {
             <Users className='h-3 w-3' />
             <span>Søknader: {task._count?.applications || 0}</span>
           </div>
+          <div className='flex flex-wrap gap-4'>
+            <div className='flex items-center gap-1 whitespace-nowrap'>
+              <UserMinus className='h-3 w-3' />
+              <span>Min. studenter: {task.minStudents || 3}</span>
+            </div>
+            <div className='flex items-center gap-1 whitespace-nowrap'>
+              <UserPlus className='h-3 w-3' />
+              <span>Maks studenter: {task.maxStudents || 5}</span>
+            </div>
+          </div>
           <div className='flex items-center gap-1 whitespace-nowrap'>
             <Globe className='h-3 w-3' />
             <span>Status: {task.published ? 'Publisert' : 'Upublisert'}</span>
           </div>
           <div className='flex items-center gap-1 whitespace-nowrap'>
             <Hourglass className='h-3 w-3' />
-            <span>Søknadsfrist: {task.deadline ? formatDate(task.deadline) : 'Ingen frist'}</span>
+            <span>
+              Søknadsfrist: {task.deadline ? formatDate(new Date(task.deadline)) : 'Ingen frist'}
+            </span>
           </div>
         </div>
 

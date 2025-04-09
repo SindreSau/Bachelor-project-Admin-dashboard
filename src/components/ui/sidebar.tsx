@@ -114,7 +114,12 @@ const SidebarProvider = React.forwardRef<
 
     React.useEffect(() => {
       const handleKeyDown = (event: KeyboardEvent) => {
-        if (event.key === SIDEBAR_KEYBOARD_SHORTCUT && (event.metaKey || event.ctrlKey)) {
+        if (
+          event.key === SIDEBAR_KEYBOARD_SHORTCUT &&
+          (event.metaKey || event.ctrlKey) &&
+          event.shiftKey
+        ) {
+          // Added check for Shift key
           event.preventDefault();
           toggleSidebar();
         }

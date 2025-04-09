@@ -1,4 +1,4 @@
-import CreateTaskForm from '@/components/tasks/create-task-form';
+import TaskForm from '@/components/tasks/task-form';
 import TaskList from '@/components/tasks/task-list';
 import { getTasks } from '@/actions/tasks/get-tasks';
 
@@ -18,7 +18,7 @@ const Page = async () => {
       <TaskList tasks={unpublishedTasks} isUnpublishedTasks={true} />
 
       {/* Create task form below both lists */}
-      <CreateTaskForm />
+      <TaskForm />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import EditTaskForm from '@/components/tasks/edit-task-form';
+import TaskForm from '@/components/tasks/task-form';
 import React from 'react';
 import { getTask } from '@/actions/tasks/get-task';
 import { notFound } from 'next/navigation';
@@ -23,5 +23,5 @@ export default async function Page({ params }: Props) {
     notFound();
   }
 
-  return <EditTaskForm task={task} />;
+  return <TaskForm isEditComponent task={task} />;
 }
