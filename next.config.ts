@@ -7,8 +7,8 @@ const nextConfig: NextConfig = {
     },
     staleTimes: {
       // Set dynamic and static stale times for the entire application
-      dynamic: 300, // 5 minutes
-      static: 60 * 30, // 30 minutes
+      dynamic: 30 * 60, // 30 minutes
+      static: 60 * 60, // 60 minutes
     },
   },
   output: 'standalone',
