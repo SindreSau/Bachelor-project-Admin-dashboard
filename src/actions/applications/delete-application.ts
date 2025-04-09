@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/prisma';
 import { RequestLogger } from '@/lib/logger.server';
 import { withAuthAndLog } from '@/lib/auth-and-log-wrapper';
+import { deleteByUrl } from '@/utils/blobstorage/delete-files';
 
 type DeleteApplicationResult = {
   success: boolean;
@@ -13,6 +14,17 @@ type DeleteApplicationResult = {
 export const deleteApplication = withAuthAndLog<DeleteApplicationResult, [number]>(
   async (logger: RequestLogger, applicationId: number): Promise<DeleteApplicationResult> => {
     try {
+      const filesToDelete = await db.file.findMany({
+        where: {
+          student: {
+            applicationId: applicationId,
+          },
+        },
+        select: {
+          storageUrl: true,
+        },
+      });
+
       await db.$transaction(async (tx) => {
         logger.info(
           { action: 'deleteApplication', applicationId, step: 'started' },
@@ -43,9 +55,29 @@ export const deleteApplication = withAuthAndLog<DeleteApplicationResult, [number
           where: { id: applicationId },
         });
 
+        const blobDeletionPromises = filesToDelete.map(async (file) => {
+          try {
+            await deleteByUrl(file.storageUrl);
+            logger.info(
+              { action: 'deleteApplication', blobUrl: file.storageUrl },
+              'Successfully deleted blob file'
+            );
+          } catch (error) {
+            // Log the error but don't fail the whole operation
+            const errorObj = error instanceof Error ? error : new Error(String(error));
+            logger.error(
+              { action: 'deleteApplication', blobUrl: file.storageUrl, error: errorObj },
+              'Failed to delete blob file'
+            );
+          }
+        });
+
+        // Wait for all blob deletions to complete
+        await Promise.all(blobDeletionPromises);
+
         logger.info(
           { action: 'deleteApplication', applicationId, status: 'completed' },
-          'Successfully deleted application with all related entities (via cascade)'
+          'Successfully deleted application with all related entities (via cascade) and files via blob deletion'
         );
 
         return { success: true };
