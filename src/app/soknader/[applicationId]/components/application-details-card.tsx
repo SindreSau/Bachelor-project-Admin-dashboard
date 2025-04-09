@@ -119,8 +119,8 @@ const ApplicationDetailsCard = ({
       <Card>
         <CardContent>
           {/* Info Section - 2 columns on mobile, 3 on larger screens */}
-          <div className='flex flex-row items-center justify-between'>
-            <div className='grid flex-grow grid-cols-2 gap-4 pt-6 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6'>
+          <div className='flex flex-row items-center justify-between pt-6'>
+            <div className='grid flex-grow grid-cols-2 items-center gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6'>
               {infoItems.map((item) => (
                 <div key={item.id}>
                   <p className='text-muted-foreground text-sm font-medium'>{item.label}</p>
