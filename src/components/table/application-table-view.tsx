@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import {
   Table,
   TableBody,
@@ -60,22 +61,23 @@ const ApplicationTableView = ({
             </TableRow>
           ) : table.getRowModel().rows?.length ? (
             // Show data when loaded and not empty
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                onClick={() => {
-                  window.location.href = getLink(row.original);
-                }}
-                key={row.id}
-                data-state={row.getIsSelected() && 'selected'}
-                className='group hover:bg-muted/50 cursor-pointer'
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
+            table.getRowModel().rows.map((row) => {
+              const href = getLink(row.original);
+              return (
+                <Link href={href} key={row.id} legacyBehavior>
+                  <TableRow
+                    data-state={row.getIsSelected() && 'selected'}
+                    className='group hover:bg-muted/50 cursor-pointer'
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </Link>
+              );
+            })
           ) : (
             // Show no results when not loading and empty
             <TableRow>

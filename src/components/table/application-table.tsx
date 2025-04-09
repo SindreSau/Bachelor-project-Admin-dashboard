@@ -10,16 +10,16 @@ import {
   getFilteredRowModel,
 } from '@tanstack/react-table';
 import { Card, CardTitle, CardHeader, CardContent } from '@/components/ui/card';
-import { concatGroupName } from '@/lib/utils';
-import getApplicationStatus from '@/utils/applications/get-application-status';
+import { createColumns, useRatingScores } from './application-table-columns';
 import ApplicationFilters from './application-filters';
 import ApplicationTableView from './application-table-view';
-import { createColumns, useRatingScores } from './application-table-columns';
 import { Application, Review, Student } from '@prisma/client';
 
 type ApplicationWithStudentsAndReviews = Application & {
   students: Student[];
   reviews: Review[];
+  groupName?: string;
+  status?: string;
 };
 
 interface ApplicationViewProps {
@@ -27,51 +27,20 @@ interface ApplicationViewProps {
 }
 
 const ApplicationTable = ({ applications }: ApplicationViewProps) => {
-  const [processedApplications, setProcessedApplications] = React.useState<
-    ApplicationWithStudentsAndReviews[]
-  >([]);
-  const [isLoading, setIsLoading] = React.useState(true);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [schoolFilter, setSchoolFilter] = React.useState<string>('all');
   const [statusFilter, setStatusFilter] = React.useState<string>('all');
   const [ratingFilter, setRatingFilter] = React.useState<string>('all');
 
-  // Fetch application statuses and process applications
-  React.useEffect(() => {
-    const fetchStatuses = async () => {
-      setIsLoading(true);
-
-      try {
-        const updatedApplications = await Promise.all(
-          applications.map(async (app) => {
-            const status = await getApplicationStatus(app.id);
-            return {
-              ...app,
-              groupName: concatGroupName(app.students),
-              status: status ?? '',
-            };
-          })
-        );
-        setProcessedApplications(updatedApplications);
-      } catch (error) {
-        console.error('Error processing applications:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchStatuses();
-  }, [applications]);
-
   // Create memoized rating scores map
-  const ratingScores = useRatingScores(processedApplications);
+  const ratingScores = useRatingScores(applications);
 
   // Create columns with the rating scores
   const columns = React.useMemo(() => createColumns(ratingScores), [ratingScores]);
 
   const table = useReactTable({
-    data: processedApplications,
+    data: applications,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -117,12 +86,7 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
           resetFilters={resetFilters}
         />
 
-        <ApplicationTableView
-          table={table}
-          columns={columns}
-          isLoading={isLoading}
-          getLink={getLink}
-        />
+        <ApplicationTableView table={table} columns={columns} isLoading={false} getLink={getLink} />
       </CardContent>
     </Card>
   );

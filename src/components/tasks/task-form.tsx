@@ -211,6 +211,7 @@ export default function TaskForm({ isEditComponent, task }: TaskFormProps) {
                     <MinimalTiptapEditor
                       key={editorKey}
                       value={field.value}
+                      immediatelyRender={false}
                       onChange={(newContent: Content) => {
                         const htmlString = typeof newContent === 'string' ? newContent : '';
                         field.onChange(htmlString);

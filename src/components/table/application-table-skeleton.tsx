@@ -16,6 +16,13 @@ export default function ApplicationTableSkeleton() {
         <CardTitle>Søknader</CardTitle>
       </CardHeader>
       <CardContent>
+        <div className='flex flex-wrap items-center gap-4 py-4'>
+          <Skeleton className='h-10 w-64 max-w-xs rounded-md' />
+          <Skeleton className='h-10 w-[180px] rounded-md' />
+          <Skeleton className='h-10 w-[180px] rounded-md' />
+          <Skeleton className='h-9 w-24 rounded-md' />
+        </div>
+
         <div className='rounded border'>
           <Table>
             <TableHeader>
