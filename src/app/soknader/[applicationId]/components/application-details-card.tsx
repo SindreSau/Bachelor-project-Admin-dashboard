@@ -165,7 +165,7 @@ const ApplicationDetailsCard = ({
             <div className='flex justify-end'>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className='hover:text-primary cursor-pointer rounded-full p-2 focus:outline-none'>
+                  <button className='hover:text-primary cursor-pointer rounded-full p-2'>
                     <MoreHorizontal className='h-5 w-5' />
                   </button>
                 </DropdownMenuTrigger>

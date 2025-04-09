@@ -7,6 +7,7 @@ import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Student, File } from '@prisma/client';
 import { getBlobPdf } from '@/utils/blobstorage/get-files';
 import Spinner from '@/components/common/spinner';
+import { Button } from '@/components/ui/button';
 
 type StudentWithFiles = Student & {
   files: File[];
@@ -90,19 +91,20 @@ const ApplicationStudentsGrid = ({ students, studentRepresentativeId }: Students
                     };
 
                     return (
-                      <button
+                      <Button
                         key={file.id}
                         onClick={handleClick}
                         disabled={isLoading}
-                        className='bg-primary/50 hover:bg-primary/70 disabled:bg-primary/25 flex cursor-pointer items-center justify-center rounded px-2 py-1 text-xs text-inherit transition-colors disabled:cursor-not-allowed'
+                        size='tiny'
+                        className='hover:bg-primary/70 disabled:bg-primary/25 cursor-pointer rounded transition-colors disabled:cursor-not-allowed'
                       >
                         <span>{file.documentType === 'CV' ? 'CV' : 'Karakterer'}</span>
                         {isLoading ? (
-                          <Spinner size='xs' className='ml-2' />
+                          <Spinner size='xs' className='ml-1' />
                         ) : (
-                          <ExternalLink className='ml-2 h-3 w-3' />
+                          <ExternalLink className='ml-1 h-3 w-3 -translate-y-[1px]' />
                         )}
-                      </button>
+                      </Button>
                     );
                   })}
                   {['CV', 'GRADES'].map(
