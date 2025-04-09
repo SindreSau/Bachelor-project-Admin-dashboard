@@ -71,7 +71,7 @@ export const columns: ColumnDef<ApplicationWithStudentsAndReviews>[] = [
     cell: ({ row }) => <div>{row.original.school}</div>,
   },
   {
-    accessorKey: 'status',
+    accessorKey: 'statusText',
     header: ({ column }) => <SortableColumnHeader column={column} title='Status' />,
     cell: ({ row }) => {
       const application = row.original;

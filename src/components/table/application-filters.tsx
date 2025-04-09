@@ -1,7 +1,7 @@
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { RotateCcw, ThumbsDown, ThumbsUp, Star } from 'lucide-react';
+import { RotateCcw } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -37,8 +37,6 @@ const ApplicationFilters = ({
   setSchoolFilter,
   statusFilter,
   setStatusFilter,
-  ratingFilter,
-  setRatingFilter,
   resetFilters,
 }: ApplicationFiltersProps) => {
   return (
@@ -88,31 +86,6 @@ const ApplicationFilters = ({
               </SelectItem>
             </div>
           ))}
-        </SelectContent>
-      </Select>
-
-      <Select
-        value={ratingFilter}
-        onValueChange={(value) => {
-          setRatingFilter(value);
-          table.getColumn('rating')?.setFilterValue(value === 'all' ? undefined : value);
-        }}
-        defaultValue='all'
-      >
-        <SelectTrigger className='w-[180px]'>
-          <SelectValue placeholder='Vurderinger' />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value='all'>Alle vurderinger</SelectItem>
-          <SelectItem value='THUMBS_DOWN'>
-            <ThumbsDown />
-          </SelectItem>
-          <SelectItem value='THUMBS_UP'>
-            <ThumbsUp />
-          </SelectItem>
-          <SelectItem value='STAR'>
-            <Star />
-          </SelectItem>
         </SelectContent>
       </Select>
 
