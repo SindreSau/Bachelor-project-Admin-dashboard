@@ -71,7 +71,7 @@ const ApplicationTable = ({ applications }: ApplicationViewProps) => {
 
   return (
     <Card className='h-full flex-col'>
-      <CardHeader>
+      <CardHeader className='pb-0'>
         <CardTitle>Søknader</CardTitle>
       </CardHeader>
       <CardContent>

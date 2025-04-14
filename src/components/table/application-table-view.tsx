@@ -1,5 +1,5 @@
+'use client';
 import React from 'react';
-import Link from 'next/link';
 import {
   Table,
   TableBody,
@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/table';
 import { ColumnDef, flexRender, Table as TableType } from '@tanstack/react-table';
 import { Application, Student, Review } from '@prisma/client';
+import { useRouter } from 'next/navigation';
 
 type ApplicationWithStudentsAndReviews = Application & {
   students: Student[];
@@ -31,6 +32,12 @@ const ApplicationTableView = ({
   isLoading,
   getLink,
 }: ApplicationTableViewProps) => {
+  const router = useRouter();
+
+  const handleRowClick = (href: string) => {
+    router.push(href);
+  };
+
   return (
     <div className='rounded border'>
       <Table>
@@ -64,18 +71,18 @@ const ApplicationTableView = ({
             table.getRowModel().rows.map((row) => {
               const href = getLink(row.original);
               return (
-                <Link href={href} key={row.id} legacyBehavior>
-                  <TableRow
-                    data-state={row.getIsSelected() && 'selected'}
-                    className='group hover:bg-muted/50 cursor-pointer'
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                </Link>
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && 'selected'}
+                  onClick={() => handleRowClick(href)}
+                  className='group hover:bg-muted/50 cursor-pointer'
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
+                </TableRow>
               );
             })
           ) : (
