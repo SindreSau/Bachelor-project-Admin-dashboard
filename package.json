@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbo -p 3001",
+    "dev": "next dev --turbopack -p 3001",
     "prebuild": "prettier --write \"src/**/*.{ts,tsx}\" && next lint --fix",
     "build": "next build",
     "build:standalone": "next build && cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/",
