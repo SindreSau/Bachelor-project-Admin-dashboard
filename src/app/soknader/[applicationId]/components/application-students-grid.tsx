@@ -2,12 +2,13 @@
 
 import { useState } from 'react';
 import { Card, CardTitle, CardHeader, CardContent } from '@/components/ui/card';
-import { Crown, ExternalLink } from 'lucide-react';
+import { Crown, ExternalLink, MailIcon } from 'lucide-react';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { Student, File } from '@prisma/client';
 import { getBlobPdf } from '@/utils/blobstorage/get-files';
 import Spinner from '@/components/common/spinner';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 type StudentWithFiles = Student & {
   files: File[];
@@ -54,9 +55,13 @@ const ApplicationStudentsGrid = ({ students, studentRepresentativeId }: Students
                   )}
                   <ScrollArea className='w-full'>
                     <div className='pb-3'>
-                      <p className='text-muted-foreground pr-4 text-sm whitespace-nowrap'>
+                      <Link
+                        href={`mailto:${student.email}`}
+                        className='text-action/70 pr-4 text-sm whitespace-nowrap hover:underline'
+                      >
+                        <MailIcon className='mr-2 inline h-4 w-4' />
                         {student.email}
-                      </p>
+                      </Link>
                     </div>
                     <ScrollBar orientation='horizontal' />
                   </ScrollArea>
