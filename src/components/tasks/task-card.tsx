@@ -43,7 +43,7 @@ const TaskCard = ({ task }: { task: TaskWithApplicationCount }) => {
           <CardTitle className='text-xl'>{task.taskName}</CardTitle>
           <div className='flex shrink-0 gap-2'>
             <Link
-              href={`/prosjekter/rediger/${task.id}`}
+              href={`/oppgaver/rediger/${task.id}`}
               className='border-input bg-secondary text-secondary-foreground hover:bg-secondary/80 focus-visible:ring-ring inline-flex h-8 w-8 items-center justify-center rounded-md border p-0 text-sm font-medium shadow-sm transition-colors focus-visible:ring-1 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50'
             >
               <Pencil className='h-4 w-4' />

@@ -76,7 +76,7 @@ export default function TaskForm({ isEditComponent, task }: TaskFormProps) {
           minStudents,
           maxStudents,
         });
-        router.push('/prosjekter');
+        router.push('/oppgaver');
       }
     } catch (error) {
       console.error('Error updating task:', error);
@@ -99,7 +99,7 @@ export default function TaskForm({ isEditComponent, task }: TaskFormProps) {
       });
       form.reset();
       setEditorKey((prev) => prev + 1);
-      router.push('/prosjekter');
+      router.push('/oppgaver');
     } catch (error) {
       console.error('Error creating task:', error);
     } finally {
@@ -249,7 +249,7 @@ export default function TaskForm({ isEditComponent, task }: TaskFormProps) {
                     'Lagre'
                   )}
                 </Button>
-                <Link href='/prosjekter'>
+                <Link href='/oppgaver'>
                   <Button type='button' variant='secondary' disabled={isSubmitting}>
                     Avbryt
                   </Button>

@@ -82,9 +82,7 @@ export default function ConfirmDeleteModal({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Er du sikker?</DialogTitle>
-          <DialogDescription>
-            Dette vil slette oppgaven permanent. Denne handlingen kan ikke angres.
-          </DialogDescription>
+          <DialogDescription>Dette vil slette oppgaven permanent.</DialogDescription>
           {hasApplications && (
             <div className='mt-4 rounded border border-red-500 bg-red-100 p-2 text-sm text-red-700'>
               Advarsel: Denne oppgaven tilhører én eller flere søknader.

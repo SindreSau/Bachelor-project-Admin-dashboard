@@ -7,8 +7,8 @@ export const navigationLinks = [
     icon: LayoutDashboardIcon,
   },
   {
-    title: 'Prosjekter',
-    url: '/prosjekter',
+    title: 'Oppgaver',
+    url: '/oppgaver',
     icon: FilePlus,
   },
 ];

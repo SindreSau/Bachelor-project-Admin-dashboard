@@ -30,7 +30,7 @@ const TaskList = ({ tasks, isUnpublishedTasks = false }: TaskListProps) => {
         <h2 className='text-xl font-bold'>{title}</h2>
         {!isUnpublishedTasks && (
           <Button asChild variant='outline' size='sm'>
-            <Link href='/prosjekter/bin'>
+            <Link href='/oppgaver/bin'>
               <Trash className='mr-2 h-4 w-4' />
               Søppel
             </Link>

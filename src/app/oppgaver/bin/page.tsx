@@ -13,13 +13,13 @@ export default async function TrashPage() {
     <div className='bg-card rounded-lg border p-6 shadow-xs'>
       <div className='mb-4 flex items-center justify-between'>
         <Button asChild variant='outline' size='sm'>
-          <Link href='/prosjekter' className='flex items-center'>
+          <Link href='/oppgaver' className='flex items-center'>
             <ArrowBigLeft className='h-4 w-4' />
             Tilbake
           </Link>
         </Button>
         <h2 className='text-xl font-bold'>Søppelbøtte</h2>
-        <div className='w-[70px]'></div> {/* Spacer to balance the layout */}
+        <div className='w-[70px]'></div>
       </div>
       <div className='grid gap-4 sm:grid-cols-1 lg:grid-cols-1'>
         {archivedTasks.length > 0 ? (

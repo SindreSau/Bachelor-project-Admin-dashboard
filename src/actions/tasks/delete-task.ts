@@ -5,7 +5,6 @@ import { revalidatePath } from 'next/cache';
 
 export async function deleteTask(id: number) {
   try {
-    // First get the comment to know which application to revalidate
     const task = await db.task.findUnique({
       where: { id: id },
     });
@@ -14,19 +13,16 @@ export async function deleteTask(id: number) {
       return { success: false, error: 'Task not found' };
     }
 
-    // Delete the comment
     const updatedTask = await db.task.update({
       where: { id: id },
       data: { deletedAt: new Date(), published: false },
     });
 
-    // Verify update was successful
     if (!updatedTask.deletedAt) {
       return { success: false, error: 'Failed to delete task' };
     }
 
-    // Revalidate the application path
-    revalidatePath(`/prosjekter`);
+    revalidatePath(`/oppgaver`);
 
     return { success: true };
   } catch (error) {

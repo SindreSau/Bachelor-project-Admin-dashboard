@@ -19,7 +19,6 @@ export const updateTask = withAuthAndLog(
     kindeUserId?: string
   ) => {
     try {
-      // Get the current task data for logging
       const existingTask = await db.task.findUnique({
         where: { id },
         select: {
@@ -47,10 +46,8 @@ export const updateTask = withAuthAndLog(
         return { success: false, error: 'Task not found' };
       }
 
-      // Parse deadline if it exists
       const deadlineDate = data.deadline ? new Date(data.deadline) : null;
 
-      // Update the task with all fields
       const result = await db.task.update({
         where: {
           id,
@@ -64,7 +61,6 @@ export const updateTask = withAuthAndLog(
         },
       });
 
-      // Log the update action with changes
       logger.info(
         {
           action: 'updateTask',
@@ -82,9 +78,8 @@ export const updateTask = withAuthAndLog(
         `Updated task ${id}`
       );
 
-      // Trigger revalidation of the /prosjekter page
       await triggerRevalidation();
-      revalidatePath('/prosjekter');
+      revalidatePath('/oppgaver');
 
       return { success: true, data: result };
     } catch (error) {

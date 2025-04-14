@@ -18,7 +18,7 @@ export const changePublishStatus = withAuthAndLog(
       );
 
       await triggerRevalidation();
-      revalidatePath('/prosjekter');
+      revalidatePath('/oppgaver');
       logger.info(
         { action: 'changePublishStatusCompleted', taskId },
         'Revalidation of application portal completed'

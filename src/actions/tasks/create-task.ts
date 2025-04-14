@@ -25,7 +25,6 @@ export async function createTask({ taskName, taskDescription, deadline, publishe
     },
   });
 
-  // Trigger revalidation of the /prosjekter page in the application-app
   await triggerRevalidation();
-  revalidatePath('/prosjekter');
+  revalidatePath('/oppgaver');
 }

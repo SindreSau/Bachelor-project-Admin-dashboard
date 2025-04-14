@@ -11,13 +11,10 @@ const Page = async () => {
 
   return (
     <div className='space-y-6'>
-      {/* Published tasks list */}
       <TaskList tasks={publishedTasks} isUnpublishedTasks={false} />
 
-      {/* Unpublished tasks list */}
       <TaskList tasks={unpublishedTasks} isUnpublishedTasks={true} />
 
-      {/* Create task form below both lists */}
       <TaskForm />
     </div>
   );
