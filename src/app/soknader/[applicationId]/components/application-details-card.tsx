@@ -61,7 +61,6 @@ const ApplicationDetailsCard = ({
     try {
       await setApplicationStatus(applicationId, newStatus); // Update status in the database
       setApplicationStatusState(newStatus); // Update local state to reflect the change
-      console.log(`Status updated to: ${newStatus}`);
     } catch (error) {
       console.error('Failed to update status:', error);
     }
@@ -110,7 +109,7 @@ const ApplicationDetailsCard = ({
       id: 'status',
       label: 'Status',
       value: applicationStatus,
-      onClick: () => console.log('clicked'),
+      onClick: () => {},
     },
   ];
 

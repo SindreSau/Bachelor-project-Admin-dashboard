@@ -27,7 +27,7 @@ export async function deleteTask(id: number) {
 
     // Revalidate the application path
     revalidatePath(`/prosjekter`);
-    console.log('Task deleted');
+
     return { success: true };
   } catch (error) {
     console.error('Failed to delete task:', error);

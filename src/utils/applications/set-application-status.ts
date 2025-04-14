@@ -7,7 +7,6 @@ const setApplicationStatus = async (applicationId: number, status: string) => {
     where: { id: applicationId },
     data: { status },
   });
-  console.log(`Application ${applicationId} status updated to ${status}`);
 };
 
 export default setApplicationStatus;

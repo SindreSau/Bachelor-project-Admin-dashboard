@@ -18,7 +18,6 @@ export async function sendTestEmail(
       subject,
       html,
     });
-    console.log('Email sent successfully');
   } catch (error) {
     console.error('Error sending email:', error);
   }
@@ -42,7 +41,6 @@ export const sendConfirmationEmail = async (to: string, studentContactFirstName:
       console.error('Error sending confirmation email:', error);
       return { data: null, error };
     }
-    console.log('Confirmation email sent successfully:', data);
 
     return { data, error };
   } catch (error) {
