@@ -1,4 +1,4 @@
-FROM node:20-alpine AS base
+FROM node:23-alpine AS base
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
@@ -19,42 +19,42 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Generate Prisma Client for the correct platform
+# Install pnpm in this stage too
 RUN npm install -g pnpm prisma
-RUN cd src && npx prisma generate
 
-# Build Next.js
-RUN pnpm run build
+# Generate Prisma Client
+RUN npx prisma generate
+
+# Build Next.js (using your standalone build)
+RUN pnpm run build:standalone
 
 # Production image, copy all the files and run next
-FROM base AS runner
+FROM node:23-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
 
-# Install required tools in the runner stage - split into separate commands
-RUN npm install -g pnpm
+# Install only Prisma CLI for migrations
 RUN npm install -g prisma
-RUN npm install -g tsx
 
-# Create non-root user (Alpine syntax)
-RUN addgroup -S -g 1001 nodejs
-RUN adduser -S -u 1001 -G nodejs nextjs
+# Create non-root user
+RUN addgroup -S -g 1001 nodejs && \
+  adduser -S -u 1001 -G nodejs nextjs
 
-# Copy necessary files and ensure proper structure
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
-COPY --from=builder /app/src/prisma ./src/prisma
-COPY --from=builder /app/node_modules ./node_modules
-
-# Set the correct permission for prerender cache
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
-
-# Copy built application
+# Copy only what's needed for production
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/src/prisma/schema.prisma ./src/prisma/
+COPY --from=builder /app/src/prisma/seed.ts ./src/prisma/
+
+# Set the correct permission for prerender cache
+RUN mkdir -p .next
+RUN chown nextjs:nodejs .next
+
+# Create the startup script
+RUN printf '#!/bin/sh\nprisma migrate reset --force\nnode server.js\n' > /app/start.sh
+RUN chmod +x /app/start.sh
 
 # Ensure proper permissions
 RUN chown -R nextjs:nodejs /app
@@ -62,22 +62,8 @@ RUN chown -R nextjs:nodejs /app
 USER nextjs
 
 EXPOSE 3000
-
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# Create a startup script
-COPY --chown=nextjs:nodejs <<'EOF' /app/start.sh
-#!/bin/sh
-cd /app
-
-echo "Resetting database..."
-npx prisma migrate reset --force  # This will drop the DB, run migrations, and seed
-
-echo "Starting Next.js application..."
-exec node server.js
-EOF
-
-RUN chmod +x /app/start.sh
-
+# Use direct path to the script
 CMD ["/app/start.sh"]
