@@ -16,7 +16,9 @@
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
     "db:cleanup": "tsx src/prisma/cleanup.ts && docker compose down -v && rm -rf ./azurite/* && docker compose up -d && sleep 2 && pnpm db:migrate && pnpm db:seed",
-    "buggybastard": "rm -rf node_modules .next && pnpm install && pnpm db:migrate && pnpm db:generate"
+    "buggybastard": "rm -rf node_modules .next && pnpm install && pnpm db:migrate && pnpm db:generate",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "prisma": {
     "schema": "src/prisma/schema.prisma",
@@ -87,6 +89,10 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4.0.11",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@types/jest": "^29.5.14",
     "@types/node": "^20.17.17",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -95,6 +101,8 @@
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.3",
     "eslint-plugin-unused-imports": "^4.1.4",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "postcss": "^8",
     "prettier": "3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.11",
