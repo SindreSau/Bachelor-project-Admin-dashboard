@@ -15,8 +15,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const SIDEBAR_COOKIE_NAME = 'sidebar:state';
-const SIDEBAR_WIDTH = '16rem';
-const SIDEBAR_WIDTH_MOBILE = '18rem';
+const SIDEBAR_WIDTH = '12rem';
+const SIDEBAR_WIDTH_MOBILE = '16rem';
 const SIDEBAR_WIDTH_ICON = '3rem';
 const SIDEBAR_KEYBOARD_SHORTCUT = 'b';
 
@@ -289,7 +289,7 @@ const SidebarTrigger = React.forwardRef<
       data-sidebar='trigger'
       variant='ghost'
       size='icon'
-      className={cn('h-7 w-7', className)}
+      className={cn('h-9 w-9', className)}
       onClick={(event) => {
         onClick?.(event);
         toggleSidebar();

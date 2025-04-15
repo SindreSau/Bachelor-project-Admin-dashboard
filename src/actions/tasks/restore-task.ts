@@ -2,14 +2,18 @@
 
 import { db } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
+import { withAuthAndLog } from '@/lib/auth-and-log-wrapper';
+import { RequestLogger } from '@/lib/logger.server';
 
-export async function restoreTask(taskId: number) {
+export const restoreTask = withAuthAndLog(async (logger: RequestLogger, taskId: number) => {
   try {
     const task = await db.task.findUnique({
       where: { id: taskId },
     });
 
     if (!task) {
+      const err = new Error('Task not found');
+      logger.error({ error: err, taskId }, 'Task not found for restore');
       return { success: false, error: 'task not found' };
     }
 
@@ -19,12 +23,23 @@ export async function restoreTask(taskId: number) {
     });
 
     revalidatePath('/oppgaver');
+
+    logger.info(
+      {
+        details: {
+          taskId,
+        },
+      },
+      'Restored task'
+    );
+
     return { success: true };
   } catch (error) {
-    console.error('Failed to restore task:', error);
+    const err = error instanceof Error ? error : new Error(String(error));
+    logger.error({ error: err, taskId }, 'Failed to restore task');
     return {
       success: false,
       error: 'Failed to restore task. Please try again.',
     };
   }
-}
+});
