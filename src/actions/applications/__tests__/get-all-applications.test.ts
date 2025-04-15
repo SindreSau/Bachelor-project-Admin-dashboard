@@ -92,7 +92,6 @@ describe('getAllApplications', () => {
 
     // Configure the prismaMock to return our test data
     prismaMock.application.findMany.mockResolvedValue(mockApplications);
-    console.log('Mocked applications:', mockApplications);
 
     // Act: Call the inner function directly with our mock logger
     const result = await innerFunction(mockLogger);
