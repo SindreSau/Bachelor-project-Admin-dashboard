@@ -18,7 +18,8 @@
     "db:cleanup": "tsx src/prisma/cleanup.ts && docker compose down -v && rm -rf ./azurite/* && docker compose up -d && sleep 2 && pnpm db:migrate && pnpm db:seed",
     "buggybastard": "rm -rf node_modules .next && pnpm install && pnpm db:migrate && pnpm db:generate",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "test:clear-cache": "jest --clearCache"
   },
   "prisma": {
     "schema": "src/prisma/schema.prisma",
