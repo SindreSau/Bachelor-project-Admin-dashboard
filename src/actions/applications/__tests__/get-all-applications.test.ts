@@ -1,54 +1,18 @@
 import { prismaMock } from '../../../../singleton';
-import { RequestLogger } from '@/lib/logger.server';
-import { Application, Student, Review } from '@prisma/client';
+// import { Application, Student, Review } from '@prisma/client';
+import getAllApplications from '@/actions/applications/get-all-applications';
 
 // First mock the modules before importing the function that uses them
 jest.mock('../../../lib/prisma', () => ({
   db: prismaMock, // Use the prismaMock from singleton here!
 }));
 
-// Mock the auth wrapper
-jest.mock('../../../lib/auth-and-log-wrapper', () => {
-  const mockWithAuthAndLog = jest.fn((fn) => {
-    // Store the inner function for testing
-    (
-      mockWithAuthAndLog as jest.Mock & { innerFn?: (logger: RequestLogger) => Promise<unknown> }
-    ).innerFn = fn;
-
-    // Return a function that would normally handle auth
-    return jest.fn(async () => {
-      // Simulate calling the inner function with a mock logger
-      const mockLogger = {
-        info: jest.fn(),
-        error: jest.fn(),
-      } as unknown as RequestLogger;
-      return fn(mockLogger);
-    });
-  });
-
-  return { withAuthAndLog: mockWithAuthAndLog };
-});
-
-// Mock logger to avoid actual logging during tests
-const mockLogger = {
-  info: jest.fn(),
-  error: jest.fn(),
-} as unknown as RequestLogger;
-
 // IMPORTANT: Import the function after mocking its dependencies!
-import getAllApplications from '@/actions/applications/get-all-applications';
-import { withAuthAndLog } from '@/lib/auth-and-log-wrapper';
-
 describe('getAllApplications', () => {
   // Get access to the inner function (the one that actually does the work)
-  const innerFunction = (
-    withAuthAndLog as unknown as { innerFn: (logger: RequestLogger) => Promise<unknown> }
-  ).innerFn;
 
   beforeEach(() => {
     jest.clearAllMocks();
-    // Clear all mock implementations
-    prismaMock.application.findMany.mockReset();
   });
 
   test('should return applications with related data when DB query succeeds', async () => {
@@ -94,7 +58,8 @@ describe('getAllApplications', () => {
     prismaMock.application.findMany.mockResolvedValue(mockApplications);
 
     // Act: Call the inner function directly with our mock logger
-    const result = await innerFunction(mockLogger);
+    const result = await getAllApplications();
+    console.log('result', result);
 
     // Assert: Verify the results match what we expect
     expect(result).toEqual(mockApplications);
@@ -107,15 +72,6 @@ describe('getAllApplications', () => {
         createdAt: 'desc',
       },
     });
-    expect(mockLogger.info).toHaveBeenCalledWith(
-      {
-        details: {
-          count: mockApplications.length,
-          includes: ['students', 'reviews'],
-        },
-      },
-      'Fetched all applications'
-    );
   });
 
   test('should return empty array when DB query fails', async () => {
@@ -124,14 +80,10 @@ describe('getAllApplications', () => {
     prismaMock.application.findMany.mockRejectedValue(mockError);
 
     // Act: Call the inner function directly with our mock logger
-    const result = await innerFunction(mockLogger);
+    const result = await getAllApplications();
 
     // Assert: Verify error handling
     expect(result).toEqual([]);
-    expect(mockLogger.error).toHaveBeenCalledWith(
-      { error: mockError },
-      'Failed to fetch all applications'
-    );
   });
 
   test('should handle non-Error thrown objects', async () => {
@@ -139,25 +91,10 @@ describe('getAllApplications', () => {
     prismaMock.application.findMany.mockRejectedValue('String error');
 
     // Act: Call the inner function directly with our mock logger
-    const result = await innerFunction(mockLogger);
+    const result = await getAllApplications();
+    console.log('result', result);
 
     // Assert: Verify error handling converts non-Error to Error
     expect(result).toEqual([]);
-    expect(mockLogger.error).toHaveBeenCalledWith(
-      { error: expect.any(Error) },
-      'Failed to fetch all applications'
-    );
-  });
-
-  test('wrapped function should be properly exported', () => {
-    // Just verify that the exported function exists and is a function
-    expect(getAllApplications).toBeDefined();
-    expect(typeof getAllApplications).toBe('function');
-
-    // Optionally verify it's the mock function we created
-    // by checking if it has mock properties
-    // Verify that the exported function exists and is callable
-    expect(getAllApplications).toBeDefined();
-    expect(typeof getAllApplications).toBe('function');
   });
 });

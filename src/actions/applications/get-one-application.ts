@@ -6,7 +6,7 @@ import { Application, Student, Review, Task, Comment, File } from '@prisma/clien
 import { withAuthAndLog } from '@/lib/auth-and-log-wrapper';
 
 // Define the complete return type with all relations
-type ApplicationWithRelations = Application & {
+export type ApplicationWithRelations = Application & {
   students: (Student & {
     files: File[];
   })[];

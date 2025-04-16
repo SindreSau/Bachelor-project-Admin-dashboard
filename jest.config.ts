@@ -17,13 +17,9 @@ const config: Config = {
   clearMocks: true,
   preset: 'ts-jest',
   transform: {
-    '^.+\\.tsx?$': 'ts-jest',
+    '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }],
   },
-  // Add this to handle ESM modules properly
-  transformIgnorePatterns: [
-    // Tell Jest to transform node_modules packages that use ESM
-    '/node_modules/(?!(.pnpm/)?(jose|@kinde-oss)/)',
-  ],
+  transformIgnorePatterns: ['/node_modules/(?!jose|@kinde-oss).+\\.js$'],
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
