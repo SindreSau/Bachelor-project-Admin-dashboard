@@ -147,7 +147,6 @@ describe('getAllApplications', () => {
       },
     });
     const time = endTime - startTime;
-    console.log(time);
     expect(time).toBeLessThan(100); // Ensure it completes within 100ms
   });
 });
