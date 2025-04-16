@@ -1,8 +1,7 @@
 // src/app/actions/applications/getOneApplication.test.ts
-import { getOneApplication } from '@/actions/applications/get-one-application';
 import { prismaMock } from '@/../singleton';
+import { getOneApplication } from '@/actions/applications/get-one-application';
 
-// Mock dependencies
 jest.mock('../../../lib/prisma', () => ({
   db: prismaMock,
 }));
