@@ -27,7 +27,7 @@ type AuthLoggerFunction<T, Args extends unknown[]> = (
  */
 export function withAuthAndLog<T, Args extends unknown[]>(
   fn: AuthLoggerFunction<T, Args>
-): (...args: Args) => Promise<T> | void {
+): (...args: Args) => Promise<T> {
   return withRequestLogger<T, Args>(async (logger: RequestLogger, ...args: Args): Promise<T> => {
     try {
       // Skip auth for tests
