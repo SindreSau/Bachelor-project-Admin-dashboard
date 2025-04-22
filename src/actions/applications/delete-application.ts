@@ -1,12 +1,11 @@
 'use server';
-
 import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/prisma';
 import { RequestLogger } from '@/lib/logger.server';
 import { withAuthAndLog } from '@/lib/auth-and-log-wrapper';
 import { deleteByUrl } from '@/utils/blobstorage/delete-files';
 
-type DeleteApplicationResult = {
+export type DeleteApplicationResult = {
   success: boolean;
   error?: string;
 };
@@ -25,7 +24,8 @@ export const deleteApplication = withAuthAndLog<DeleteApplicationResult, [number
         },
       });
 
-      await db.$transaction(async (tx) => {
+      // Use a variable to capture the transaction result
+      const transactionResult = await db.$transaction(async (tx) => {
         logger.info(
           { action: 'deleteApplication', applicationId, step: 'started' },
           'Starting delete process'
@@ -43,8 +43,6 @@ export const deleteApplication = withAuthAndLog<DeleteApplicationResult, [number
           );
           return { success: false, error: 'Application not found' };
         }
-
-        //TODO: Delete files from blob
 
         // With cascade delete, deleting the application automatically deletes:
         // - All related students
@@ -83,13 +81,16 @@ export const deleteApplication = withAuthAndLog<DeleteApplicationResult, [number
         return { success: true };
       });
 
-      // Revalidate the applications path to update the UI
-      revalidatePath('/applications');
+      // Use the transaction result
+      if (!transactionResult.success) {
+        return transactionResult;
+      }
 
+      // Only revalidate and return success if the transaction was successful
+      revalidatePath('/applications');
       return { success: true };
     } catch (error) {
       const errorObject = error instanceof Error ? error : new Error(String(error));
-
       logger.error(
         {
           action: 'deleteApplication',

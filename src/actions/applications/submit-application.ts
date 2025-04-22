@@ -97,24 +97,26 @@ const submitApplication = withRequestLogger<
         );
 
         // Send confirmation email
+        // Move the logger.info for confirmation email inside the if (!error) block
         const { data, error } = await sendConfirmationEmail(
           applicationData.students[0].email,
           applicationData.students[0].firstName
         );
         if (error) {
           throw new Error('Failed to send confirmation email');
-        }
-        logger.info(
-          {
-            details: {
-              action: 'sendConfirmationEmail',
-              data: data,
-              email: applicationData.students[0].email,
-              studentName: applicationData.students[0].firstName,
+        } else {
+          logger.info(
+            {
+              details: {
+                action: 'sendConfirmationEmail',
+                data: data ?? {},
+                email: applicationData.students[0].email,
+                studentName: applicationData.students[0].firstName,
+              },
             },
-          },
-          'Confirmation email sent successfully'
-        );
+            'Confirmation email sent successfully'
+          );
+        }
       });
 
       return { success: true, message: 'Application received successfully!' };

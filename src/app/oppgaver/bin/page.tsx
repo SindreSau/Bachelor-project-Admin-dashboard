@@ -1,4 +1,4 @@
-import { getDeletedTasks } from '@/actions/tasks/get-tasks';
+import { getDeletedTasks } from '@/actions/tasks/get-deleted-tasks';
 import DeletedTaskCard from '@/components/tasks/unpublished-task-card';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';

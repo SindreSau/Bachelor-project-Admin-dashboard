@@ -52,6 +52,16 @@ const baseLogger: Logger = pino({
   },
 });
 
+// Create a null logger for testing
+const createTestLogger = (): RequestLogger => {
+  // Create a silent logger for tests
+  const testLogger = pino({
+    level: 'silent', // Don't output anything
+  });
+
+  return testLogger as RequestLogger;
+};
+
 // Export the default logger
 export const logger: RequestLogger = baseLogger as RequestLogger;
 
@@ -66,6 +76,18 @@ export function withRequestLogger<T, Args extends unknown[]>(
   fn: LoggerFunction<T, Args>
 ): (...args: Args) => Promise<T> {
   return async (...args: Args): Promise<T> => {
+    // Use a test logger when in test environment
+    if (process.env.NODE_ENV === 'test') {
+      const testLogger = createTestLogger();
+      try {
+        return await fn(testLogger, ...args);
+      } catch (error) {
+        // Just re-throw without logging in tests
+        throw error;
+      }
+    }
+
+    // Regular logger for non-test environments
     // Dynamic import to avoid server/client mismatch issues
     const { getRequestContext } = await import('../utils/request-context');
     const requestContext: RequestContext = await getRequestContext();

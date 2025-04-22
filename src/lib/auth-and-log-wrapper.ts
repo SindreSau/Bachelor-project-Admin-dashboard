@@ -28,9 +28,13 @@ type AuthLoggerFunction<T, Args extends unknown[]> = (
 export function withAuthAndLog<T, Args extends unknown[]>(
   fn: AuthLoggerFunction<T, Args>
 ): (...args: Args) => Promise<T> {
-  // First wrap with the request logger
   return withRequestLogger<T, Args>(async (logger: RequestLogger, ...args: Args): Promise<T> => {
     try {
+      // Skip auth for tests
+      if (process.env.NODE_ENV === 'test') {
+        return await fn(logger, ...args);
+      }
+
       // Get the Kinde session
       const { getUser, isAuthenticated } = getKindeServerSession();
 

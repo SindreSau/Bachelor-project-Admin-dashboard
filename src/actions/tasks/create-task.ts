@@ -44,7 +44,10 @@ export const createTask = withAuthAndLog(
         },
         'Created new task successfully and revalidated bachelor portal'
       );
-      return task;
+      return {
+        success: true,
+        task,
+      };
     } catch (error) {
       const err = error instanceof Error ? error : new Error(String(error));
       logger.error({ error: err }, 'Failed to create task');

@@ -1,4 +1,4 @@
-import { getUnpublishedTasks } from '@/actions/tasks/get-tasks';
+import { getUnpublishedTasks } from '@/actions/tasks/get-unpublished-tasks';
 import TaskCard from './task-card';
 
 const UnpublishedTasks = async () => {
