@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { changePublishStatus } from '@/actions/tasks/change-publish-status';
 import Spinner from '../common/spinner';
 import { TaskWithApplicationCount } from './task-card';
+import { cn } from '@/lib/utils';
 
 export default function ConfirmPublishModal({ task }: { task: TaskWithApplicationCount }) {
   const [isPublishing, setIsPublishing] = useState(false);
@@ -35,7 +36,12 @@ export default function ConfirmPublishModal({ task }: { task: TaskWithApplicatio
             variant={task.published ? 'outline' : 'default'}
             size='sm'
             disabled={isPublishing}
-            className='shrink-0'
+            className={cn(
+              'bg shrink-0',
+              task.published
+                ? 'bg-warning/60 hover:bg-warning/50 disabled:bg-warning/40 text-white'
+                : 'bg-confirm/70 hover:bg-confirm/50 disabled:bg-confirm/40'
+            )}
           >
             {isPublishing ? (
               <span className='flex items-center gap-2'>
@@ -65,7 +71,12 @@ export default function ConfirmPublishModal({ task }: { task: TaskWithApplicatio
             variant={task.published ? 'outline' : 'default'}
             size='sm'
             disabled={isPublishing}
-            className='inline-flex items-center disabled:cursor-not-allowed'
+            className={cn(
+              'inline-flex items-center disabled:cursor-not-allowed',
+              task.published
+                ? 'bg-warning/60 hover:bg-warning/50 disabled:bg-warning/40'
+                : 'bg-confirm/70 hover:bg-confirm/50 disabled:bg-confirm/40'
+            )}
           >
             {isPublishing ? (
               <>
@@ -78,7 +89,7 @@ export default function ConfirmPublishModal({ task }: { task: TaskWithApplicatio
               'Publiser'
             )}
           </Button>
-          <Button variant='ghost' size='sm' onClick={() => setDialogOpen(false)}>
+          <Button variant='ghost' className='border' size='sm' onClick={() => setDialogOpen(false)}>
             Avbryt
           </Button>
         </DialogFooter>

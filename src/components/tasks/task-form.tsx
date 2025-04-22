@@ -261,7 +261,7 @@ export default function TaskForm({ isEditComponent, task }: TaskFormProps) {
                   type='button'
                   onClick={() => form.handleSubmit((data) => handleCreateSubmit(data, false))()}
                   disabled={isDraftLoading || isPublishLoading}
-                  className='bg-confirm hover:bg-confirm/80 disabled:bg-confirm/50 inline-flex cursor-pointer items-center'
+                  className='bg-warning/70 hover:bg-warning/50 disabled:bg-warning/40 inline-flex cursor-pointer items-center'
                 >
                   {isDraftLoading ? (
                     <>
@@ -276,7 +276,7 @@ export default function TaskForm({ isEditComponent, task }: TaskFormProps) {
                   type='button'
                   onClick={() => form.handleSubmit((data) => handleCreateSubmit(data, true))()}
                   disabled={isDraftLoading || isPublishLoading}
-                  className='inline-flex cursor-pointer items-center'
+                  className='bg-confirm/80 hover:bg-confirm/60 disabled:bg-confirm/50 inline-flex cursor-pointer items-center'
                 >
                   {isPublishLoading ? (
                     <>

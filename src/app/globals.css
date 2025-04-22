@@ -29,113 +29,113 @@
 @layer base {
   :root {
     /* Dimmed down light mode with reduced brightness */
-    --background: 240 15% 90%;
-    --foreground: 240 10% 12%;
-    --card: 0 0% 95%;
-    --card-foreground: 240 10% 12%;
-    --popover: 0 0% 98%;
-    --popover-foreground: 240 10% 12%;
+    --background: 240 15% 90%; /* Unchanged */
+    --foreground: 240 8% 30%; /* Pastel */
+    --card: 0 0% 95%; /* Unchanged */
+    --card-foreground: 240 8% 30%; /* Pastel */
+    --popover: 0 0% 98%; /* Unchanged */
+    --popover-foreground: 240 8% 30%; /* Pastel */
 
     /* Primary and accent remain unchanged as requested */
-    --primary: 278 100% 50%;
-    --primary-foreground: 210 20% 98%;
-    --accent: 260 30% 92%;
-    --accent-foreground: 240 5.9% 10%;
+    --primary: 278 80% 55%; /* Pastel */
+    --primary-foreground: 210 16% 98%; /* Pastel */
+    --accent: 260 24% 92%; /* Pastel */
+    --accent-foreground: 240 5% 28%; /* Pastel */
 
     /* Dimmed down secondary and muted tones */
-    --secondary: 220 12% 90%;
-    --secondary-foreground: 240 8% 15%;
-    --muted: 220 12% 90%;
-    --muted-foreground: 240 4% 40%;
+    --secondary: 220 12% 90%; /* Unchanged */
+    --secondary-foreground: 240 6% 33%; /* Pastel */
+    --muted: 220 12% 90%; /* Unchanged */
+    --muted-foreground: 240 3% 52%; /* Pastel */
 
     /* Status colors with slight adjustments */
-    --destructive: 0 75% 55%;
-    --destructive-foreground: 210 20% 98%;
-    --warning: 38 85% 48%;
-    --warning-foreground: 0 0% 10%;
+    --destructive: 0 60% 61%; /* Pastel */
+    --destructive-foreground: 210 16% 98%; /* Pastel */
+    --warning: 38 68% 53%; /* Pastel */
+    --warning-foreground: 0 0% 20%; /* Pastel (Increased L for contrast) */
 
     /* Softer borders and inputs */
-    --border: 220 13% 85%;
-    --input: 220 13% 85%;
-    --ring: 262 80% 50%;
+    --border: 220 10% 85%; /* Pastel */
+    --input: 220 10% 85%; /* Pastel */
+    --ring: 262 64% 55%; /* Pastel */
     --radius: 0.6rem;
 
     /* Modern Chart Colors - Slightly muted */
-    --chart-1: 262 70% 55%; /* Muted purple */
-    --chart-2: 196 70% 50%; /* Muted cyan */
-    --chart-3: 340 70% 55%; /* Muted pink */
-    --chart-4: 160 60% 42%; /* Muted emerald */
-    --chart-5: 25 80% 52%; /* Muted orange */
+    --chart-1: 262 56% 61%; /* Pastel */
+    --chart-2: 196 56% 55%; /* Pastel */
+    --chart-3: 340 56% 61%; /* Pastel */
+    --chart-4: 160 48% 46%; /* Pastel */
+    --chart-5: 25 64% 57%; /* Pastel */
 
     /* Sidebar styling - slightly dimmed */
-    --sidebar-background: 260 30% 95%;
-    --sidebar-foreground: 240 10% 20%;
-    --sidebar-primary: 262 80% 50%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 260 40% 90%;
-    --sidebar-accent-foreground: 240 10% 20%;
-    --sidebar-border: 260 20% 85%;
-    --sidebar-ring: 262 80% 50%;
+    --sidebar-background: 260 30% 95%; /* Unchanged */
+    --sidebar-foreground: 240 8% 36%; /* Pastel */
+    --sidebar-primary: 262 64% 55%; /* Pastel */
+    --sidebar-primary-foreground: 0 0% 100%; /* Unchanged */
+    --sidebar-accent: 260 32% 90%; /* Pastel */
+    --sidebar-accent-foreground: 240 8% 36%; /* Pastel */
+    --sidebar-border: 260 16% 85%; /* Pastel */
+    --sidebar-ring: 262 64% 55%; /* Pastel */
 
     /* Custom additions */
-    --confirm-foreground: 142 70% 95%;
-    --confirm: 142 60% 40%;
+    --confirm-foreground: 142 56% 95%; /* Pastel */
+    --confirm: 142 48% 44%; /* Pastel */
 
-    --action-color: 222 75% 52%;
-    --action-hover: 222 75% 45%;
-    --danger-color: 0 70% 52%;
-    --danger-hover: 0 70% 42%;
+    --action-color: 222 60% 57%; /* Pastel */
+    --action-hover: 222 60% 50%; /* Pastel */
+    --danger-color: 0 56% 57%; /* Pastel */
+    --danger-hover: 0 56% 46%; /* Pastel */
   }
 
   .dark {
     /* Dark Mode - Modern Color Palette */
-    --background: 240 14% 10%;
-    --foreground: 210 20% 98%;
-    --card: 240 10% 14%;
-    --card-foreground: 210 20% 98%;
-    --popover: 240 10% 12%;
-    --popover-foreground: 210 20% 98%;
-    --primary: 278 100% 50%;
-    --primary-foreground: 210 20% 98%;
-    --secondary: 240 6% 18%;
-    --secondary-foreground: 210 20% 98%;
-    --muted: 240 6% 18%;
-    --muted-foreground: 240 5% 65%;
-    --accent: 240 25% 20%;
-    --accent-foreground: 210 20% 98%;
-    --destructive: 0 70% 45%;
-    --destructive-foreground: 210 20% 98%;
-    --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 10%;
-    --border: 240 6% 20%;
-    --input: 240 6% 20%;
-    --ring: 262 80% 60%;
+    --background: 240 14% 10%; /* Unchanged */
+    --foreground: 210 16% 98%; /* Pastel */
+    --card: 240 10% 14%; /* Unchanged */
+    --card-foreground: 210 16% 98%; /* Pastel */
+    --popover: 240 10% 12%; /* Unchanged */
+    --popover-foreground: 210 16% 98%; /* Pastel */
+    --primary: 278 80% 60%; /* Pastel */
+    --primary-foreground: 210 16% 98%; /* Pastel */
+    --secondary: 240 6% 18%; /* Unchanged */
+    --secondary-foreground: 210 16% 98%; /* Pastel */
+    --muted: 240 6% 18%; /* Unchanged */
+    --muted-foreground: 240 4% 72%; /* Pastel */
+    --accent: 240 20% 20%; /* Pastel */
+    --accent-foreground: 210 16% 98%; /* Pastel */
+    --destructive: 0 56% 56%; /* Pastel */
+    --destructive-foreground: 210 16% 98%; /* Pastel */
+    --warning: 38 74% 60%; /* Pastel */
+    --warning-foreground: 0 0% 10%; /* Unchanged (already high contrast) */
+    --border: 240 5% 22%; /* Pastel */
+    --input: 240 5% 22%; /* Pastel */
+    --ring: 262 64% 68%; /* Pastel */
 
     /* Modern Chart Colors - Vibrant and distinguishable in dark mode */
-    --chart-1: 262 80% 65%; /* Lighter purple */
-    --chart-2: 196 80% 65%; /* Lighter cyan */
-    --chart-3: 340 80% 70%; /* Lighter pink */
-    --chart-4: 160 70% 55%; /* Lighter emerald */
-    --chart-5: 25 90% 65%; /* Lighter orange */
+    --chart-1: 262 64% 72%; /* Pastel */
+    --chart-2: 196 64% 72%; /* Pastel */
+    --chart-3: 340 64% 76%; /* Pastel */
+    --chart-4: 160 56% 61%; /* Pastel */
+    --chart-5: 25 72% 72%; /* Pastel */
 
     /* Sidebar styling - dark mode */
-    --sidebar-background: 240 10% 14%;
-    --sidebar-foreground: 210 20% 98%;
-    --sidebar-primary: 262 80% 60%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 10% 16%;
-    --sidebar-accent-foreground: 210 20% 98%;
-    --sidebar-border: 240 10% 16%;
-    --sidebar-ring: 262 80% 60%;
+    --sidebar-background: 240 10% 14%; /* Unchanged */
+    --sidebar-foreground: 210 16% 98%; /* Pastel */
+    --sidebar-primary: 262 64% 68%; /* Pastel */
+    --sidebar-primary-foreground: 0 0% 100%; /* Unchanged */
+    --sidebar-accent: 240 8% 16%; /* Pastel */
+    --sidebar-accent-foreground: 210 16% 98%; /* Pastel */
+    --sidebar-border: 240 8% 16%; /* Pastel */
+    --sidebar-ring: 262 64% 68%; /* Pastel */
 
     /* Custom additions */
-    --confirm-foreground: 142 70% 95%;
-    --confirm: 142 55% 45%;
+    --confirm-foreground: 142 56% 95%; /* Pastel */
+    --confirm: 142 44% 56%; /* Pastel */
 
-    --action-color: 222 85% 65%;
-    --action-hover: 222 85% 58%;
-    --danger-color: 0 75% 60%;
-    --danger-hover: 0 75% 50%;
+    --action-color: 222 68% 72%; /* Pastel */
+    --action-hover: 222 68% 64%; /* Pastel */
+    --danger-color: 0 60% 68%; /* Pastel */
+    --danger-hover: 0 60% 55%; /* Pastel */
   }
 }
 

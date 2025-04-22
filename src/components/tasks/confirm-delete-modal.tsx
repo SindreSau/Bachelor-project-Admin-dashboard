@@ -74,7 +74,7 @@ export default function ConfirmDeleteModal({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <span>
-          <Button variant='destructive' size='sm' className='h-8 w-8 p-0'>
+          <Button variant='destructive' size='sm' className='bg-destructive/80 h-8 w-8 p-0'>
             <Trash2 className='h-4 w-4' />
           </Button>
         </span>
