@@ -47,18 +47,16 @@ const ApplicationCoverLetter = ({ coverLetter, tasks }: ApplicationCoverLetterPr
         <div className='bg-border mb-2 h-px @md:mb-4'></div>
 
         {/* Cover Letter Section - Updated to use dangerouslySetInnerHTML */}
-        <div className='overflow-y-auto'>
-          <ScrollArea className='h-full max-h-[calc(100vh-300px)] p-1'>
-            {sanitizedHtml ? (
-              <div
-                className='prose prose-sm max-w-none text-sm'
-                dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
-              />
-            ) : (
-              <p className='text-muted-foreground italic'>Ingen søknadstekst tilgjengelig</p>
-            )}
-          </ScrollArea>
-        </div>
+        <ScrollArea className='scroll-fun h-full max-h-[calc(100vh-300px)] overflow-auto p-1'>
+          {sanitizedHtml ? (
+            <div
+              className='prose prose-sm max-w-none text-sm'
+              dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
+            />
+          ) : (
+            <p className='text-muted-foreground italic'>Ingen søknadstekst tilgjengelig</p>
+          )}
+        </ScrollArea>
       </CardContent>
     </Card>
   );
