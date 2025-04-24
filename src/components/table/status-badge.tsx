@@ -4,23 +4,24 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 export default function StatusBadge({ status, icon }: { status: string; icon?: string }) {
   const statusColor: { [key: string]: string } = {
     // Negative outcome - red
-    Avslag: 'bg-destructive/70 hover:bg-destructive/50',
+    Avslag: 'bg-destructive/70 hover:bg-destructive/70',
 
     // Not started - gray
-    'Ikke påbegynt': 'bg-gray-500 hover:bg-gray-400',
+    'Ikke påbegynt':
+      'dark:bg-muted/70 dark:hover:bg-muted/70 bg-muted-foreground/80 hover:bg-muted/80',
 
     // Automatic Statuses:
-    Påbegynt: 'bg-purple-400 hover:bg-purple-400/70',
-    'Vurdert av alle': 'bg-purple-500 hover:bg-purple-500/70',
+    Påbegynt: 'bg-primary/80 hover:bg-primary/80',
+    'Vurdert av alle': 'bg-primary/90 hover:bg-primary/90',
 
     // Interview Stages:
-    'Kalles inn til intervju': 'bg-warning hover:bg-warning/70',
-    'Intervju satt opp': 'bg-warning hover:bg-warning/70',
-    'Intervju gjennomført': 'bg-warning hover:bg-warning/70',
+    'Kalles inn til intervju': 'bg-warning hover:bg-warning/80',
+    'Intervju satt opp': 'bg-warning hover:bg-warning/80',
+    'Intervju gjennomført': 'bg-warning hover:bg-warning/80',
 
     // Positive outcome - green
-    'Tilbud sendt': 'bg-confirm/90 hover:bg-confirm/70',
-    'Tilbud akseptert': 'bg-confirm/90 hover:bg-confirm/70',
+    'Tilbud sendt': 'bg-confirm/90 hover:bg-confirm/90',
+    'Tilbud akseptert': 'bg-confirm/90 hover:bg-confirm/90',
   };
 
   const renderIcon = () => {
@@ -34,7 +35,7 @@ export default function StatusBadge({ status, icon }: { status: string; icon?: s
 
   return (
     <Badge
-      className={`max-w-full rounded-sm px-1 py-1 text-xs whitespace-nowrap text-white ${statusColor[status]} `}
+      className={`max-w-full cursor-default rounded-sm px-1 py-1 text-xs whitespace-nowrap text-white ${statusColor[status]} `}
       style={{
         minWidth: 'min-content',
       }}

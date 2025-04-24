@@ -28,114 +28,107 @@
 
 @layer base {
   :root {
-    /* Dimmed down light mode with reduced brightness */
-    --background: 240 15% 90%; /* Unchanged */
-    --foreground: 240 8% 30%; /* Pastel */
-    --card: 0 0% 95%; /* Unchanged */
-    --card-foreground: 240 8% 30%; /* Pastel */
-    --popover: 0 0% 98%; /* Unchanged */
-    --popover-foreground: 240 8% 30%; /* Pastel */
+    --radius: 0.4rem;
 
-    /* Primary and accent remain unchanged as requested */
-    --primary: 278 80% 55%; /* Pastel */
-    --primary-foreground: 210 16% 98%; /* Pastel */
-    --accent: 260 24% 92%; /* Pastel */
-    --accent-foreground: 240 5% 28%; /* Pastel */
+    --background: 95.41% 0.0191 293.49;
+    --background-dashboard: 91.39% 0.0206 292.73;
+    --foreground: 40.03% 0.0254 288.2;
+    --card: 95.41% 0.0191 293.49;
+    --card-foreground: 40.03% 0.0254 288.2;
+    --popover: 98.47% 0.0108 299.18;
+    --popover-foreground: 40.03% 0.0254 288.2;
 
-    /* Dimmed down secondary and muted tones */
-    --secondary: 220 12% 90%; /* Unchanged */
-    --secondary-foreground: 240 6% 33%; /* Pastel */
-    --muted: 220 12% 90%; /* Unchanged */
-    --muted-foreground: 240 3% 52%; /* Pastel */
+    --primary: 52.87% 0.2237 295.16;
+    --primary-foreground: 98.43% 0.0118 293.88;
+    --accent: 92.93% 0.0242 300.36;
+    --accent-foreground: 38.86% 0.0166 289.6;
 
-    /* Status colors with slight adjustments */
-    --destructive: 0 60% 61%; /* Pastel */
-    --destructive-foreground: 210 16% 98%; /* Pastel */
-    --warning: 38 68% 53%; /* Pastel */
-    --warning-foreground: 0 0% 20%; /* Pastel (Increased L for contrast) */
+    --secondary: 91.99% 0.0156 286.66;
+    --secondary-foreground: 43.16% 0.0217 288.99;
+    --muted: 91.99% 0.0156 286.66;
+    --muted-foreground: 60.53% 0.0179 291.2;
 
-    /* Softer borders and inputs */
-    --border: 220 10% 85%; /* Pastel */
-    --input: 220 10% 85%; /* Pastel */
-    --ring: 262 64% 55%; /* Pastel */
-    --radius: 0.6rem;
+    --destructive: 63.65% 0.1514 20.71;
+    --destructive-foreground: 98.43% 0.0118 293.88;
+    --warning: 73.56% 0.1334 76.38;
+    --warning-foreground: 32.11% 0.0035 299.18;
 
-    /* Modern Chart Colors - Slightly muted */
-    --chart-1: 262 56% 61%; /* Pastel */
-    --chart-2: 196 56% 55%; /* Pastel */
-    --chart-3: 340 56% 61%; /* Pastel */
-    --chart-4: 160 48% 46%; /* Pastel */
-    --chart-5: 25 64% 57%; /* Pastel */
+    --border: 88.01% 0.0167 284.34;
+    --input: 88.01% 0.0167 284.34;
+    --ring: 52.87% 0.2237 295.16;
 
-    /* Sidebar styling - slightly dimmed */
-    --sidebar-background: 260 30% 95%; /* Unchanged */
-    --sidebar-foreground: 240 8% 36%; /* Pastel */
-    --sidebar-primary: 262 64% 55%; /* Pastel */
-    --sidebar-primary-foreground: 0 0% 100%; /* Unchanged */
-    --sidebar-accent: 260 32% 90%; /* Pastel */
-    --sidebar-accent-foreground: 240 8% 36%; /* Pastel */
-    --sidebar-border: 260 16% 85%; /* Pastel */
-    --sidebar-ring: 262 64% 55%; /* Pastel */
+    --chart-1: 59.59% 0.1772 298.23;
+    --chart-2: 69.59% 0.1046 230.54;
+    --chart-3: 64.68% 0.1484 358.66;
+    --chart-4: 67.58% 0.112 169.7;
+    --chart-5: 69.36% 0.1237 53.33;
+
+    --sidebar-background: 95.45% 0.0213 300.25;
+    --sidebar-foreground: 45.3% 0.0294 288.13;
+    --sidebar-primary: 52.87% 0.2237 295.16;
+    --sidebar-primary-foreground: 99.99% 0.011 299.18;
+    --sidebar-accent: 90.76% 0.0334 300.5;
+    --sidebar-accent-foreground: 45.3% 0.0294 288.13;
+    --sidebar-border: 87.25% 0.0273 300.46;
+    --sidebar-ring: 52.87% 0.2237 295.16;
 
     /* Custom additions */
-    --confirm-foreground: 142 56% 95%; /* Pastel */
-    --confirm: 142 48% 44%; /* Pastel */
+    --confirm-foreground: 97.01% 0.0129 188.79;
+    --confirm: 64.67% 0.1375 153.24;
 
-    --action-color: 222 60% 57%; /* Pastel */
-    --action-hover: 222 60% 50%; /* Pastel */
-    --danger-color: 0 56% 57%; /* Pastel */
-    --danger-hover: 0 56% 46%; /* Pastel */
+    --action-color: 58.59% 0.1575 267.14;
+    --action-hover: 52.19% 0.1834 265.98;
+    --danger-color: 60.54% 0.1569 21.61;
+    --danger-hover: 52.33% 0.1685 24.41;
   }
 
   .dark {
-    /* Dark Mode - Modern Color Palette */
-    --background: 240 14% 10%; /* Unchanged */
-    --foreground: 210 16% 98%; /* Pastel */
-    --card: 240 10% 14%; /* Unchanged */
-    --card-foreground: 210 16% 98%; /* Pastel */
-    --popover: 240 10% 12%; /* Unchanged */
-    --popover-foreground: 210 16% 98%; /* Pastel */
-    --primary: 278 80% 60%; /* Pastel */
-    --primary-foreground: 210 16% 98%; /* Pastel */
-    --secondary: 240 6% 18%; /* Unchanged */
-    --secondary-foreground: 210 16% 98%; /* Pastel */
-    --muted: 240 6% 18%; /* Unchanged */
-    --muted-foreground: 240 4% 72%; /* Pastel */
-    --accent: 240 20% 20%; /* Pastel */
-    --accent-foreground: 210 16% 98%; /* Pastel */
-    --destructive: 0 56% 56%; /* Pastel */
-    --destructive-foreground: 210 16% 98%; /* Pastel */
-    --warning: 38 74% 60%; /* Pastel */
-    --warning-foreground: 0 0% 10%; /* Unchanged (already high contrast) */
-    --border: 240 5% 22%; /* Pastel */
-    --input: 240 5% 22%; /* Pastel */
-    --ring: 262 64% 68%; /* Pastel */
+    --background: 20.32% 0.0168 287.36;
+    --background-dashboard: 18.28% 0.014 287.61;
+    --foreground: 98.43% 0.0118 293.88;
+    --card: 23.72% 0.0156 288.09;
+    --card-foreground: 98.43% 0.0118 293.88;
+    --popover: 22.71% 0.0146 288.16;
+    --popover-foreground: 98.43% 0.0118 293.88;
+    --primary: 61.07% 0.2507 309.62;
+    --primary-foreground: 98.43% 0.0118 293.88;
+    --secondary: 29.19% 0.0134 289.32;
+    --secondary-foreground: 98.43% 0.0118 293.88;
+    --muted: 29.19% 0.0134 289.32;
+    --muted-foreground: 77.4% 0.0167 293;
+    --accent: 28.97% 0.0413 285.51;
+    --accent-foreground: 98.43% 0.0118 293.88;
+    --destructive: 59.78% 0.1605 22.01;
+    --destructive-foreground: 98.43% 0.0118 293.88;
+    --warning: 78.17% 0.1268 77.67;
+    --warning-foreground: 21.56% 0.0024 299.18;
+    --border: 33.23% 0.0137 289.73;
+    --input: 33.23% 0.0137 289.73;
+    --ring: 65.8% 0.1658 299.08;
 
-    /* Modern Chart Colors - Vibrant and distinguishable in dark mode */
-    --chart-1: 262 64% 72%; /* Pastel */
-    --chart-2: 196 64% 72%; /* Pastel */
-    --chart-3: 340 64% 76%; /* Pastel */
-    --chart-4: 160 56% 61%; /* Pastel */
-    --chart-5: 25 72% 72%; /* Pastel */
+    --chart-1: 70.01% 0.1459 299.82;
+    --chart-2: 81.18% 0.079 230.54;
+    --chart-3: 77.3% 0.1033 354.08;
+    --chart-4: 79.19% 0.1115 172.02;
+    --chart-5: 79.99% 0.0881 53.41;
 
-    /* Sidebar styling - dark mode */
-    --sidebar-background: 240 10% 14%; /* Unchanged */
-    --sidebar-foreground: 210 16% 98%; /* Pastel */
-    --sidebar-primary: 262 64% 68%; /* Pastel */
-    --sidebar-primary-foreground: 0 0% 100%; /* Unchanged */
-    --sidebar-accent: 240 8% 16%; /* Pastel */
-    --sidebar-accent-foreground: 210 16% 98%; /* Pastel */
-    --sidebar-border: 240 8% 16%; /* Pastel */
-    --sidebar-ring: 262 64% 68%; /* Pastel */
+    --sidebar-background: 22.51% 0.0171 287.64;
+    --sidebar-foreground: 98.43% 0.0118 293.88;
+    --sidebar-primary: 65.8% 0.1658 299.08;
+    --sidebar-primary-foreground: 99.99% 0.011 299.18;
+    --sidebar-accent: 26.94% 0.0153 288.57;
+    --sidebar-accent-foreground: 98.43% 0.0118 293.88;
+    --sidebar-border: 26.94% 0.0153 288.57;
+    --sidebar-ring: 65.8% 0.1658 299.08;
 
     /* Custom additions */
-    --confirm-foreground: 142 56% 95%; /* Pastel */
-    --confirm: 142 44% 56%; /* Pastel */
+    --confirm-foreground: 97.01% 0.0129 188.79;
+    --confirm: 73.22% 0.1261 155.36;
 
-    --action-color: 222 68% 72%; /* Pastel */
-    --action-hover: 222 68% 64%; /* Pastel */
-    --danger-color: 0 60% 68%; /* Pastel */
-    --danger-hover: 0 60% 55%; /* Pastel */
+    --action-color: 72.4% 0.1146 269.27;
+    --action-hover: 64.61% 0.1477 267.82;
+    --danger-color: 69.54% 0.1226 18.04;
+    --danger-hover: 59.15% 0.1742 23.15;
   }
 }
 
@@ -145,7 +138,7 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background-dashboard text-foreground;
   }
 
   h1 {
