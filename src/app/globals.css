@@ -20,12 +20,14 @@
   }
 
   .light,
-  .github-light {
+  .github-light,
+  .coffee {
     color-scheme: light;
   }
 
   .dark,
-  .github-dark {
+  .github-dark,
+  .coffee-dark {
     color-scheme: dark;
   }
 }
@@ -282,6 +284,103 @@
     --sidebar-accent-foreground: 90% 0.01 280; /* Sidebar accent text #e2e6f3 */
     --sidebar-border: 28% 0.01 260; /* Sidebar border blue-gray #353a4d */
     --sidebar-ring: 72% 0.32 150; /* Sidebar GitHub green #28a745 */
+  }
+
+  /* Coffee Theme - Rich Browns & Muted Greens */
+  .coffee {
+    --radius: 0.5rem;
+    --background: 98% 0.03 40; /* Light coffee cream */
+    --background-dashboard: 88% 0.04 50; /* Muted tan */
+    --foreground: 22% 0.04 40; /* Deep brown */
+    --card: 97% 0.02 40; /* Off-white */
+    --card-foreground: 12% 0.01 40;
+    --popover: 94% 0.04 45; /* Light coffee foam */
+    --popover-foreground: 22% 0.04 40;
+    --primary: 48% 0.18 120; /* Muted green */
+    --primary-foreground: 96% 0.01 40; /* Cream */
+    --secondary: 70% 0.08 50; /* Muted tan */
+    --secondary-foreground: 32% 0.04 40;
+    --muted: 80% 0.03 50; /* Light muted brown */
+    --muted-foreground: 40% 0.03 40;
+    --accent: 52% 0.05 50; /* Muted brown accent */
+    --accent-foreground: 96% 0.01 40;
+    --destructive: 40% 0.12 30; /* Muted red-brown */
+    --destructive-foreground: 96% 0.01 40;
+    --warning: 75% 0.18 90; /* Muted yellow */
+    --warning-foreground: 22% 0.04 40;
+    --border: 60% 0.03 40; /* Light brown border */
+    --input: 60% 0.03 40;
+    --ring: 52% 0.15 120;
+    --chart-1: 48% 0.18 120; /* Muted green */
+    --chart-2: 70% 0.08 50; /* Muted tan */
+    --chart-3: 40% 0.12 30; /* Muted red-brown */
+    --chart-4: 75% 0.18 90; /* Muted yellow */
+    --chart-5: 60% 0.1 80; /* Muted olive */
+    --sidebar-background: 94% 0.03 40; /* Light coffee */
+    --sidebar-foreground: 32% 0.04 40;
+    --sidebar-primary: 48% 0.18 120;
+    --sidebar-primary-foreground: 96% 0.01 40;
+    --sidebar-accent: 70% 0.08 50;
+    --sidebar-accent-foreground: 32% 0.04 40;
+    --sidebar-border: 60% 0.03 40;
+    --sidebar-ring: 52% 0.15 120;
+    --confirm: 52% 0.38 122;
+    --confirm-foreground: 99% 0.01 40;
+    --info: 52% 0.15 110;
+    --info-foreground: 99% 0.01 40;
+    --link: 40% 0.12 120;
+    --action-color: 52% 0.15 120;
+    --action-hover: 44% 0.18 120;
+    --danger-color: 40% 0.12 30;
+    --danger-hover: 32% 0.15 30;
+  }
+
+  .coffee-dark {
+    --radius: 0.5rem;
+    --background: 12% 0.02 40; /* Deep brown */
+    --background-dashboard: 13% 0.015 50; /* Slightly lighter brown */
+    --foreground: 98% 0.01 40; /* Cream */
+    --card: 22% 0.015 40; /* Darker brown */
+    --card-foreground: 98% 0.01 40;
+    --popover: 18% 0.015 40;
+    --popover-foreground: 98% 0.01 40;
+    --primary: 65% 0.1 122; /* Muted green */
+    --primary-foreground: 4% 0.04 40;
+    --secondary: 12% 0.08 50; /* Muted brown */
+    --secondary-foreground: 98% 0.01 40;
+    --muted: 40% 0.03 50; /* Muted brown */
+    --muted-foreground: 72% 0.03 40;
+    --accent: 65% 0.04 20; /* Muted green accent */
+    --accent-foreground: 24% 0.04 40;
+    --destructive: 28% 0.12 30; /* Muted red-brown */
+    --destructive-foreground: 88% 0.01 40;
+    --warning: 60% 0.18 90; /* Muted yellow */
+    --warning-foreground: 14% 0.04 40;
+    --border: 16% 0.02 40; /* Brown border */
+    --input: 16% 0.03 40;
+    --ring: 52% 0.15 120;
+    --chart-1: 48% 0.18 120; /* Muted green */
+    --chart-2: 22% 0.08 50; /* Muted brown */
+    --chart-3: 28% 0.12 30; /* Muted red-brown */
+    --chart-4: 60% 0.18 90; /* Muted yellow */
+    --chart-5: 32% 0.1 80; /* Muted olive */
+    --sidebar-background: 20% 0.01 40; /* Deep coffee */
+    --sidebar-foreground: 98% 0.01 40;
+    --sidebar-primary: 48% 0.1 120;
+    --sidebar-primary-foreground: 14% 0.04 40;
+    --sidebar-accent: 18% 0.04 50;
+    --sidebar-accent-foreground: 88% 0.01 40;
+    --sidebar-border: 22% 0.03 40;
+    --sidebar-ring: 52% 0.15 120;
+    --confirm: 75% 0.1 122;
+    --confirm-foreground: 24% 0.04 40;
+    --info: 75% 0.1 150;
+    --info-foreground: 4% 0.04 40;
+    --link: 65% 0.04 35;
+    --action-color: 52% 0.15 120;
+    --action-hover: 44% 0.18 120;
+    --danger-color: 28% 0.12 30;
+    --danger-hover: 20% 0.15 30;
   }
 }
 

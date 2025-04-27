@@ -11,7 +11,7 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
         defaultTheme='system'
         enableSystem
         disableTransitionOnChange
-        themes={['light', 'dark', 'github-light', 'github-dark', 'system']}
+        themes={['light', 'dark', 'github-light', 'github-dark', 'coffee', 'coffee-dark', 'system']}
       >
         <SidebarProvider defaultOpen={true}>
           <TooltipProvider>{children}</TooltipProvider>

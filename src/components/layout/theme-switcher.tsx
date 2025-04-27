@@ -1,6 +1,6 @@
 'use client';
 import { cn } from '@/lib/utils';
-import { ChevronDown, Laptop, Moon, Sun } from 'lucide-react';
+import { ChevronDown, CoffeeIcon, Laptop, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import {
@@ -37,6 +37,10 @@ const ThemeSwitcher = ({ className }: ThemeSwitcherProps) => {
       case 'github-light':
       case 'github-dark':
         return <GitHubLogoIcon className='h-4 w-4' />;
+      case 'coffee':
+        return <CoffeeIcon className='h-4 w-4' />;
+      case 'coffee-dark':
+        return <CoffeeIcon className='h-4 w-4' />;
       case 'system':
       default:
         return <Laptop className='h-4 w-4' />;
