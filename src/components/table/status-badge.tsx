@@ -4,41 +4,44 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 export default function StatusBadge({ status, icon }: { status: string; icon?: string }) {
   const statusColor: { [key: string]: string } = {
     // Negative outcome - red
-    Avslag: 'bg-destructive/70 hover:bg-destructive/70',
+    Avslag: 'bg-destructive hover:bg-destructive text-destructive-foreground',
 
     // Not started - gray
     'Ikke påbegynt':
-      'dark:bg-muted/70 dark:hover:bg-muted/70 bg-muted-foreground/80 hover:bg-muted/80',
+      'dark:bg-muted dark:hover:bg-muted bg-muted-foreground/10 hover:bg-muted-foreground/10 text-muted-foreground dark:text-muted-foreground',
 
-    // Automatic Statuses:
-    Påbegynt: 'bg-primary/80 hover:bg-primary/80',
-    'Vurdert av alle': 'bg-primary/90 hover:bg-primary/90',
+    // Started - blue
+    Påbegynt: 'bg-primary/70 hover:bg-primary/70 text-primary-foreground',
 
-    // Interview Stages:
-    'Kalles inn til intervju': 'bg-warning hover:bg-warning/80',
-    'Intervju satt opp': 'bg-warning hover:bg-warning/80',
-    'Intervju gjennomført': 'bg-warning hover:bg-warning/80',
+    // Reviewed - purple
+    'Vurdert av alle': 'bg-secondary hover:bg-secondary text-secondary-foreground',
 
-    // Positive outcome - green
-    'Tilbud sendt': 'bg-confirm/90 hover:bg-confirm/90',
-    'Tilbud akseptert': 'bg-confirm/90 hover:bg-confirm/90',
+    // Interview Stages - purple (deepening)
+    'Kalles inn til intervju':
+      'bg-secondary text-secondary-foreground hover:bg-secondary text-secondary-foreground',
+    'Intervju satt opp':
+      'bg-secondary text-secondary-foreground hover:bg-secondary text-secondary-foreground',
+    'Intervju gjennomført':
+      'bg-secondary text-secondary-foreground hover:bg-secondary text-secondary-foreground',
+
+    // Offer stages - green (accent)
+    'Tilbud sendt': 'bg-confirm/70 hover:bg-confirm/70 text-confirm-foreground',
+    'Tilbud akseptert': 'bg-confirm hover:bg-confirm text-confirm-foreground',
   };
 
   const renderIcon = () => {
     if (icon === 'open') {
-      return <ChevronDown className='h-4 w-4' />;
+      return <ChevronDown className='ml-1 h-4 w-4' />;
     } else if (icon === 'close') {
-      return <ChevronUp className='h-4 w-4' />;
+      return <ChevronUp className='ml-1 h-4 w-4' />;
     }
     return null;
   };
 
   return (
     <Badge
-      className={`max-w-full cursor-default rounded-sm px-1 py-1 text-xs whitespace-nowrap text-white ${statusColor[status]} `}
-      style={{
-        minWidth: 'min-content',
-      }}
+      className={`max-w-full cursor-default rounded-sm px-1 py-1 text-xs whitespace-nowrap ${statusColor[status]}`}
+      style={{ minWidth: 'min-content' }}
     >
       {status}
       {renderIcon()}

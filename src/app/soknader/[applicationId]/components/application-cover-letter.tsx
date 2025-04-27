@@ -20,13 +20,15 @@ const ApplicationCoverLetter = ({ coverLetter, tasks }: ApplicationCoverLetterPr
             <div className='mb-2 @xl:mb-0'>Søknad</div>
             <div className='flex flex-col items-start gap-2 @xl:flex-row @xl:items-center'>
               {/* Tasks Section */}
-              <h3 className='text-muted-foreground mb-1 text-sm font-medium @xl:mb-0'>Oppgaver:</h3>
+              <h3 className='text-muted-foreground mb-1 text-sm font-medium @xl:mb-0'>
+                Valgte oppgaver:
+              </h3>
               <div className='flex flex-wrap gap-2'>
                 {tasks.length > 0 ? (
                   tasks.map((task, index) => (
                     <div
                       key={task.id}
-                      className={`bg-secondary flex items-center rounded-md px-3 py-1 text-sm ${index === 0 ? 'border-primary border' : ''}`}
+                      className={`bg-secondary/70 text-secondary-foreground flex items-center rounded-md px-3 py-1 text-sm ${index === 0 ? 'border-primary/50 border' : ''}`}
                     >
                       <span className='bg-primary text-primary-foreground mr-2 flex h-5 w-5 items-center justify-center rounded-full text-xs'>
                         {index + 1}
@@ -47,7 +49,7 @@ const ApplicationCoverLetter = ({ coverLetter, tasks }: ApplicationCoverLetterPr
         <div className='bg-border mb-2 h-px @md:mb-4'></div>
 
         {/* Cover Letter Section - Updated to use dangerouslySetInnerHTML */}
-        <ScrollArea className='scroll-fun h-full max-h-[calc(100vh-300px)] overflow-auto p-1'>
+        <ScrollArea className='h-full max-h-[calc(100vh-300px)] overflow-auto p-1'>
           {sanitizedHtml ? (
             <div
               className='prose prose-sm max-w-none text-sm'

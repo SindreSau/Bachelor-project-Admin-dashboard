@@ -169,8 +169,10 @@ const ReviewControls = ({
                       <Icon className='h-4 w-4' />
                       {count > 0 && (
                         <span
-                          className={`absolute -top-2 -right-2 ${
-                            isSelected ? 'text-primary bg-white' : 'bg-primary text-white'
+                          className={`absolute -top-2 -right-2 border ${
+                            isSelected
+                              ? 'text-primary border-border bg-white'
+                              : 'bg-primary border-primary text-white'
                           } flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold`}
                         >
                           {count}

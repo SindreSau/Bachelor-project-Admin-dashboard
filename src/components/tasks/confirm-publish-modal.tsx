@@ -39,8 +39,8 @@ export default function ConfirmPublishModal({ task }: { task: TaskWithApplicatio
             className={cn(
               'bg shrink-0',
               task.published
-                ? 'bg-warning/60 hover:bg-warning/50 disabled:bg-warning/40 text-white'
-                : 'bg-confirm/70 hover:bg-confirm/50 disabled:bg-confirm/40'
+                ? 'bg-info/80 hover:bg-info/70 disabled:bg-info/40 text-primary-foreground hover:text-primary-foreground'
+                : 'bg-confirm/80 hover:bg-confirm/50 disabled:bg-confirm/40'
             )}
           >
             {isPublishing ? (
@@ -74,7 +74,7 @@ export default function ConfirmPublishModal({ task }: { task: TaskWithApplicatio
             className={cn(
               'inline-flex items-center disabled:cursor-not-allowed',
               task.published
-                ? 'bg-warning/60 hover:bg-warning/50 disabled:bg-warning/40'
+                ? 'bg-info/80 hover:bg-info/70 disabled:bg-info/40 text-primary-foreground hover:text-primary-foreground'
                 : 'bg-confirm/70 hover:bg-confirm/50 disabled:bg-confirm/40'
             )}
           >

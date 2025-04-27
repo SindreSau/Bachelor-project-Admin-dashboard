@@ -58,7 +58,7 @@ const Comment = ({ comment, isCurrentUser, user }: CommentProps) => {
     <div
       className={`@container flex w-full ${isCurrentUser ? 'justify-end' : 'justify-start'} mb-3`}
     >
-      <Card className={`w-4/5 ${isCurrentUser ? 'bg-accent dark:bg-accent/50 border' : ''}`}>
+      <Card className={`w-4/5 ${isCurrentUser ? 'bg-accent/10 border' : ''}`}>
         <CardHeader className='flex flex-row items-center justify-between px-3 py-2'>
           <div className='flex items-center gap-3'>
             <CustomAvatar

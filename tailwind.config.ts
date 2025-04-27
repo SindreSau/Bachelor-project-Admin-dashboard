@@ -12,8 +12,10 @@ export default {
       colors: {
         // Custom added
         confirm: 'oklch(var(--confirm))',
+        info: 'oklch(var(--info))',
         'confirm-foreground': 'oklch(var(--confirm-foreground))',
         'background-dashboard': 'oklch(var(--background-dashboard))',
+        link: 'oklch(var(--link))',
 
         // Rest
         background: 'oklch(var(--background))',

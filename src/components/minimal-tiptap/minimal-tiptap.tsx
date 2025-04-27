@@ -45,14 +45,6 @@ const Toolbar = ({ editor, className }: { editor: Editor; className?: string }) 
         activeActions={['orderedList', 'bulletList']}
         mainActionCount={0}
       />
-
-      {/* <Separator orientation='vertical' className='mx-2 h-7' /> */}
-
-      {/* <SectionFive
-        editor={editor}
-        activeActions={['codeBlock', 'blockquote', 'horizontalRule']}
-        mainActionCount={0}
-      /> */}
     </div>
   </div>
 );
@@ -83,7 +75,7 @@ export const MinimalTiptapEditor = React.forwardRef<HTMLDivElement, MinimalTipta
         name='editor'
         ref={ref}
         className={cn(
-          'border-input focus-within:border-primary flex h-auto min-h-72 w-full cursor-text flex-col rounded-md border shadow-sm',
+          'focus-within:border-primary flex h-auto min-h-72 w-full cursor-text flex-col rounded-md',
           className
         )}
         onClick={handleEditorClick}

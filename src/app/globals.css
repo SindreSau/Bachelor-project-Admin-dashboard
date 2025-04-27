@@ -18,6 +18,16 @@
   ::file-selector-button {
     border-color: var(--color-gray-200, currentColor);
   }
+
+  .light,
+  .github-light {
+    color-scheme: light;
+  }
+
+  .dark,
+  .github-dark {
+    color-scheme: dark;
+  }
 }
 
 @layer utilities {
@@ -28,58 +38,65 @@
 
 @layer base {
   :root {
-    --radius: 0.4rem;
+    --radius: 0.5rem;
 
-    --background: 95.41% 0.0191 293.49;
-    --background-dashboard: 91.39% 0.0206 292.73;
-    --foreground: 40.03% 0.0254 288.2;
-    --card: 95.41% 0.0191 293.49;
-    --card-foreground: 40.03% 0.0254 288.2;
-    --popover: 98.47% 0.0108 299.18;
-    --popover-foreground: 40.03% 0.0254 288.2;
+    --background: 98% 0.012 270;
+    --background-dashboard: 93% 0.01 270;
+    --foreground: 25% 0.02 290;
 
-    --primary: 52.87% 0.2237 295.16;
+    --card: 98% 0.004 296;
+    --card-foreground: 25% 0.02 290;
+    --popover: 99% 0.01 298;
+    --popover-foreground: 25% 0.02 290;
+
+    --primary: 61.07% 0.2507 309.62; /* Matches dark mode */
     --primary-foreground: 98.43% 0.0118 293.88;
-    --accent: 92.93% 0.0242 300.36;
-    --accent-foreground: 38.86% 0.0166 289.6;
 
-    --secondary: 91.99% 0.0156 286.66;
-    --secondary-foreground: 43.16% 0.0217 288.99;
-    --muted: 91.99% 0.0156 286.66;
-    --muted-foreground: 60.53% 0.0179 291.2;
+    --secondary: 92% 0.09 289; /* Matches dark mode */
+    --secondary-foreground: 48% 0.012 289;
 
-    --destructive: 63.65% 0.1514 20.71;
+    --muted: 92% 0.01 295;
+    --muted-foreground: 50% 0.01 293;
+
+    --accent: 65% 0.07 290; /* Matches dark mode */
+    --accent-foreground: 98.43% 0.0118 293.88;
+
+    --destructive: 59.78% 0.1605 22.01; /* Matches dark mode */
     --destructive-foreground: 98.43% 0.0118 293.88;
-    --warning: 73.56% 0.1334 76.38;
-    --warning-foreground: 32.11% 0.0035 299.18;
 
-    --border: 88.01% 0.0167 284.34;
-    --input: 88.01% 0.0167 284.34;
-    --ring: 52.87% 0.2237 295.16;
+    --warning: 70% 0.11 85; /* Matches dark mode */
+    --warning-foreground: 21.56% 0.0024 299.18;
 
-    --chart-1: 59.59% 0.1772 298.23;
-    --chart-2: 69.59% 0.1046 230.54;
-    --chart-3: 64.68% 0.1484 358.66;
-    --chart-4: 67.58% 0.112 169.7;
-    --chart-5: 69.36% 0.1237 53.33;
+    --border: 80% 0.015 290;
+    --input: 80% 0.015 290;
+    --ring: 65.8% 0.1658 299.08;
 
-    --sidebar-background: 95.45% 0.0213 300.25;
-    --sidebar-foreground: 45.3% 0.0294 288.13;
-    --sidebar-primary: 52.87% 0.2237 295.16;
+    --chart-1: 70.01% 0.1459 299.82;
+    --chart-2: 81.18% 0.079 230.54;
+    --chart-3: 77.3% 0.1033 354.08;
+    --chart-4: 79.19% 0.1115 172.02;
+    --chart-5: 79.99% 0.0881 53.41;
+
+    --sidebar-background: 96% 0.005 296;
+    --sidebar-foreground: 30% 0.02 292;
+    --sidebar-primary: 61.07% 0.2507 309.62;
     --sidebar-primary-foreground: 99.99% 0.011 299.18;
-    --sidebar-accent: 90.76% 0.0334 300.5;
-    --sidebar-accent-foreground: 45.3% 0.0294 288.13;
-    --sidebar-border: 87.25% 0.0273 300.46;
-    --sidebar-ring: 52.87% 0.2237 295.16;
+    --sidebar-accent: 94% 0.06 290;
+    --sidebar-accent-foreground: 30% 0.02 292;
+    --sidebar-border: 80% 0.01 290;
+    --sidebar-ring: 65.8% 0.1658 299.08;
 
-    /* Custom additions */
-    --confirm-foreground: 97.01% 0.0129 188.79;
-    --confirm: 64.67% 0.1375 153.24;
+    /* Keep custom additions consistent */
+    --confirm: 64% 0.21 307;
+    --confirm-foreground: 98.43% 0.0118 293.88;
+    --info: 66% 0.19 310;
+    --info-foreground: 98.43% 0.0118 293.88;
+    --link: 40% 0.1 300;
 
-    --action-color: 58.59% 0.1575 267.14;
-    --action-hover: 52.19% 0.1834 265.98;
-    --danger-color: 60.54% 0.1569 21.61;
-    --danger-hover: 52.33% 0.1685 24.41;
+    --action-color: 72.4% 0.1146 269.27;
+    --action-hover: 64.61% 0.1477 267.82;
+    --danger-color: 69.54% 0.1226 18.04;
+    --danger-hover: 59.15% 0.1742 23.15;
   }
 
   .dark {
@@ -90,18 +107,21 @@
     --card-foreground: 98.43% 0.0118 293.88;
     --popover: 22.71% 0.0146 288.16;
     --popover-foreground: 98.43% 0.0118 293.88;
+
     --primary: 61.07% 0.2507 309.62;
     --primary-foreground: 98.43% 0.0118 293.88;
-    --secondary: 29.19% 0.0134 289.32;
+    --secondary: 35% 0.1 289.32;
     --secondary-foreground: 98.43% 0.0118 293.88;
-    --muted: 29.19% 0.0134 289.32;
-    --muted-foreground: 77.4% 0.0167 293;
-    --accent: 28.97% 0.0413 285.51;
+    --muted: 34% 0.0134 289.32;
+    --muted-foreground: 80% 0.0167 293;
+    --accent: 60% 0.12 290;
     --accent-foreground: 98.43% 0.0118 293.88;
+
     --destructive: 59.78% 0.1605 22.01;
     --destructive-foreground: 98.43% 0.0118 293.88;
-    --warning: 78.17% 0.1268 77.67;
+    --warning: 70% 0.11 85;
     --warning-foreground: 21.56% 0.0024 299.18;
+
     --border: 33.23% 0.0137 289.73;
     --input: 33.23% 0.0137 289.73;
     --ring: 65.8% 0.1658 299.08;
@@ -122,13 +142,146 @@
     --sidebar-ring: 65.8% 0.1658 299.08;
 
     /* Custom additions */
-    --confirm-foreground: 97.01% 0.0129 188.79;
-    --confirm: 73.22% 0.1261 155.36;
+    --confirm: 64% 0.21 307;
+    --confirm-foreground: 98.43% 0.0118 293.88;
+    --info: 66% 0.19 310;
+    --info-foreground: 98.43% 0.0118 293.88;
+    --link: 68% 0.08 300;
 
     --action-color: 72.4% 0.1146 269.27;
     --action-hover: 64.61% 0.1477 267.82;
     --danger-color: 69.54% 0.1226 18.04;
     --danger-hover: 59.15% 0.1742 23.15;
+  }
+
+  /* GitHub Light Theme - Exact Match */
+  .github-light {
+    --radius: 0.45rem; /* GitHub's rounded corners */
+
+    --background: 100% 0 0; /* White #ffffff */
+    --background-dashboard: 96% 0.007 135; /* Slightly off‑white #fafafa */
+    --foreground: 20% 0 0; /* Dark gray text #333333 */
+
+    --card: 100% 0 0; /* White #ffffff */
+    --card-foreground: 20% 0 0; /* Dark gray text #333333 */
+    --popover: 100% 0 0; /* White #ffffff */
+    --popover-foreground: 20% 0 0; /* Dark gray text #333333 */
+
+    --primary: 60% 0.15 150; /* GitHub Green #28a745 */
+    --primary-foreground: 100% 0 0; /* White #ffffff */
+
+    --secondary: 90% 0.04 150; /* Dimmed Green/Gray #838E8C */
+    --secondary-foreground: 48% 0.12 150; /* Dimmed Green/Gray #838E8C */
+
+    --muted: 95% 0 0; /* Light gray #f6f8fa */
+    --muted-foreground: 42% 0 0; /* Medium gray #6a737d */
+
+    --accent: 40% 0.03 160; /*  */
+    --accent-foreground: 99% 0 0; /* Dark gray #333333 */
+
+    --destructive: 50% 0.6 10; /* GitHub Red #d73a49 */
+    --destructive-foreground: 100% 0 0; /* White #ffffff */
+
+    --warning: 60% 0.8 40; /* GitHub Yellow #ffd33d */
+    --warning-foreground: 20% 0 0; /* Dark gray #333333 */
+
+    --border: 88% 0 0; /* Light gray border #e1e4e8 */
+    --input: 90% 0 0; /* Very light gray #f9f9f9 */
+    --ring: 50% 0.1 180; /* GitHub Blue #0366d6 */
+
+    /* Semantic colors from GitHub's UI */
+    --confirm: 50% 0.6 140; /* GitHub Green #28a745 */
+    --confirm-foreground: 100% 0 0; /* White #ffffff */
+    --info: 60% 0.1 230; /* GitHub Blue #0366d6 */
+    --info-foreground: 100% 0 0; /* White #ffffff */
+    --link: 45% 0.12 230; /* GitHub Blue #0366d6 */
+
+    --action-color: 60% 0.1 230; /* GitHub Blue #0366d6 */
+    --action-hover: 55% 0.15 230; /* Darker blue #005cc5 */
+    --danger-color: 55% 0.7 0; /* GitHub Red #d73a49 */
+    --danger-hover: 50% 0.75 0; /* Darker red #b31d28 */
+
+    /* Chart colors matching GitHub's palette */
+    --chart-1: 60% 0.1 230; /* Blue #0366d6 */
+    --chart-2: 50% 0.6 140; /* Green #28a745 */
+    --chart-3: 55% 0.7 0; /* Red #d73a49 */
+    --chart-4: 60% 0.8 40; /* Yellow #ffd33d */
+    --chart-5: 65% 0.5 280; /* Purple #6f42c1 */
+
+    /* Sidebar specific adjustments */
+    --sidebar-background: 98% 0 0; /* Very light gray #f9f9f9 */
+    --sidebar-foreground: 10% 0 0; /* Dark gray #333333 */
+    --sidebar-primary: 60% 0.1 230; /* GitHub Blue #0366d6 */
+    --sidebar-primary-foreground: 100% 0 0; /* White #ffffff */
+    --sidebar-accent: 90% 0 0; /* Light gray #e1e4e8 */
+    --sidebar-accent-foreground: 20% 0 0; /* Dark gray #333333 */
+    --sidebar-border: 90% 0 0; /* Border gray #e1e4e8 */
+    --sidebar-ring: 60% 0.1 230; /* GitHub Blue #0366d6 */
+  }
+
+  /* GitHub Dark Theme - Improved Pastel Palette */
+  .github-dark {
+    --radius: 0.45rem;
+
+    --background: 16% 0.004 150; /* Deep blue-black #181a20 */
+    --background-dashboard: 8% 0.015 150; /* Slightly lighter blue-black #20232a */
+    --foreground: 90% 0.01 280; /* Soft light gray #e2e6f3 */
+
+    --card: 18% 0 0; /* Card dark blue, 1% lighter #25283c */
+    --card-foreground: 90% 0.01 280; /* Card text soft light gray #e2e6f3 */
+    --popover: 17% 0.012 250; /* Popover dark blue #282b3f */
+    --popover-foreground: 90% 0.01 280; /* Popover text soft light gray #e2e6f3 */
+
+    --primary: 62% 0.2 150; /* GitHub green #28a745 (LCH approximation) */
+    --primary-foreground: 100% 0 0; /* White #ffffff */
+
+    --secondary: 22% 0.02 260; /* Muted blue-gray #2c3140 */
+    --secondary-foreground: 85% 0.01 280; /* Light gray #d9d9e3 */
+
+    --muted: 22% 0.01 260; /* Muted blue-gray #2c3140 */
+    --muted-foreground: 70% 0.01 280; /* Medium gray #9999b3 */
+
+    --accent: 30% 0.03 320; /* Muted purple #3d2e4f */
+    --accent-foreground: 90% 0.01 280; /* Light gray #e2e6f3 */
+
+    --destructive: 60% 0.25 25; /* More red, less pink #e34d4d */
+    --destructive-foreground: 100% 0 0; /* White #ffffff */
+
+    --warning: 78% 0.35 45; /* Pastel orange #ffd580 */
+    --warning-foreground: 15% 0.01 250; /* Dark text #23263a */
+
+    --border: 24% 0.01 260; /* Border blue-gray #353a4d */
+    --input: 28% 0.01 260; /* Input blue-gray #2c3140 */
+    --ring: 62% 0.32 150; /* GitHub green #28a745 (LCH approximation) */
+
+    /* Semantic colors */
+    --confirm: 65% 0.18 150; /* Pastel green #7be6b5 */
+    --confirm-foreground: 30% 0.02 150; /* Dark text #23263a */
+    --info: 58% 0.2 220; /* Pastel cyan #7fd6f7 */
+    --info-foreground: 15% 0.01 250; /* Dark text #23263a */
+    --link: 65% 0.07 190; /* Muted blue #3d2e4f */
+
+    --action-color: 72% 0.32 150; /* GitHub green #28a745 (LCH approximation) */
+    --action-hover: 65% 0.36 150; /* Slightly deeper green */
+    --danger-color: 70% 0.45 25; /* More red, less pink #e34d4d */
+    --danger-hover: 65% 0.5 25; /* Deeper red #c43a3a */
+
+    /* Chart colors - harmonious pastel palette */
+    --chart-1: 68% 0.28 220; /* Pastel cyan #7fd6f7 */
+    --chart-2: 70% 0.25 140; /* Pastel green #7be6b5 */
+    --chart-3: 70% 0.45 25; /* More red, less pink #e34d4d */
+    --chart-4: 78% 0.35 45; /* Pastel orange #ffd580 */
+    --chart-5: 75% 0.32 300; /* Pastel purple #d1a7ff */
+
+    /* Sidebar specific adjustments */
+    --sidebar-background: 16% 0.012 250; /* Sidebar dark blue, 1% lighter #25283c */
+    --sidebar-foreground: 90% 0.01 280; /* Sidebar text soft light gray #e2e6f3 */
+    --sidebar-primary: 72% 0.32 150; /* Sidebar GitHub green #28a745 */
+    --sidebar-primary-foreground: 100% 0 0; /* White #ffffff */
+    --sidebar-accent: 30% 0.03 320; /* Sidebar muted purple #3d2e4f */
+    --sidebar-accent-foreground: 90% 0.01 280; /* Sidebar accent text #e2e6f3 */
+    --sidebar-border: 28% 0.01 260; /* Sidebar border blue-gray #353a4d */
+    --sidebar-ring: 72% 0.32 150; /* Sidebar GitHub green #28a745 */
   }
 }
 

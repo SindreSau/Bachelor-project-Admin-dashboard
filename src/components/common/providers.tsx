@@ -6,7 +6,13 @@ import { TooltipProvider } from '../ui/tooltip';
 const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
     <AuthProvider>
-      <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
+      <ThemeProvider
+        attribute='class'
+        defaultTheme='system'
+        enableSystem
+        disableTransitionOnChange
+        themes={['light', 'dark', 'github-light', 'github-dark', 'system']}
+      >
         <SidebarProvider defaultOpen={true}>
           <TooltipProvider>{children}</TooltipProvider>
         </SidebarProvider>
