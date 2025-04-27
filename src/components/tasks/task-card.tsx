@@ -39,8 +39,8 @@ const TaskCard = ({ task }: { task: TaskWithApplicationCount }) => {
       className={`flex h-full w-full grow flex-col ${task.published ? 'border-primary border' : ''}`}
     >
       <CardHeader className='pb-4'>
-        <div className='flex items-start justify-between gap-4'>
-          <CardTitle className='text-xl'>{task.taskName}</CardTitle>
+        <div className='flex flex-col items-end justify-between gap-4 md:flex-row md:items-start'>
+          <CardTitle className='w-full text-start text-xl'>{task.taskName}</CardTitle>
           <div className='flex shrink-0 gap-2'>
             <Link
               href={`/oppgaver/rediger/${task.id}`}

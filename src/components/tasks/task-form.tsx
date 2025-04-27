@@ -232,7 +232,7 @@ export default function TaskForm({ isEditComponent, task }: TaskFormProps) {
           {/* Now render deadline and students fields for both create and edit modes */}
           {renderDeadlineAndStudentsFields()}
 
-          <div className='flex space-x-4'>
+          <div className='flex flex-wrap gap-4'>
             {isEditComponent ? (
               <>
                 <Button
