@@ -1,10 +1,10 @@
-import { LayoutDashboardIcon, FilePlus } from 'lucide-react';
+import { House, FilePlus } from 'lucide-react';
 
 export const navigationLinks = [
   {
-    title: 'Dashboard',
+    title: 'Søknader',
     url: '/',
-    icon: LayoutDashboardIcon,
+    icon: House,
   },
   {
     title: 'Oppgaver',
