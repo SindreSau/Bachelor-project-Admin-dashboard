@@ -15,9 +15,11 @@ import { Separator } from '@radix-ui/react-separator';
 import { navigationLinks } from '@/lib/navigationlinks';
 import Link from 'next/link';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
+import { usePathname } from 'next/navigation';
 
 export const AppSidebar = () => {
-  const { setOpenMobile, isMobile } = useSidebar(); // Use setOpen instead of setIsOpen
+  const { setOpenMobile, isMobile, open } = useSidebar(); // Use setOpen instead of setIsOpen
+  const pathname = usePathname();
 
   const handleCloseSidebar = () => {
     // Only close on mobile
@@ -30,19 +32,39 @@ export const AppSidebar = () => {
     return navigator.userAgent.toLowerCase().includes('mac');
   };
 
+  const isActiveLink = (itemUrl: string) => {
+    if (itemUrl === '/') {
+      return pathname === '/' || pathname.startsWith('/soknader');
+    }
+    return pathname === itemUrl || pathname.startsWith(itemUrl);
+  };
+
   return (
     <Sidebar variant='sidebar' collapsible='icon' className='py-1'>
       <SidebarContent className='h-full'>
         <SidebarGroup className='flex h-full'>
-          <SidebarGroupLabel className='text-base font-bold'>Bachelor Admin</SidebarGroupLabel>
+          <SidebarGroupLabel className='text-base font-bold'>
+            {open ? (
+              <Link href='/' className='hover:text-primary/60 outline-none'>
+                Bachelor Admin
+              </Link>
+            ) : null}
+          </SidebarGroupLabel>
           <Separator className='my-1' />
           <SidebarGroupContent className='flex h-full flex-col justify-between'>
             <SidebarMenu>
               {navigationLinks.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton onClick={handleCloseSidebar} asChild>
-                    <Link href={item.url}>
-                      <item.icon />
+                    <Link
+                      href={item.url}
+                      className={
+                        isActiveLink(item.url)
+                          ? 'border-primary/40 flex items-center gap-2 rounded-none border-b-2'
+                          : 'flex items-center gap-2'
+                      }
+                    >
+                      {item.icon && <item.icon />}
                       <span>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
