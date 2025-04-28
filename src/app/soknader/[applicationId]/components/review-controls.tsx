@@ -169,8 +169,10 @@ const ReviewControls = ({
                       <Icon className='h-4 w-4' />
                       {count > 0 && (
                         <span
-                          className={`absolute -top-2 -right-2 ${
-                            isSelected ? 'text-primary bg-white' : 'bg-primary text-white'
+                          className={`absolute -top-2 -right-2 border ${
+                            isSelected
+                              ? 'text-primary border-border bg-white'
+                              : 'bg-primary border-primary text-white'
                           } flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold`}
                         >
                           {count}
@@ -178,20 +180,10 @@ const ReviewControls = ({
                       )}
                     </Button>
                   ) : (
-                    <div
-                      className={`relative flex h-6 w-6 items-center justify-center rounded-md p-0 ${
-                        isSelected
-                          ? 'bg-primary text-primary-foreground hover:bg-primary/80'
-                          : 'text-muted-foreground hover:text-muted-foreground/80 bg-transparent'
-                      }`}
-                    >
+                    <div className='text-muted-foreground hover:text-muted-foreground/80 relative flex h-6 w-6 cursor-default items-center justify-center rounded-md bg-transparent p-0'>
                       <Icon className='h-4 w-4' />
                       {count > 0 && (
-                        <span
-                          className={`absolute -top-2 -right-2 ${
-                            isSelected ? 'text-primary bg-white' : 'bg-primary text-white'
-                          } flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold`}
-                        >
+                        <span className='bg-primary absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold text-white'>
                           {count}
                         </span>
                       )}

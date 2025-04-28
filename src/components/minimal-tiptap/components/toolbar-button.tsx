@@ -16,7 +16,11 @@ export const ToolbarButton = React.forwardRef<HTMLButtonElement, ToolbarButtonPr
       <Toggle
         size='sm'
         ref={ref}
-        className={cn('size-8 p-0', { 'bg-accent': isActive }, className)}
+        className={cn(
+          'size-8 cursor-pointer p-0',
+          { 'bg-accent text-accent-foreground': isActive },
+          className
+        )}
         {...props}
       >
         {children}

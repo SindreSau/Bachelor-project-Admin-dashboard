@@ -57,7 +57,7 @@ const ApplicationStudentsGrid = ({ students, studentRepresentativeId }: Students
                     <div className='pb-3'>
                       <Link
                         href={`mailto:${student.email}`}
-                        className='text-action/70 pr-4 text-sm whitespace-nowrap hover:underline'
+                        className='text-link pr-4 text-sm whitespace-nowrap hover:underline'
                       >
                         <MailIcon className='mr-2 inline h-4 w-4' />
                         {student.email}

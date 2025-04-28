@@ -71,8 +71,8 @@ export const ToolbarSection: React.FC<ToolbarSectionProps> = ({
         key={action.label}
         onClick={() => action.action(editor)}
         disabled={!action.canExecute(editor)}
-        className={cn('flex flex-row items-center justify-between gap-4', {
-          'bg-accent': action.isActive(editor),
+        className={cn('flex cursor-pointer flex-row items-center justify-between gap-4', {
+          'bg-accent text-accent-foreground': action.isActive(editor),
         })}
         aria-label={action.label}
       >

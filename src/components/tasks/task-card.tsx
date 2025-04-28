@@ -36,7 +36,7 @@ const TaskCard = ({ task }: { task: TaskWithApplicationCount }) => {
 
   return (
     <Card
-      className={`flex h-full w-full grow flex-col ${task.published ? 'border-primary border' : ''}`}
+      className={`flex h-full w-full grow flex-col ${task.published ? 'border-confirm/50 border' : ''}`}
     >
       <CardHeader className='pb-4'>
         <div className='flex flex-col items-end justify-between gap-4 md:flex-row md:items-start'>
@@ -44,9 +44,9 @@ const TaskCard = ({ task }: { task: TaskWithApplicationCount }) => {
           <div className='flex shrink-0 gap-2'>
             <Link
               href={`/oppgaver/rediger/${task.id}`}
-              className='border-input bg-secondary text-secondary-foreground hover:bg-secondary/80 focus-visible:ring-ring inline-flex h-8 w-8 items-center justify-center rounded-md border p-0 text-sm font-medium shadow-sm transition-colors focus-visible:ring-1 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50'
+              className='border-input bg-muted hover:bg-muted/80 focus:ring-ring inline-flex h-8 w-8 items-center justify-center rounded-md border p-0 text-sm font-medium transition-colors focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
             >
-              <Pencil className='h-4 w-4' />
+              <Pencil className='text-muted-foreground h-4 w-4' />
             </Link>
             <ConfirmDeleteModal taskId={task.id} hasApplications={hasApplications} />
           </div>

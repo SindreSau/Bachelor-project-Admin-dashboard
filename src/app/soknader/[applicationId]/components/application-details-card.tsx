@@ -176,7 +176,7 @@ const ApplicationDetailsCard = ({
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onClick={handleDeleteClick}
-                    className='text-destructive/90 focus:text-destructive cursor-pointer'
+                    className='text-destructive-foreground hover:text-destructive-foreground bg-destructive/20 focus:text-destructive-foreground cursor-pointer'
                   >
                     Slett søknad
                   </DropdownMenuItem>
