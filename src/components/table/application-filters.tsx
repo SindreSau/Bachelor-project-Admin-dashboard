@@ -1,7 +1,10 @@
 import React from 'react';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { deleteAllApplications } from '@/actions/applications/delete-all-applications';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { RotateCcw } from 'lucide-react';
+import { RotateCcw, MoreHorizontal } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -12,6 +15,15 @@ import {
 import { STATUS_OPTIONS } from '@/lib/constants';
 import { Table } from '@tanstack/react-table';
 import { Application, Student, Review } from '@prisma/client';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import ConfirmActionModal from '../tasks/confirm-action-modal';
 
 type ApplicationWithStudentsAndReviews = Application & {
   students: Student[];
@@ -39,6 +51,27 @@ const ApplicationFilters = ({
   setStatusFilter,
   resetFilters,
 }: ApplicationFiltersProps) => {
+  const [isDeleteAllDialogOpen, setIsDeleteAllDialogOpen] = useState(false);
+  const [isDeletingAll, setIsDeletingAll] = useState(false);
+
+  const handleDeleteAllConfirm = async () => {
+    setIsDeletingAll(true);
+    try {
+      const result = await deleteAllApplications();
+      if (result.success) {
+        toast.success('Alle søknader slettet');
+        // Optionally, refresh data here
+      } else {
+        toast.error('Kunne ikke slette alle søknader', { description: result.error });
+      }
+    } catch (error) {
+      toast.error('Noe gikk galt', { description: 'Kunne ikke slette alle søknader.' });
+    } finally {
+      setIsDeletingAll(false);
+      setIsDeleteAllDialogOpen(false);
+    }
+  };
+
   return (
     <div className='flex flex-wrap items-center gap-4 py-4'>
       <Input
@@ -47,7 +80,6 @@ const ApplicationFilters = ({
         onChange={(event) => table.getColumn('groupName')?.setFilterValue(event.target.value)}
         className='max-w-xs'
       />
-
       <Select
         value={schoolFilter}
         onValueChange={(value) => {
@@ -65,7 +97,6 @@ const ApplicationFilters = ({
           <SelectItem value='kristiania'>Høyskolen Kristiania</SelectItem>
         </SelectContent>
       </Select>
-
       <Select
         value={statusFilter}
         onValueChange={(value) => {
@@ -88,11 +119,39 @@ const ApplicationFilters = ({
           ))}
         </SelectContent>
       </Select>
-
       <Button onClick={resetFilters} variant='outline' size='sm' className='cursor-pointer'>
         Nullstill
         <RotateCcw />
       </Button>
+      <div className='flex justify-end'>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant='ghost' className='h-fit px-2'>
+              <MoreHorizontal />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align='end'>
+            <DropdownMenuLabel>Handlinger</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <ConfirmActionModal
+              onAction={handleDeleteAllConfirm}
+              title='Slett søknad'
+              description={`Er du sikker på at du vil slette alle søknader? Dette kan ikke angres.`}
+              confirmText='Slett'
+              cancelText='Avbryt'
+              actionButtonClassName='bg-destructive text-destructive-foreground hover:bg-destructive/90'
+              trigger={
+                <DropdownMenuItem
+                  className='text-destructive-foreground hover:text-destructive-foreground bg-destructive/20 cursor-pointer'
+                  onSelect={(e) => e.preventDefault()}
+                >
+                  Slett alle søknader
+                </DropdownMenuItem>
+              }
+            />
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </div>
   );
 };
