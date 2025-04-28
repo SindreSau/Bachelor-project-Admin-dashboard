@@ -1,5 +1,5 @@
 import { ColumnDef, FilterFn } from '@tanstack/react-table';
-import { ArrowUpDown, ArrowUp, ArrowDown, BookOpenText } from 'lucide-react';
+import { ArrowUpDown, ArrowUp, ArrowDown, ArrowRightSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { concatGroupName } from '@/lib/utils';
@@ -185,9 +185,9 @@ export const createColumns = (
       return (
         <Link
           href={`/soknader/${application.id.toString()}`}
-          className='group flex cursor-pointer items-center justify-center'
+          className='group text-muted-foreground/70 flex cursor-pointer items-center justify-center'
         >
-          <BookOpenText className='group-hover:text-primary h-6 w-6' />
+          <ArrowRightSquare className='group-hover:text-primary h-6 w-6' />
         </Link>
       );
     },
