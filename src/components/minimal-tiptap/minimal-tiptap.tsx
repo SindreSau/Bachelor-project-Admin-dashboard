@@ -8,7 +8,6 @@ import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { SectionOne } from './components/section/one';
 import { SectionTwo } from './components/section/two';
-import { SectionThree } from './components/section/three';
 import { SectionFour } from './components/section/four';
 import { LinkBubbleMenu } from './components/bubble-menu/link-bubble-menu';
 import { useMinimalTiptapEditor } from './hooks/use-minimal-tiptap';
@@ -33,10 +32,6 @@ const Toolbar = ({ editor, className }: { editor: Editor; className?: string }) 
         activeActions={['bold', 'italic', 'underline', 'strikethrough', 'code', 'clearFormatting']}
         mainActionCount={3}
       />
-
-      <Separator orientation='vertical' className='mx-2 h-7' />
-
-      <SectionThree editor={editor} />
 
       <Separator orientation='vertical' className='mx-2 h-7' />
 
