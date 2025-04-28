@@ -238,7 +238,7 @@ export default function TaskForm({ isEditComponent, task }: TaskFormProps) {
                 <Button
                   type='submit'
                   disabled={isSubmitting}
-                  className='inline-flex items-center disabled:cursor-not-allowed'
+                  className='bg-confirm/90 hover:bg-confirm/80 inline-flex items-center disabled:cursor-not-allowed'
                 >
                   {isSubmitting ? (
                     <>
@@ -250,7 +250,12 @@ export default function TaskForm({ isEditComponent, task }: TaskFormProps) {
                   )}
                 </Button>
                 <Link href='/oppgaver'>
-                  <Button type='button' variant='secondary' disabled={isSubmitting}>
+                  <Button
+                    className='hover:bg-muted/80 border'
+                    type='button'
+                    variant='ghost'
+                    disabled={isSubmitting}
+                  >
                     Avbryt
                   </Button>
                 </Link>
@@ -261,7 +266,7 @@ export default function TaskForm({ isEditComponent, task }: TaskFormProps) {
                   type='button'
                   onClick={() => form.handleSubmit((data) => handleCreateSubmit(data, false))()}
                   disabled={isDraftLoading || isPublishLoading}
-                  className='bg-info hover:bg-info/80 disabled:bg-info/40 inline-flex cursor-pointer items-center'
+                  className='bg-info/80 hover:bg-info/60 disabled:bg-info/40 inline-flex cursor-pointer items-center'
                 >
                   {isDraftLoading ? (
                     <>
@@ -276,7 +281,7 @@ export default function TaskForm({ isEditComponent, task }: TaskFormProps) {
                   type='button'
                   onClick={() => form.handleSubmit((data) => handleCreateSubmit(data, true))()}
                   disabled={isDraftLoading || isPublishLoading}
-                  className='bg-confirm/90 hover:bg-confirm/80 disabled:bg-confirm/50 inline-flex cursor-pointer items-center'
+                  className='bg-confirm hover:bg-confirm/80 disabled:bg-confirm/50 inline-flex cursor-pointer items-center'
                 >
                   {isPublishLoading ? (
                     <>

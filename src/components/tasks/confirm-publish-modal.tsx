@@ -89,7 +89,12 @@ export default function ConfirmPublishModal({ task }: { task: TaskWithApplicatio
               'Publiser'
             )}
           </Button>
-          <Button variant='ghost' className='border' size='sm' onClick={() => setDialogOpen(false)}>
+          <Button
+            variant='ghost'
+            className='hover:bg-muted/80 border'
+            size='sm'
+            onClick={() => setDialogOpen(false)}
+          >
             Avbryt
           </Button>
         </DialogFooter>
