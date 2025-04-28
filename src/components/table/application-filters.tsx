@@ -51,8 +51,8 @@ const ApplicationFilters = ({
   setStatusFilter,
   resetFilters,
 }: ApplicationFiltersProps) => {
-  const [isDeleteAllDialogOpen, setIsDeleteAllDialogOpen] = useState(false);
-  const [isDeletingAll, setIsDeletingAll] = useState(false);
+  const [, setIsDeleteAllDialogOpen] = useState(false);
+  const [, setIsDeletingAll] = useState(false);
 
   const handleDeleteAllConfirm = async () => {
     setIsDeletingAll(true);
@@ -64,7 +64,7 @@ const ApplicationFilters = ({
       } else {
         toast.error('Kunne ikke slette alle søknader', { description: result.error });
       }
-    } catch (error) {
+    } catch {
       toast.error('Noe gikk galt', { description: 'Kunne ikke slette alle søknader.' });
     } finally {
       setIsDeletingAll(false);
