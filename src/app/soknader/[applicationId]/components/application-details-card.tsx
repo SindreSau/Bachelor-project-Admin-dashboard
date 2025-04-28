@@ -16,7 +16,7 @@ import {
 import StatusBadge from '@/components/table/status-badge';
 import { STATUS_OPTIONS } from '@/lib/constants';
 import { MoreHorizontal } from 'lucide-react';
-import DeleteConfirmationDialog from './delete-application-dialog';
+import ConfirmActionModal from '@/components/tasks/confirm-action-modal';
 import { deleteApplication } from '@/actions/applications/delete-application';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -44,7 +44,7 @@ const ApplicationDetailsCard = ({
 }: ApplicationDetailsCardProps) => {
   const [applicationStatus, setApplicationStatusState] = useState(initialStatus);
   const [isOpen, setIsOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [, setIsDeleteDialogOpen] = useState(false);
   const [, setIsDeleting] = useState(false);
   const router = useRouter();
 
@@ -64,10 +64,6 @@ const ApplicationDetailsCard = ({
     } catch (error) {
       console.error('Failed to update status:', error);
     }
-  };
-
-  const handleDeleteClick = () => {
-    setIsDeleteDialogOpen(true);
   };
 
   const handleDeleteConfirm = async () => {
@@ -174,27 +170,28 @@ const ApplicationDetailsCard = ({
                 <DropdownMenuContent align='end'>
                   <DropdownMenuLabel>Handlinger</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onClick={handleDeleteClick}
-                    className='text-destructive-foreground hover:text-destructive-foreground bg-destructive/20 focus:text-destructive-foreground cursor-pointer'
-                  >
-                    Slett søknad
-                  </DropdownMenuItem>
+                  <ConfirmActionModal
+                    onAction={handleDeleteConfirm}
+                    title='Slett søknad'
+                    description={`Er du helt sikker på at du vil slette søknaden til ${groupName}? No backsies!`}
+                    confirmText='Slett'
+                    cancelText='Avbryt'
+                    actionButtonClassName='bg-destructive text-destructive-foreground hover:bg-destructive/90'
+                    trigger={
+                      <DropdownMenuItem
+                        className='text-destructive-foreground hover:text-destructive-foreground bg-destructive/20 focus:text-destructive-foreground cursor-pointer'
+                        onSelect={(e) => e.preventDefault()}
+                      >
+                        Slett søknad
+                      </DropdownMenuItem>
+                    }
+                  />
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
           </div>
         </CardContent>
       </Card>
-
-      {/* Delete Confirmation Dialog */}
-      <DeleteConfirmationDialog
-        isOpen={isDeleteDialogOpen}
-        onClose={() => setIsDeleteDialogOpen(false)}
-        onConfirm={handleDeleteConfirm}
-        title='Slett søknad'
-        description={`Er du helt sikker på at du vil slette søknaden til ${groupName}? No backsies!`}
-      />
     </>
   );
 };

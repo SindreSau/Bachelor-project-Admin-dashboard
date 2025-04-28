@@ -5,12 +5,24 @@ import { Toaster as Sonner } from 'sonner';
 
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 
+// Map custom theme names to Sonner's theme prop
+function mapTheme(theme: string | undefined): 'light' | 'dark' | 'system' {
+  if (!theme || theme === 'system') return 'system';
+  if (theme === 'light' || theme === 'github-light' || theme === 'coffee') {
+    return 'light';
+  }
+  if (theme === 'dark' || theme === 'github-dark' || theme === 'coffee-dark') {
+    return 'dark';
+  }
+  return 'system';
+}
+
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = 'system' } = useTheme();
 
   return (
     <Sonner
-      theme={theme as ToasterProps['theme']}
+      theme={mapTheme(theme)}
       className='toaster group'
       toastOptions={{
         classNames: {

@@ -20,7 +20,7 @@ export async function deleteByUrl(blobUrl: string): Promise<void> {
       },
       'Invalid blob URL'
     );
-    throw new Error('Invalid blob URL');
+    return;
   }
 
   const containerClient = blobServiceClient.getContainerClient(containerName);
@@ -40,12 +40,28 @@ export async function deleteAll(): Promise<void> {
   const connectionString = process.env.AZURITE_CONNECTION_STRING || '';
   const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
 
-  for await (const container of blobServiceClient.listContainers()) {
-    const containerClient = blobServiceClient.getContainerClient(container.name);
-    for await (const blob of containerClient.listBlobsFlat()) {
-      const blobClient = containerClient.getBlobClient(blob.name);
-      await blobClient.deleteIfExists();
-      console.log(`Deleted blob: ${container.name}/${blob.name}`);
+  try {
+    for await (const container of blobServiceClient.listContainers()) {
+      const containerClient = blobServiceClient.getContainerClient(container.name);
+      for await (const blob of containerClient.listBlobsFlat()) {
+        const blobClient = containerClient.getBlobClient(blob.name);
+        await blobClient.deleteIfExists();
+      }
     }
+  } catch (error) {
+    logger.error(
+      {
+        action: 'deleteAll',
+        error: error instanceof Error ? error : new Error(String(error)),
+      },
+      'Failed to delete all blobs'
+    );
+    return;
   }
+  logger.info(
+    {
+      action: 'deleteAll',
+    },
+    'Deleted all blobs from all containers'
+  );
 }

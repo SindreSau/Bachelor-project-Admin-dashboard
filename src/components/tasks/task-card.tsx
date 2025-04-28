@@ -9,12 +9,27 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 
-import { Calendar, Pencil, Users, Globe, Hourglass, UserPlus, UserMinus } from 'lucide-react';
+import {
+  Calendar,
+  Pencil,
+  Users,
+  Globe,
+  Hourglass,
+  UserPlus,
+  UserMinus,
+  Trash2,
+} from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Task } from '@prisma/client';
-import ConfirmDeleteModal from './confirm-delete-modal';
-import ConfirmPublishModal from './confirm-publish-modal';
+import ConfirmActionModal from './confirm-action-modal';
 import Link from 'next/link';
+import { toast } from 'sonner';
+import { deleteTask } from '@/actions/tasks/delete-task';
+import { restoreTask } from '@/actions/tasks/restore-task';
+import { changePublishStatus } from '@/actions/tasks/change-publish-status';
+import { Button } from '../ui/button';
+import { useState } from 'react';
+import { cn } from '@/lib/utils';
 
 export type TaskWithApplicationCount = Task & {
   _count?: {
@@ -23,6 +38,8 @@ export type TaskWithApplicationCount = Task & {
 };
 
 const TaskCard = ({ task }: { task: TaskWithApplicationCount }) => {
+  const [isPublishing, setIsPublishing] = useState(false);
+
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('no-NO', {
       day: '2-digit',
@@ -31,8 +48,64 @@ const TaskCard = ({ task }: { task: TaskWithApplicationCount }) => {
     });
   };
 
-  // Check if the task has any applications
   const hasApplications = (task._count?.applications || 0) > 0;
+
+  const handleRestore = async (id: number) => {
+    try {
+      const result = await restoreTask(id);
+      if (result.success) {
+        toast.success('Oppgave gjenopprettet');
+      } else {
+        toast.error('Kunne ikke gjenopprette oppgave');
+        console.error(result.error);
+      }
+    } catch (err) {
+      toast.error('Kunne ikke gjenopprette oppgave');
+      console.error(err);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const result = await deleteTask(task.id);
+      if (result.success) {
+        toast('Oppgave slettet', {
+          duration: 10000,
+          action: {
+            label: 'Angre',
+            onClick: () => {
+              // Call the handler instead of directly calling the server action
+              handleRestore(task.id);
+            },
+          },
+        });
+      } else {
+        toast.error('Kunne ikke slette oppgave');
+        console.error(result.error);
+      }
+    } catch (err) {
+      toast.error('Kunne ikke slette oppgave');
+      console.error(err);
+    }
+  };
+
+  const handlePublishTask = async () => {
+    try {
+      setIsPublishing(true);
+      const result = await changePublishStatus(task.id, !task.published);
+      if (result.success) {
+        toast.success(`Oppgave ${task.published ? 'avpublisert' : 'publisert'}`);
+      } else {
+        toast.error('Kunne ikke endre publiseringsstatus');
+        console.error(result.error);
+      }
+    } catch (err) {
+      toast.error('Kunne ikke endre publiseringsstatus');
+      console.error(err);
+    } finally {
+      setIsPublishing(false);
+    }
+  };
 
   return (
     <Card
@@ -48,7 +121,30 @@ const TaskCard = ({ task }: { task: TaskWithApplicationCount }) => {
             >
               <Pencil className='text-muted-foreground h-4 w-4' />
             </Link>
-            <ConfirmDeleteModal taskId={task.id} hasApplications={hasApplications} />
+            <ConfirmActionModal
+              onAction={handleDelete}
+              description='Er du sikker på at du vil slette oppgaven?'
+              title='Slett oppgave'
+              confirmText='Slett'
+              cancelText='Avbryt'
+              trigger={
+                <Button
+                  variant='destructive'
+                  size='sm'
+                  className='border-destructive bg-destructive/80 hover:bg-destructive/60 disabled:bg-destructive/20 h-8 w-8 border'
+                >
+                  <Trash2 className='text-destructive-foreground' />
+                </Button>
+              }
+              warning={
+                hasApplications && (
+                  <div className='border-destructive text-foreground bg-destructive/10 my-3 border p-2 text-sm'>
+                    Dette vil slette oppgaven og alle tilknyttede søknader. Dette kan ikke angres.
+                  </div>
+                )
+              }
+              actionButtonClassName='bg-destructive/80 hover:bg-destructive/60 disabled:bg-destructive/20 inline-flex items-center disabled:cursor-not-allowed'
+            />
           </div>
         </div>
       </CardHeader>
@@ -98,7 +194,46 @@ const TaskCard = ({ task }: { task: TaskWithApplicationCount }) => {
           </div>
         </div>
 
-        <ConfirmPublishModal task={task} />
+        <ConfirmActionModal
+          onAction={handlePublishTask}
+          trigger={
+            <Button
+              variant={task.published ? 'outline' : 'default'}
+              size='sm'
+              disabled={isPublishing}
+              className={cn(
+                'bg shrink-0',
+                task.published
+                  ? 'bg-info/80 hover:bg-info/70 disabled:bg-info/40 text-primary-foreground hover:text-primary-foreground'
+                  : 'bg-confirm/80 hover:bg-confirm/50 disabled:bg-confirm/40'
+              )}
+            >
+              {isPublishing ? (
+                <span className='flex items-center gap-2'>
+                  <div className='h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent' />
+                  Laster...
+                </span>
+              ) : task.published ? (
+                'Avpubliser'
+              ) : (
+                'Publiser'
+              )}
+            </Button>
+          }
+          title={task.published ? 'Avpubliser oppgave' : 'Publiser oppgave'}
+          description={
+            task.published
+              ? 'Dette vil skjule oppgaven fra søknadsportalen'
+              : 'Dette vil gjøre oppgaven synlig på søknadsportalen. Vil du fortsette?'
+          }
+          confirmText={task.published ? 'Avpubliser' : 'Publiser'}
+          cancelText='Avbryt'
+          actionButtonClassName={
+            task.published
+              ? 'bg-info/80 hover:bg-info/70 disabled:bg-info/40 text-primary-foreground hover:text-primary-foreground inline-flex items-center disabled:cursor-not-allowed'
+              : 'bg-confirm/70 hover:bg-confirm/50 disabled:bg-confirm/40 inline-flex items-center disabled:cursor-not-allowed'
+          }
+        />
       </CardFooter>
     </Card>
   );
