@@ -58,13 +58,7 @@ const ApplicationTableView = ({
           {isLoading ? (
             // Show loading state
             <TableRow>
-              <TableCell colSpan={columns.length} className='h-24 text-center'>
-                <div className='flex items-center justify-center space-x-2'>
-                  {/* super duper cool spinner */}
-                  <div className='h-4 w-4 animate-spin rounded-full border-2 border-dashed border-t-green-400 border-r-yellow-400 border-b-orange-400 border-l-red-400'></div>
-                  <span>Laster søknader...</span>
-                </div>
-              </TableCell>
+              <TableCell colSpan={columns.length} className='h-24 text-center'></TableCell>
             </TableRow>
           ) : table.getRowModel().rows?.length ? (
             // Show data when loaded and not empty
