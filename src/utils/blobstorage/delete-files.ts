@@ -1,31 +1,39 @@
 'use server';
+import { logger } from '@/lib/logger.server';
 import { BlobServiceClient } from '@azure/storage-blob';
 
 export async function deleteByUrl(blobUrl: string): Promise<void> {
-  console.log('blobUrl to delete: ', blobUrl);
-
   const connectionString = process.env.AZURITE_CONNECTION_STRING || '';
   const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
 
   const url = new URL(blobUrl);
   const pathSegments = url.pathname.split('/');
-  console.log('pathSegments: ', pathSegments);
 
   const containerName = pathSegments[2];
   const blobName = pathSegments.slice(3).join('/');
 
   if (!containerName || !blobName) {
+    logger.error(
+      {
+        action: 'deleteByUrl',
+        blobUrl,
+      },
+      'Invalid blob URL'
+    );
     throw new Error('Invalid blob URL');
   }
-
-  console.log('containerName: ', containerName);
-  console.log('blobName: ', blobName);
 
   const containerClient = blobServiceClient.getContainerClient(containerName);
   const blobClient = containerClient.getBlobClient(blobName);
 
   await blobClient.deleteIfExists();
-  console.log(`Deleted blob: ${blobUrl}`);
+  logger.info(
+    {
+      action: 'deleteByUrl',
+      blobUrl,
+    },
+    `Deleted blob: ${containerName}/${blobName}`
+  );
 }
 
 export async function deleteAll(): Promise<void> {

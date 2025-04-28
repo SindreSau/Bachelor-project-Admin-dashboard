@@ -1,9 +1,10 @@
 'use server';
 import { ApplicationData } from '@/app/api/applications/route';
 import { DocumentType } from '@prisma/client';
-import { withRequestLogger, RequestLogger } from '@/lib/logger.server';
+import { withRequestLogger, RequestLogger, logger } from '@/lib/logger.server';
 import { db } from '@/lib/prisma';
 import { sendConfirmationEmail } from '../email/send-email';
+import { deleteByUrl } from '@/utils/blobstorage/delete-files';
 
 const submitApplication = withRequestLogger<
   { success: boolean; message: string },
@@ -133,7 +134,18 @@ const submitApplication = withRequestLogger<
           action: 'submitApplication',
           error: errorObject,
         },
-        'Failed to submit application'
+        'Failed to submit application - deleting files'
+      );
+
+      // If an error occurs, delete the files that were created
+      deleteFiles(
+        applicationData.students
+          .map((student) => ({
+            cv_blob: student.cv_blob,
+            grades_blob: student.grades_blob,
+          }))
+          .flat()
+          .filter((blob) => blob.cv_blob || blob.grades_blob)
       );
 
       return {
@@ -148,3 +160,22 @@ const submitApplication = withRequestLogger<
 );
 
 export default submitApplication;
+
+async function deleteFiles(blobs: { cv_blob?: string; grades_blob?: string }[]) {
+  logger.warn(
+    {
+      action: 'deleteFiles',
+      blobs,
+    },
+    'Deleting files'
+  );
+
+  for (const blob of blobs) {
+    if (blob.cv_blob) {
+      await deleteByUrl(blob.cv_blob);
+    }
+    if (blob.grades_blob) {
+      await deleteByUrl(blob.grades_blob);
+    }
+  }
+}
