@@ -28,7 +28,7 @@ const ApplicationCoverLetter = ({ coverLetter, tasks }: ApplicationCoverLetterPr
                   tasks.map((task, index) => (
                     <div
                       key={task.id}
-                      className={`bg-secondary/70 text-secondary-foreground flex items-center rounded-md px-3 py-1 text-sm ${index === 0 ? 'border-primary/50 border' : ''}`}
+                      className={`bg-secondary/70 text-secondary-foreground flex items-center rounded-md px-3 py-1 text-sm ${index === 0 ? 'border' : ''}`}
                     >
                       <span className='bg-primary text-primary-foreground mr-2 flex h-5 w-5 items-center justify-center rounded-full text-xs'>
                         {index + 1}

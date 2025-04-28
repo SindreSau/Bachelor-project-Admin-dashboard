@@ -32,6 +32,13 @@ export const AppSidebar = () => {
     return navigator.userAgent.toLowerCase().includes('mac');
   };
 
+  const isActiveLink = (itemUrl: string) => {
+    if (itemUrl === '/') {
+      return pathname === '/' || pathname.startsWith('/soknader');
+    }
+    return pathname === itemUrl || pathname.startsWith(itemUrl);
+  };
+
   return (
     <Sidebar variant='sidebar' collapsible='icon' className='py-1'>
       <SidebarContent className='h-full'>
@@ -52,7 +59,9 @@ export const AppSidebar = () => {
                     <Link
                       href={item.url}
                       className={
-                        pathname === item.url ? 'border-primary/40 rounded-none border-b-2' : ''
+                        isActiveLink(item.url)
+                          ? 'border-primary/40 flex items-center gap-2 rounded-none border-b-2'
+                          : 'flex items-center gap-2'
                       }
                     >
                       {item.icon && <item.icon />}
