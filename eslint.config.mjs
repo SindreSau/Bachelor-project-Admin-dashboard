@@ -55,6 +55,12 @@ const eslintConfig = [
           argsIgnorePattern: '^_',
         },
       ],
+      'no-console': [
+        'warn',
+        {
+          allow: ['warn', 'error'],
+        },
+      ],
     },
   },
 ];
