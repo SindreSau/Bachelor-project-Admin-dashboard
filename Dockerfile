@@ -19,13 +19,13 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Install pnpm in this stage too
+# Install pnpm in the builder stage
 RUN npm install -g pnpm prisma
 
 # Generate Prisma Client
-RUN npx prisma generate
+RUN cd src && npx prisma generate
 
-# Build Next.js (using your standalone build)
+# Build Next.js
 RUN pnpm run build:standalone
 
 # Production image, copy all the files and run next
@@ -33,9 +33,6 @@ FROM node:23-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
-
-# Install only Prisma CLI for migrations
-RUN npm install -g prisma
 
 # Create non-root user
 RUN addgroup -S -g 1001 nodejs && \
@@ -45,15 +42,19 @@ RUN addgroup -S -g 1001 nodejs && \
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/src/prisma/schema.prisma ./src/prisma/
-COPY --from=builder /app/src/prisma/seed.ts ./src/prisma/
+COPY --from=builder /app/src/prisma ./src/prisma
+
+# Install Prisma CLI for migrations only
+WORKDIR /home/nextjs
+RUN npm install -g prisma
+WORKDIR /app
 
 # Set the correct permission for prerender cache
 RUN mkdir -p .next
 RUN chown nextjs:nodejs .next
 
-# Create the startup script
-RUN printf '#!/bin/sh\nprisma migrate reset --force\nnode server.js\n' > /app/start.sh
+# Create a startup script that only runs migrations (no reset, no seed)
+RUN printf '#!/bin/sh\necho "Running database migrations..."\ncd /app\nprisma migrate deploy --schema=./src/prisma/schema.prisma\necho "Starting Next.js application..."\nexec node server.js\n' > start.sh
 RUN chmod +x /app/start.sh
 
 # Ensure proper permissions

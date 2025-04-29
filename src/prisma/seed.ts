@@ -3,6 +3,7 @@ import { PrismaClient, DocumentType } from '@prisma/client';
 import fs from 'fs/promises';
 import path from 'path';
 import { fakerNB_NO as faker } from '@faker-js/faker';
+import { logger } from '@/lib/logger.server';
 
 const prisma = new PrismaClient();
 
@@ -12,7 +13,6 @@ async function uploadPdf(file: File) {
   }
 
   const connectionString = process.env.AZURITE_CONNECTION_STRING || '';
-  console.log('using connectionString: ' + connectionString);
 
   const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
 
@@ -74,8 +74,6 @@ async function main() {
   await prisma.application.deleteMany({});
   await prisma.task.deleteMany({});
 
-  console.log('Cleared existing data');
-
   // Create first task (fixed)
   const task1 = await prisma.task.upsert({
     where: { id: 1 },
@@ -88,7 +86,6 @@ async function main() {
       deadline: new Date('2025-10-25'),
     },
   });
-  console.log('Upserted task 1.');
 
   // Create one more task with realistic content using faker
   const task2 = await prisma.task.create({
@@ -100,7 +97,6 @@ async function main() {
       deadline: new Date('2025-10-25'),
     },
   });
-  console.log('Created task 2.');
 
   // The first application is from OsloMet (as set in the original code)
   const schoolForFixedStudents = 'OsloMet';
@@ -116,7 +112,6 @@ async function main() {
       taskpriorityids: [task1.id],
     },
   });
-  console.log('Created application 1.');
 
   // Create fixed students with emails based on school and associated with application
   const fixedStudentData = [
@@ -144,7 +139,6 @@ async function main() {
 
     fixedStudents.push(student);
   }
-  console.log('Created fixed students.');
 
   // Set student representative for first application
   await prisma.application.update({
@@ -153,7 +147,6 @@ async function main() {
       studentRepresentativeId: fixedStudents[0].id,
     },
   });
-  console.log('Updated application 1 with student representative.');
 
   // Generate additional applications with their students
   const additionalStudentsData = [];
@@ -163,7 +156,6 @@ async function main() {
       lastName: faker.person.lastName(),
     });
   }
-  console.log('Prepared additional student data.');
 
   // Create 9 more applications with new students
   let studentIndex = 0;
@@ -220,12 +212,6 @@ async function main() {
         studentRepresentativeId: studentRepresentative.id,
       },
     });
-
-    console.log(
-      `Created application ${i + 2} with ${studentsInGroup.length} student(s) from ${school}, applying for ${
-        connectedTasks.length === 2 ? 'both tasks' : 'one task'
-      }.`
-    );
   }
 
   // For each student, create file records
@@ -251,7 +237,6 @@ async function main() {
         storageUrl: cvUrl,
       },
     });
-    console.log(`Created CV file for ${student.firstName}`);
 
     // Create Grades file
     const gradesUrl = await uploadFileFromPublic(gradesSample);
@@ -263,7 +248,13 @@ async function main() {
         storageUrl: gradesUrl,
       },
     });
-    console.log(`Created Grades file for ${student.firstName}`);
+
+    logger.info(
+      {
+        success: true,
+      },
+      'succesffully seeded the database with student data and uploaded files'
+    );
   }
 }
 
