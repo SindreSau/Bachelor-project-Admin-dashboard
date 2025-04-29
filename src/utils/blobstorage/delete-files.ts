@@ -2,7 +2,7 @@
 import { logger } from '@/lib/logger.server';
 import { BlobServiceClient } from '@azure/storage-blob';
 
-export async function deleteByUrl(blobUrl: string): Promise<void> {
+export async function deleteFileByUrlFromBlobStorage(blobUrl: string): Promise<void> {
   const connectionString = process.env.AZURITE_CONNECTION_STRING || '';
   const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
 
@@ -15,7 +15,7 @@ export async function deleteByUrl(blobUrl: string): Promise<void> {
   if (!containerName || !blobName) {
     logger.error(
       {
-        action: 'deleteByUrl',
+        action: 'deleteFileByUrlFromBlobStorage',
         blobUrl,
       },
       'Invalid blob URL'
@@ -29,14 +29,14 @@ export async function deleteByUrl(blobUrl: string): Promise<void> {
   await blobClient.deleteIfExists();
   logger.info(
     {
-      action: 'deleteByUrl',
+      action: 'deleteFileByUrlFromBlobStorage',
       blobUrl,
     },
     `Deleted blob: ${containerName}/${blobName}`
   );
 }
 
-export async function deleteAll(): Promise<void> {
+export async function deleteAllFilesFromBlobStorage(): Promise<void> {
   const connectionString = process.env.AZURITE_CONNECTION_STRING || '';
   const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
 
@@ -51,7 +51,7 @@ export async function deleteAll(): Promise<void> {
   } catch (error) {
     logger.error(
       {
-        action: 'deleteAll',
+        action: 'deleteAllFilesFromBlobStorage',
         error: error instanceof Error ? error : new Error(String(error)),
       },
       'Failed to delete all blobs'
@@ -60,7 +60,7 @@ export async function deleteAll(): Promise<void> {
   }
   logger.info(
     {
-      action: 'deleteAll',
+      action: 'deleteAllFilesFromBlobStorage',
     },
     'Deleted all blobs from all containers'
   );

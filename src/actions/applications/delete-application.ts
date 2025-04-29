@@ -3,7 +3,7 @@ import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/prisma';
 import { RequestLogger } from '@/lib/logger.server';
 import { withAuthAndLog } from '@/lib/auth-and-log-wrapper';
-import { deleteByUrl } from '@/utils/blobstorage/delete-files';
+import { deleteFileByUrlFromBlobStorage } from '@/utils/blobstorage/delete-files';
 
 export type DeleteApplicationResult = {
   success: boolean;
@@ -55,7 +55,7 @@ export const deleteApplication = withAuthAndLog<DeleteApplicationResult, [number
 
         const blobDeletionPromises = filesToDelete.map(async (file) => {
           try {
-            await deleteByUrl(file.storageUrl);
+            await deleteFileByUrlFromBlobStorage(file.storageUrl);
             logger.info(
               { action: 'deleteApplication', blobUrl: file.storageUrl },
               'Successfully deleted blob file'

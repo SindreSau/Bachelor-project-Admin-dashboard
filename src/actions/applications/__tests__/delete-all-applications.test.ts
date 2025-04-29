@@ -3,7 +3,7 @@ import {
   deleteAllApplications,
   DeleteAllApplicationsResult,
 } from '@/actions/applications/delete-all-applications';
-import { deleteAll } from '@/utils/blobstorage/delete-files';
+import { deleteAllFilesFromBlobStorage } from '@/utils/blobstorage/delete-files';
 
 jest.mock('../../../lib/prisma', () => ({
   db: prismaMock,
@@ -14,7 +14,7 @@ jest.mock('next/cache', () => ({
 }));
 
 jest.mock('@/utils/blobstorage/delete-files', () => ({
-  deleteAll: jest.fn(),
+  deleteAllFilesFromBlobStorage: jest.fn(),
 }));
 
 describe('deleteAllApplications', () => {
@@ -25,7 +25,7 @@ describe('deleteAllApplications', () => {
   it('should successfully delete all applications and blobs', async () => {
     // Arrange
     prismaMock.application.deleteMany.mockResolvedValue({ count: 5 });
-    (deleteAll as jest.Mock).mockResolvedValue(undefined);
+    (deleteAllFilesFromBlobStorage as jest.Mock).mockResolvedValue(undefined);
     prismaMock.$transaction.mockImplementation(async (callback) => {
       return await callback(prismaMock);
     });
@@ -36,7 +36,7 @@ describe('deleteAllApplications', () => {
     // Assert
     expect(result.success).toBe(true);
     expect(prismaMock.application.deleteMany).toHaveBeenCalledWith({});
-    expect(deleteAll).toHaveBeenCalled();
+    expect(deleteAllFilesFromBlobStorage).toHaveBeenCalled();
   });
 
   it('should handle DB errors gracefully', async () => {
@@ -49,13 +49,13 @@ describe('deleteAllApplications', () => {
     // Assert
     expect(result.success).toBe(false);
     expect(result.error).toBe('Failed to delete all applications');
-    expect(deleteAll).not.toHaveBeenCalled();
+    expect(deleteAllFilesFromBlobStorage).not.toHaveBeenCalled();
   });
 
-  it('should handle errors from deleteAll (blob deletion)', async () => {
+  it('should handle errors from deleteAllFilesFromBlobStorage (blob deletion)', async () => {
     // Arrange
     prismaMock.application.deleteMany.mockResolvedValue({ count: 5 });
-    (deleteAll as jest.Mock).mockRejectedValue(new Error('Blob error'));
+    (deleteAllFilesFromBlobStorage as jest.Mock).mockRejectedValue(new Error('Blob error'));
     prismaMock.$transaction.mockImplementation(async (callback) => {
       return await callback(prismaMock);
     });
@@ -67,6 +67,6 @@ describe('deleteAllApplications', () => {
     expect(result.success).toBe(false);
     expect(result.error).toBe('Blob error');
     expect(prismaMock.application.deleteMany).toHaveBeenCalled();
-    expect(deleteAll).toHaveBeenCalled();
+    expect(deleteAllFilesFromBlobStorage).toHaveBeenCalled();
   });
 });

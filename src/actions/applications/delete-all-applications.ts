@@ -3,7 +3,7 @@ import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/prisma';
 import { RequestLogger } from '@/lib/logger.server';
 import { withAuthAndLog } from '@/lib/auth-and-log-wrapper';
-import { deleteAll } from '@/utils/blobstorage/delete-files';
+import { deleteAllFilesFromBlobStorage } from '@/utils/blobstorage/delete-files';
 
 export type DeleteAllApplicationsResult = {
   success: boolean;
@@ -34,7 +34,7 @@ export const deleteAllApplications = withAuthAndLog<DeleteAllApplicationsResult,
         return { success: false, error: 'Failed to delete all applications' };
       }
 
-      await deleteAll();
+      await deleteAllFilesFromBlobStorage();
       logger.info({ action: 'deleteAllApplications' }, 'Deleted all blobs from all containers');
 
       revalidatePath('/applications');

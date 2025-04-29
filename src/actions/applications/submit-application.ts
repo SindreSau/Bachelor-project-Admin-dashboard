@@ -4,7 +4,7 @@ import { DocumentType } from '@prisma/client';
 import { withRequestLogger, RequestLogger, logger } from '@/lib/logger.server';
 import { db } from '@/lib/prisma';
 import { sendConfirmationEmail } from '../email/send-email';
-import { deleteByUrl } from '@/utils/blobstorage/delete-files';
+import { deleteFileByUrlFromBlobStorage } from '@/utils/blobstorage/delete-files';
 
 const submitApplication = withRequestLogger<
   { success: boolean; message: string },
@@ -172,10 +172,10 @@ async function deleteFiles(blobs: { cv_blob?: string; grades_blob?: string }[]) 
 
   for (const blob of blobs) {
     if (blob.cv_blob) {
-      await deleteByUrl(blob.cv_blob);
+      await deleteFileByUrlFromBlobStorage(blob.cv_blob);
     }
     if (blob.grades_blob) {
-      await deleteByUrl(blob.grades_blob);
+      await deleteFileByUrlFromBlobStorage(blob.grades_blob);
     }
   }
 }

@@ -3,7 +3,7 @@ import {
   deleteApplication,
   DeleteApplicationResult,
 } from '@/actions/applications/delete-application';
-import { deleteByUrl } from '@/utils/blobstorage/delete-files';
+import { deleteFileByUrlFromBlobStorage } from '@/utils/blobstorage/delete-files';
 import type { DocumentType } from '@prisma/client';
 
 // Mock dependencies
@@ -16,7 +16,7 @@ jest.mock('next/cache', () => ({
 }));
 
 jest.mock('@/utils/blobstorage/delete-files', () => ({
-  deleteByUrl: jest.fn(),
+  deleteFileByUrlFromBlobStorage: jest.fn(),
 }));
 
 describe('deleteApplication', () => {
@@ -71,7 +71,7 @@ describe('deleteApplication', () => {
     prismaMock.file.findMany.mockResolvedValue(mockFiles);
     prismaMock.application.findUnique.mockResolvedValue(mockApplication);
     prismaMock.application.delete.mockResolvedValue(mockApplication);
-    (deleteByUrl as jest.Mock).mockResolvedValue(undefined);
+    (deleteFileByUrlFromBlobStorage as jest.Mock).mockResolvedValue(undefined);
 
     // Configure transaction mock
     prismaMock.$transaction.mockImplementation(async (callback) => {
@@ -107,9 +107,9 @@ describe('deleteApplication', () => {
     });
 
     // Verify blob deletion was called for each file
-    expect(deleteByUrl).toHaveBeenCalledTimes(2);
-    expect(deleteByUrl).toHaveBeenCalledWith('https://storage.com/file1.pdf');
-    expect(deleteByUrl).toHaveBeenCalledWith('https://storage.com/file2.pdf');
+    expect(deleteFileByUrlFromBlobStorage).toHaveBeenCalledTimes(2);
+    expect(deleteFileByUrlFromBlobStorage).toHaveBeenCalledWith('https://storage.com/file1.pdf');
+    expect(deleteFileByUrlFromBlobStorage).toHaveBeenCalledWith('https://storage.com/file2.pdf');
   });
 
   it('should handle non-existent application gracefully', async () => {
@@ -143,7 +143,7 @@ describe('deleteApplication', () => {
     expect(prismaMock.application.delete).not.toHaveBeenCalled();
 
     // Verify blob deletion was not attempted
-    expect(deleteByUrl).not.toHaveBeenCalled();
+    expect(deleteFileByUrlFromBlobStorage).not.toHaveBeenCalled();
   });
 
   it('should handle errors during file deletion but still succeed overall', async () => {
@@ -195,7 +195,7 @@ describe('deleteApplication', () => {
     prismaMock.application.delete.mockResolvedValue(mockApplication);
 
     // Make the first file deletion fail
-    (deleteByUrl as jest.Mock).mockImplementation((url) => {
+    (deleteFileByUrlFromBlobStorage as jest.Mock).mockImplementation((url) => {
       if (url === 'https://storage.com/file1.pdf') {
         return Promise.reject(new Error('Failed to delete blob'));
       }
@@ -219,7 +219,7 @@ describe('deleteApplication', () => {
     });
 
     // Verify both blob deletions were attempted
-    expect(deleteByUrl).toHaveBeenCalledTimes(2);
+    expect(deleteFileByUrlFromBlobStorage).toHaveBeenCalledTimes(2);
   });
 
   it('should handle database errors properly', async () => {
@@ -250,6 +250,6 @@ describe('deleteApplication', () => {
     expect(result.error).toBe('Database connection error');
 
     // Verify blob deletion was not called as transaction failed
-    expect(deleteByUrl).not.toHaveBeenCalled();
+    expect(deleteFileByUrlFromBlobStorage).not.toHaveBeenCalled();
   });
 });
