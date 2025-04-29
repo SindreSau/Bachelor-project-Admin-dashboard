@@ -31,7 +31,6 @@ const Comment = ({ comment, isCurrentUser, user }: CommentProps) => {
             label: 'Angre',
             onClick: async () => {
               await restoreComment(comment.id, user as KindeUser<void>);
-              console.log('Angre slett kommentar');
             },
           },
         });

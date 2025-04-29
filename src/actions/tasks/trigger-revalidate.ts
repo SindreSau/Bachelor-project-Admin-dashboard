@@ -3,7 +3,6 @@
 import { RequestLogger, withRequestLogger } from '@/lib/logger.server';
 
 const triggerRevalidation = withRequestLogger(async (logger: RequestLogger) => {
-  console.debug('Triggering revalidation...');
   const appUrl = process.env.APPLICATION_APP_BASE_URL;
   const apiToken = process.env.SECRET_API_TOKEN;
 
