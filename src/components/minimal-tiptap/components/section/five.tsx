@@ -11,7 +11,7 @@ import {
   QuoteIcon,
 } from '@radix-ui/react-icons';
 import { LinkEditPopover } from '../link/link-edit-popover';
-import { ImageEditDialog } from '../image/image-edit-dialog';
+
 import { ToolbarSection } from '../toolbar-section';
 
 type InsertElementAction = 'codeBlock' | 'blockquote' | 'horizontalRule';
@@ -65,7 +65,6 @@ export const SectionFive: React.FC<SectionFiveProps> = ({
   return (
     <>
       <LinkEditPopover editor={editor} size={size} variant={variant} />
-      <ImageEditDialog editor={editor} size={size} variant={variant} />
       <ToolbarSection
         editor={editor}
         actions={formatActions}
