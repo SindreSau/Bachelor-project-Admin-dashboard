@@ -2,8 +2,6 @@
 import { BlobServiceClient } from '@azure/storage-blob';
 
 export async function getBlobPdf(blobUrl: string, containerName: string = 'pdf'): Promise<File> {
-  console.log('Full blob URL:', blobUrl);
-
   const connectionString = process.env.AZURITE_CONNECTION_STRING || '';
   const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
 
@@ -22,9 +20,6 @@ export async function getBlobPdf(blobUrl: string, containerName: string = 'pdf')
     // Get the filename (last part of the URL)
     const blobName = pathParts[pathParts.length - 1];
 
-    console.log('Container:', container);
-    console.log('Blob name:', blobName);
-
     const containerClient = blobServiceClient.getContainerClient(container);
     const blobClient = containerClient.getBlobClient(blobName);
 
@@ -39,7 +34,6 @@ export async function getBlobPdf(blobUrl: string, containerName: string = 'pdf')
 
     return file;
   } catch (error) {
-    console.error('Error in getBlobPdf:', error);
     throw error;
   }
 }

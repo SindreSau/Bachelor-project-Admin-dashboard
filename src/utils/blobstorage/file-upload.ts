@@ -24,14 +24,6 @@ export async function uploadPdf(file: File, documentType?: string, email?: strin
     }
     const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
-    // Log the upload attempt
-    console.log('Attempting to upload blob:', {
-      containerName,
-      blobName,
-      fileSize: file.size,
-      fileType: file.type,
-    });
-
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
@@ -46,8 +38,6 @@ export async function uploadPdf(file: File, documentType?: string, email?: strin
         documentType: documentType || '',
       },
     });
-
-    console.log('Upload successful. Blob URL:', blockBlobClient.url);
 
     return blockBlobClient.url;
   } catch (error) {
