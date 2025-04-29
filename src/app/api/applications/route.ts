@@ -6,9 +6,19 @@ import { z } from 'zod';
 
 // Define schemas for student data validation
 const studentSchema = z.object({
-  email: z.string().email(),
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
+  firstName: z
+    .string()
+    .min(2, { message: 'Fornavn må inneholde minst 2 bokstaver' })
+    .max(100, { message: 'Fornavn kan ikke være lengre enn 100 tegn' }),
+  lastName: z
+    .string()
+    .min(2, { message: 'Etternavn må inneholde minst 2 bokstaver' })
+    .max(100, { message: 'Etternavn kan ikke være lengre enn 100 tegn' }),
+  email: z
+    .string()
+    .min(1, { message: 'E-post er påkrevd' })
+    .max(100, { message: 'E-post kan ikke være lengre enn 100 tegn' })
+    .email({ message: 'Ugyldig e-postadresse' }),
   cv_blob: z.string().url(),
   grades_blob: z.string().url(),
 });
@@ -64,7 +74,6 @@ export async function POST(request: NextRequest) {
 
   try {
     const formData = await request.formData();
-    console.log('Received form data:', formData);
 
     const groupLeaderAsInt = Number(formData.get('groupLeader'));
 
