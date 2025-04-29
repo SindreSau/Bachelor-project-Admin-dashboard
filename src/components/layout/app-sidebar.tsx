@@ -60,8 +60,8 @@ export const AppSidebar = () => {
                       href={item.url}
                       className={
                         isActiveLink(item.url)
-                          ? 'border-primary/40 flex items-center gap-2 rounded-none border-b-2'
-                          : 'flex items-center gap-2'
+                          ? 'border-primary/40 flex items-center gap-2 rounded-xs border-b-2'
+                          : 'flex items-center gap-2 rounded-xs'
                       }
                     >
                       {item.icon && <item.icon />}
