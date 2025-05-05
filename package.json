@@ -7,7 +7,7 @@
     "prebuild": "prettier --write \"src/**/*.{ts,tsx}\" && next lint --fix",
     "build": "next build",
     "build:standalone": "next build --turbopack && cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/",
-    "start": "next start",
+    "start": "next start -p 3001",
     "start:standalone": "PORT=3001 node .next/standalone/server.js",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
