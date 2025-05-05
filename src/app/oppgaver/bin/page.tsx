@@ -1,8 +1,8 @@
 import { getDeletedTasks } from '@/actions/tasks/get-deleted-tasks';
-import DeletedTaskCard from '@/components/tasks/unpublished-task-card';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowBigLeft } from 'lucide-react';
+import TaskCard from '@/components/tasks/task-card';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,7 +25,7 @@ export default async function TrashPage() {
         {archivedTasks.length > 0 ? (
           archivedTasks.map((task) => (
             <div key={task.id} className='w-full'>
-              <DeletedTaskCard task={task} />
+              <TaskCard task={task} variant='bin' />
             </div>
           ))
         ) : (

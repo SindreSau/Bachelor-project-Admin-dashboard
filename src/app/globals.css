@@ -401,3 +401,85 @@
     @apply mb-1 text-xl font-bold md:mb-2 md:text-2xl;
   }
 }
+
+@layer components {
+  /* Basic text styling */
+  .prose {
+    @apply text-foreground;
+  }
+
+  .prose .text-node {
+    @apply mb-4;
+  }
+
+  /* Headings */
+  .prose .heading-node,
+  .prose h2 {
+    @apply my-4 text-xl font-semibold;
+  }
+
+  /* Lists - Base styling */
+  .prose .list-node {
+    @apply my-4 ml-6;
+  }
+
+  /* Bullet list styling */
+  .prose ul.list-node {
+    @apply list-disc;
+  }
+
+  /* Nested bullet lists - Level 2 */
+  .prose ul.list-node ul.list-node {
+    @apply my-2 ml-5;
+    list-style-type: circle;
+  }
+
+  /* Nested bullet lists - Level 3 */
+  .prose ul.list-node ul.list-node ul.list-node {
+    list-style-type: square;
+  }
+
+  /* Numbered list styling */
+  .prose ol.list-node {
+    @apply list-decimal;
+  }
+
+  /* Nested numbered lists - Styles for different levels */
+  .prose ol.list-node ol.list-node {
+    @apply my-2 ml-5;
+    list-style-type: lower-alpha;
+  }
+
+  .prose ol.list-node ol.list-node ol.list-node {
+    list-style-type: lower-roman;
+  }
+
+  /* List items */
+  .prose .list-node li {
+    @apply mb-1;
+  }
+
+  /* Code styling */
+  .prose code.inline {
+    @apply bg-muted text-foreground rounded px-1.5 py-0.5 font-mono text-sm;
+  }
+
+  /* Strikethrough text */
+  .prose s {
+    @apply text-muted-foreground;
+  }
+
+  /* Text formatting */
+  .prose strong {
+    @apply font-semibold;
+  }
+
+  .prose em {
+    @apply italic;
+  }
+
+  /* Additional spacing between elements */
+  .prose > *:not(:first-child) {
+    @apply mt-3;
+  }
+}
