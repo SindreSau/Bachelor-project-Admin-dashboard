@@ -105,44 +105,6 @@ export async function POST(request: NextRequest) {
 }
 ```
 
-## CORS Configuration
-
-```typescript
-// middleware.ts (Dashboard app)
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-
-export function middleware(request: NextRequest) {
-  if (
-    request.nextUrl.pathname.startsWith('/api/tasks') ||
-    request.nextUrl.pathname.startsWith('/api/applications')
-  ) {
-    const allowedOrigin = process.env.ALLOWED_ORIGINS;
-    const origin = request.headers.get('origin') || '';
-
-    if (allowedOrigin && allowedOrigin === origin) {
-      const response = NextResponse.next();
-
-      response.headers.set('Access-Control-Allow-Origin', origin);
-      response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-      response.headers.set('Access-Control-Allow-Headers', 'Content-Type, x-api-key');
-
-      return response;
-    }
-
-    if (request.method === 'OPTIONS') {
-      return new NextResponse(null, { status: 200 });
-    }
-  }
-
-  return NextResponse.next();
-}
-
-export const config = {
-  matcher: ['/api/tasks', '/api/applications'],
-};
-```
-
 ## Environment Configuration
 
 ### Dashboard `.env`

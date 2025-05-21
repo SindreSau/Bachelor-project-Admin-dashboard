@@ -38,7 +38,7 @@ export const GET = withRequestLogger(async function GET(logger: RequestLogger) {
       },
       { status: 200 }
     );
-  } catch (error: unknown) {
+  } catch (error) {
     const err = error instanceof Error ? error : new Error(String(error));
     logger.error({ error: err }, 'Failed to fetch tasks');
     return NextResponse.json(
