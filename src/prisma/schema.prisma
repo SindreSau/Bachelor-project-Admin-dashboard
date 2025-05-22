@@ -8,16 +8,16 @@ datasource db {
 }
 
 model Student {
-  id           Int           @id @default(autoincrement())
-  email        String        @unique
-  firstName    String
-  lastName     String
-  // fileIds      Int[] // Do we need this? We can get the files from the File model which has a studentId field
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  applications Application[] @relation("StudentToApplication")
-  files        File[]
-  Application  Application[]
+  id                Int           @id @default(autoincrement())
+  email             String // Removed @unique constraint
+  firstName         String
+  lastName          String
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  files             File[]
+  application       Application   @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  applicationId     Int
+  representativeFor Application[] @relation("StudentRepresentative")
 }
 
 enum DocumentType {
@@ -32,7 +32,7 @@ model File {
   storageUrl   String
   fileName     String
   uploadedAt   DateTime     @default(now())
-  student      Student      @relation(fields: [studentId], references: [id])
+  student      Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
 }
 
 model Application {
@@ -41,22 +41,27 @@ model Application {
   school                  String?
   createdAt               DateTime  @default(now())
   updatedAt               DateTime  @updatedAt
-  students                Student[] @relation("StudentToApplication")
+  students                Student[]
   tasks                   Task[]    @relation("ApplicationToTask")
-  Review                  Review[]
-  studentRepresentative   Student?  @relation(fields: [studentRepresentativeId], references: [id])
+  taskpriorityids         Int[]     @default([])
+  reviews                 Review[]
+  comments                Comment[]
+  studentRepresentative   Student?  @relation("StudentRepresentative", fields: [studentRepresentativeId], references: [id], onDelete: SetNull)
   studentRepresentativeId Int?
+  status                  String    @default("Ikke påbegynt")
 }
 
 model Task {
   id              Int           @id @default(autoincrement())
   taskName        String
   taskDescription String?
+  deadline        DateTime?
   published       Boolean       @default(false)
   minStudents     Int           @default(3)
   maxStudents     Int           @default(5)
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
+  deletedAt       DateTime?
   applications    Application[] @relation("ApplicationToTask")
 }
 
@@ -67,10 +72,31 @@ enum ReviewStatus {
 }
 
 model Review {
-  id            Int           @id @default(autoincrement())
-  applicationId Int
-  review        ReviewStatus?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  application   Application   @relation(fields: [applicationId], references: [id])
+  id              Int           @id @default(autoincrement())
+  applicationId   Int
+  kindeUserId     String
+  kindeGivenName  String //"Cached" name
+  kindeFamilyName String //"Cached" family name
+  kindeUserImage  String //"Cached" image
+  review          ReviewStatus?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  application     Application   @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@unique([applicationId, kindeUserId], name: "applicationId_kindeUserId")
+}
+
+model Comment {
+  id              Int         @id @default(autoincrement())
+  commentText     String
+  kindeUserId     String
+  kindeGivenName  String //"Cached" name
+  kindeFamilyName String //"Cached" family name
+  kindeUserImage  String //"Cached" image
+  applicationId   Int
+  createdAt       DateTime    @default(now())
+  application     Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  deletedAt       DateTime?
+
+  @@index([applicationId])
 }

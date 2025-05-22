@@ -2,7 +2,8 @@ import { BlobServiceClient } from '@azure/storage-blob';
 import { PrismaClient, DocumentType } from '@prisma/client';
 import fs from 'fs/promises';
 import path from 'path';
-import { faker } from '@faker-js/faker';
+import { fakerNB_NO as faker } from '@faker-js/faker';
+import { logger } from '@/lib/logger.server';
 
 const prisma = new PrismaClient();
 
@@ -12,6 +13,7 @@ async function uploadPdf(file: File) {
   }
 
   const connectionString = process.env.AZURITE_CONNECTION_STRING || '';
+
   const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
 
   const containerName = 'pdf';
@@ -26,7 +28,9 @@ async function uploadPdf(file: File) {
 
   await blockBlobClient.upload(buffer, buffer.length);
 
-  return blockBlobClient.url;
+  // Instead of returning blockBlobClient.url, construct the URL:
+  const baseUrl = process.env.BLOB_BASE_URL || 'http://127.0.0.1:10000';
+  return `${baseUrl}/devstoreaccount1/${containerName}/${blobName}`;
 }
 
 async function uploadFileFromPublic(fileName: string): Promise<string> {
@@ -42,7 +46,34 @@ async function uploadFileFromPublic(fileName: string): Promise<string> {
   }
 }
 
+// Function to generate school-based email
+function generateSchoolEmail(firstName: string, lastName: string, school: string): string {
+  // Normalize to lowercase and remove special characters
+  const normalizedFirstName = firstName
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+  const normalizedLastName = lastName
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .split(/\s+/)
+    .join('-');
+
+  // Create the email address based on school
+  const domain = school === 'OsloMet' ? 'oslomet.no' : 'kristiania.no';
+  return `${normalizedFirstName}-${normalizedLastName}@${domain}`;
+}
+
 async function main() {
+  // Clear existing data to avoid conflicts
+  await prisma.file.deleteMany({});
+  await prisma.student.deleteMany({});
+  await prisma.review.deleteMany({});
+  await prisma.comment.deleteMany({});
+  await prisma.application.deleteMany({});
+  await prisma.task.deleteMany({});
+
   // Create first task (fixed)
   const task1 = await prisma.task.upsert({
     where: { id: 1 },
@@ -51,96 +82,89 @@ async function main() {
       taskName: 'Bachelor application management system',
       taskDescription:
         'Build a system for managing applications for bachelor programs for Accenture. The system should allow students to apply for a program, and for the student representative to manage the applications. The system should also allow the student representative to review and approve applications.',
+      published: true,
+      deadline: new Date('2025-10-25'),
     },
   });
-  console.log('Upserted task 1.');
 
   // Create one more task with realistic content using faker
   const task2 = await prisma.task.create({
     data: {
-      taskName: faker.company.catchPhrase(),
-      taskDescription: faker.lorem.paragraphs(2),
+      taskName: 'Automated Library Management System',
+      taskDescription:
+        'Build a system for managing a library. The system should allow librarians to manage books, patrons, and loans. The system should also allow patrons to search for books, check out books, and return books. The system should also allow librarians to generate reports on books, patrons, and loans.',
+      published: true,
+      deadline: new Date('2025-10-25'),
     },
   });
-  console.log('Created task 2.');
 
-  // Create fixed students (they will only be used in the first application)
-  const fixedStudents = await Promise.all([
-    prisma.student.upsert({
-      where: { email: 'aadne@example.com' },
-      update: {},
-      create: {
-        email: 'aadne@example.com',
-        firstName: 'Ådne',
-        lastName: 'Longva Nilsen',
-      },
-    }),
-    prisma.student.upsert({
-      where: { email: 'alex@example.com' },
-      update: {},
-      create: {
-        email: 'alex@example.com',
-        firstName: 'Alex',
-        lastName: 'McCorkle',
-      },
-    }),
-    prisma.student.upsert({
-      where: { email: 'sindre@example.com' },
-      update: {},
-      create: {
-        email: 'sindre@example.com',
-        firstName: 'Sindre',
-        lastName: 'Sauarlia',
-      },
-    }),
-  ]);
-  console.log('Upserted fixed students.');
+  // The first application is from OsloMet (as set in the original code)
+  const schoolForFixedStudents = 'OsloMet';
 
-  // Create additional students using faker (create 50 so that we can partition them uniquely)
-  const additionalStudentsPromises = [];
-  for (let i = 0; i < 50; i++) {
-    additionalStudentsPromises.push(
-      prisma.student.create({
-        data: {
-          email: faker.internet.email(),
-          firstName: faker.name.firstName(),
-          lastName: faker.name.lastName(),
-        },
-      })
-    );
-  }
-  const additionalStudents = await Promise.all(additionalStudentsPromises);
-  console.log('Created additional students.');
-
-  // First application remains as is with fixed students
-  await prisma.application.upsert({
-    where: { id: 1 },
-    update: {},
-    create: {
-      school: 'OsloMet',
+  // Create first application
+  const application1 = await prisma.application.create({
+    data: {
+      school: schoolForFixedStudents,
       coverLetterText: 'We are applying for the position because we are a great fit.',
-      students: {
-        connect: fixedStudents.map((student) => ({ id: student.id })),
-      },
-      studentRepresentative: {
-        connect: { id: fixedStudents[0].id },
-      },
       tasks: {
         connect: [{ id: task1.id }],
       },
+      taskpriorityids: [task1.id],
     },
   });
-  console.log('Upserted application 1.');
 
-  // Partition additional students into 9 unique groups (each group gets 3 to 5 students)
-  const additionalPool = [...additionalStudents];
+  // Create fixed students with emails based on school and associated with application
+  const fixedStudentData = [
+    { firstName: 'Ådne', lastName: 'Longva Nilsen' },
+    { firstName: 'Alex', lastName: 'McCorkle' },
+    { firstName: 'Sindre', lastName: 'Sauarlia' },
+  ];
+
+  const fixedStudents = [];
+  for (const studentData of fixedStudentData) {
+    const email = generateSchoolEmail(
+      studentData.firstName,
+      studentData.lastName,
+      schoolForFixedStudents
+    );
+
+    const student = await prisma.student.create({
+      data: {
+        email,
+        firstName: studentData.firstName,
+        lastName: studentData.lastName,
+        applicationId: application1.id, // Directly associate with application
+      },
+    });
+
+    fixedStudents.push(student);
+  }
+
+  // Set student representative for first application
+  await prisma.application.update({
+    where: { id: application1.id },
+    data: {
+      studentRepresentativeId: fixedStudents[0].id,
+    },
+  });
+
+  // Generate additional applications with their students
+  const additionalStudentsData = [];
+  for (let i = 0; i < 50; i++) {
+    additionalStudentsData.push({
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+    });
+  }
+
+  // Create 9 more applications with new students
+  let studentIndex = 0;
   for (let i = 0; i < 9; i++) {
     const groupSize = faker.number.int({ min: 3, max: 5 });
-    // Remove the first groupSize students from the pool; this ensures each student is used only once.
-    const selectedStudents = additionalPool.splice(0, groupSize);
-    if (selectedStudents.length === 0) break; // stop if we run out
+    if (studentIndex + groupSize > additionalStudentsData.length) break; // stop if we run out
 
-    const studentRepresentative = selectedStudents[0];
+    // Select the school for this application
+    const school = faker.helpers.arrayElement(['OsloMet', 'Høyskolen Kristiania']);
 
     // 50/50 chance: either connect both tasks or only one randomly selected task.
     const applyBoth = faker.datatype.boolean();
@@ -148,71 +172,89 @@ async function main() {
       ? [{ id: task1.id }, { id: task2.id }]
       : [{ id: faker.helpers.arrayElement([task1.id, task2.id]) }];
 
-    await prisma.application.create({
+    const taskIds = connectedTasks.map((task) => task.id);
+
+    // Create the application first
+    const application = await prisma.application.create({
       data: {
-        school: faker.helpers.arrayElement(['OsloMet', 'Høyskolen Kristiania']),
-        coverLetterText: faker.lorem.paragraphs(2),
-        students: {
-          connect: selectedStudents.map((student) => ({ id: student.id })),
-        },
-        studentRepresentative: {
-          connect: { id: studentRepresentative.id },
-        },
+        school: school,
+        coverLetterText: faker.lorem.words(faker.number.int({ min: 150, max: 400 })),
         tasks: {
           connect: connectedTasks,
         },
+        taskpriorityids: faker.helpers.shuffle(taskIds),
       },
     });
-    console.log(
-      `Created application ${i + 2} with ${selectedStudents.length} student(s), applying for ${
-        connectedTasks.length === 2 ? 'both tasks' : 'one task'
-      }.`
-    );
+
+    // Create the students with school-based emails and associate with application
+    const studentsInGroup = [];
+    for (let j = 0; j < groupSize; j++) {
+      const studentData = additionalStudentsData[studentIndex++];
+      const email = generateSchoolEmail(studentData.firstName, studentData.lastName, school);
+
+      const student = await prisma.student.create({
+        data: {
+          email: email,
+          firstName: studentData.firstName,
+          lastName: studentData.lastName,
+          applicationId: application.id, // Directly associate with application
+        },
+      });
+
+      studentsInGroup.push(student);
+    }
+
+    // Set the student representative
+    const studentRepresentative = studentsInGroup[0];
+    await prisma.application.update({
+      where: { id: application.id },
+      data: {
+        studentRepresentativeId: studentRepresentative.id,
+      },
+    });
   }
 
-  // For each student (both fixed and additional), create file records if they don't exist.
-  // Use "example.pdf" for both CV and Grades.
-  const allStudents = [...fixedStudents, ...additionalStudents];
+  // For each student, create file records
+  const allStudents = await prisma.student.findMany();
+  const fileSamples = ['example-1.pdf', 'example-2.pdf', 'example-3.pdf'];
+
   for (const student of allStudents) {
     const cvFileName = `${student.firstName.toLowerCase()}-cv.pdf`;
     const gradesFileName = `${student.firstName.toLowerCase()}-kar.pdf`;
 
-    const existingFiles = await prisma.file.findMany({
-      where: {
+    // Randomly choose a sample for CV and a different one for Grades
+    const cvSample = faker.helpers.arrayElement(fileSamples);
+    const remainingSamples = fileSamples.filter((sample) => sample !== cvSample);
+    const gradesSample = faker.helpers.arrayElement(remainingSamples);
+
+    // Create CV file
+    const cvUrl = await uploadFileFromPublic(cvSample);
+    await prisma.file.create({
+      data: {
         studentId: student.id,
-        OR: [{ fileName: cvFileName }, { fileName: gradesFileName }],
+        documentType: DocumentType.CV,
+        fileName: cvFileName,
+        storageUrl: cvUrl,
       },
     });
 
-    if (!existingFiles.some((file) => file.fileName === cvFileName)) {
-      const cvUrl = await uploadFileFromPublic('example.pdf');
-      await prisma.file.create({
-        data: {
-          studentId: student.id,
-          documentType: DocumentType.CV,
-          fileName: cvFileName,
-          storageUrl: cvUrl,
-        },
-      });
-      console.log(`Created CV file for ${student.firstName}`);
-    } else {
-      console.log(`CV already exists for ${student.firstName}`);
-    }
+    // Create Grades file
+    const gradesUrl = await uploadFileFromPublic(gradesSample);
+    await prisma.file.create({
+      data: {
+        studentId: student.id,
+        documentType: DocumentType.GRADES,
+        fileName: gradesFileName,
+        storageUrl: gradesUrl,
+      },
+    });
 
-    if (!existingFiles.some((file) => file.fileName === gradesFileName)) {
-      const gradesUrl = await uploadFileFromPublic('example.pdf');
-      await prisma.file.create({
-        data: {
-          studentId: student.id,
-          documentType: DocumentType.GRADES,
-          fileName: gradesFileName,
-          storageUrl: gradesUrl,
-        },
-      });
-      console.log(`Created Grades file for ${student.firstName}`);
-    } else {
-      console.log(`Grades already exists for ${student.firstName}`);
-    }
+    logger.info(
+      {
+        success: true,
+      },
+      'succesffully seeded the database with student data and uploaded files'
+    );
   }
 }
 

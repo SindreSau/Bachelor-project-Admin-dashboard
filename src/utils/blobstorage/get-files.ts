@@ -1,29 +1,41 @@
 'use server';
 import { BlobServiceClient } from '@azure/storage-blob';
 
-export async function getBlobPdf(blobUrl: string): Promise<File> {
+export async function getBlobPdf(blobUrl: string, containerName: string = 'pdf'): Promise<File> {
   const connectionString = process.env.AZURITE_CONNECTION_STRING || '';
   const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
 
-  const containerName = blobUrl.split('/')[4];
-  const blobName = decodeURIComponent(blobUrl.split('/')[5]);
-
-  console.log('Accessing:', blobName);
-
-  const containerClient = blobServiceClient.getContainerClient(containerName);
-
-  const blobClient = containerClient.getBlobClient(blobName);
-
-  const downloadBlockBlobResponse = await blobClient.download();
-
-  if (!downloadBlockBlobResponse.readableStreamBody) {
-    throw new Error('Failed to download blob: readableStreamBody is undefined');
+  if (!blobUrl) {
+    throw new Error('Blob URL is undefined or empty');
   }
 
-  const blobData = await streamToBuffer(downloadBlockBlobResponse.readableStreamBody);
-  const file = new File([blobData], blobName, { type: 'application/pdf' });
+  try {
+    // Parse URL
+    const url = new URL(blobUrl);
+    const pathParts = url.pathname.split('/').filter(Boolean);
 
-  return file;
+    // Use the provided containerName or default to 'pdf'
+    const container = containerName || 'pdf';
+
+    // Get the filename (last part of the URL)
+    const blobName = pathParts[pathParts.length - 1];
+
+    const containerClient = blobServiceClient.getContainerClient(container);
+    const blobClient = containerClient.getBlobClient(blobName);
+
+    const downloadBlockBlobResponse = await blobClient.download();
+
+    if (!downloadBlockBlobResponse.readableStreamBody) {
+      throw new Error('Failed to download blob: readableStreamBody is undefined');
+    }
+
+    const blobData = await streamToBuffer(downloadBlockBlobResponse.readableStreamBody);
+    const file = new File([blobData], blobName, { type: 'application/pdf' });
+
+    return file;
+  } catch (error) {
+    throw error;
+  }
 }
 
 async function streamToBuffer(readableStream: NodeJS.ReadableStream): Promise<Buffer> {

@@ -1,10 +1,18 @@
 {
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "always",
+    "source.fixAll.eslint": "always"
   },
+  "eslint.codeActionsOnSave.rules": [
+    "!unused-imports/no-unused-imports",
+    "!unused-imports/no-unused-vars",
+    "*"
+  ],
   "editor.tabSize": 2,
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
   },
+  "files.associations": {
+    "*.css": "tailwindcss"
+  }
 }

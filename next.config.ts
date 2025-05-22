@@ -7,11 +7,19 @@ const nextConfig: NextConfig = {
     },
     staleTimes: {
       // Set dynamic and static stale times for the entire application
-      dynamic: 30, // 30 seconds
-      static: 60 * 30, // 30 minutes
+      dynamic: 30 * 60, // 30 minutes
+      static: 60 * 60, // 60 minutes
     },
   },
   output: 'standalone',
+  logging: {
+    fetches: {
+      fullUrl: false,
+      hmrRefreshes: false,
+    },
+    incomingRequests: false,
+  },
+  serverExternalPackages: ['pino', 'pino-pretty'],
 };
 
 export default nextConfig;

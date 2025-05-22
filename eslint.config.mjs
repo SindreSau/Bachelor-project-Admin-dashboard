@@ -1,6 +1,7 @@
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { FlatCompat } from '@eslint/eslintrc';
+import unusedImports from 'eslint-plugin-unused-imports';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -21,6 +22,9 @@ const eslintConfig = [
     ignores: ['node_modules', '.next'],
   },
   {
+    plugins: {
+      'unused-imports': unusedImports,
+    },
     rules: {
       'prettier/prettier': [
         'error',
@@ -36,6 +40,25 @@ const eslintConfig = [
           arrowParens: 'always',
           bracketSameLine: false,
           quoteProps: 'as-needed',
+        },
+      ],
+      // Turn off the TypeScript no-unused-vars rule as it will conflict
+      '@typescript-eslint/no-unused-vars': 'off',
+      // Add the unused-imports rules
+      'unused-imports/no-unused-imports': 'error',
+      'unused-imports/no-unused-vars': [
+        'warn',
+        {
+          vars: 'all',
+          varsIgnorePattern: '^_',
+          args: 'after-used',
+          argsIgnorePattern: '^_',
+        },
+      ],
+      'no-console': [
+        'warn',
+        {
+          allow: ['warn', 'error'],
         },
       ],
     },

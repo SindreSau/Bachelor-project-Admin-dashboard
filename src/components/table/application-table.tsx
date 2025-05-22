@@ -1,71 +1,92 @@
 'use client';
 
+import * as React from 'react';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+  SortingState,
+  ColumnFiltersState,
+  useReactTable,
+  getCoreRowModel,
+  getSortedRowModel,
+  getFilteredRowModel,
+} from '@tanstack/react-table';
 import { Card, CardTitle, CardHeader, CardContent } from '@/components/ui/card';
-import { Application, Student } from '@prisma/client';
-import { ExternalLink } from 'lucide-react';
-import { concatGroupName } from '@/lib/utils';
-import Link from 'next/link';
+import { createColumns, useRatingScores } from './application-table-columns';
+import ApplicationFilters from './application-filters';
+import ApplicationTableView from './application-table-view';
+import { Application, Review, Student } from '@prisma/client';
 
-type ApplicationWithStudents = Application & {
+type ApplicationWithStudentsAndReviews = Application & {
   students: Student[];
+  reviews: Review[];
+  groupName?: string;
+  status?: string;
 };
 
 interface ApplicationViewProps {
-  applications: ApplicationWithStudents[]; // Changed from single application to array
+  applications: ApplicationWithStudentsAndReviews[];
 }
 
 const ApplicationTable = ({ applications }: ApplicationViewProps) => {
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const [schoolFilter, setSchoolFilter] = React.useState<string>('all');
+  const [statusFilter, setStatusFilter] = React.useState<string>('all');
+  const [ratingFilter, setRatingFilter] = React.useState<string>('all');
+
+  // Create memoized rating scores map
+  const ratingScores = useRatingScores(applications);
+
+  // Create columns with the rating scores
+  const columns = React.useMemo(() => createColumns(ratingScores), [ratingScores]);
+
+  const table = useReactTable({
+    data: applications,
+    columns,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      sorting,
+      columnFilters,
+    },
+  });
+
+  function resetFilters() {
+    const columns = table.getAllColumns();
+    columns.forEach((column) => {
+      column.setFilterValue(undefined);
+    });
+
+    setSchoolFilter('all');
+    setStatusFilter('all');
+    setRatingFilter('all');
+    setSorting([]);
+  }
+
+  function getLink(row: ApplicationWithStudentsAndReviews) {
+    return `/soknader/${row.id.toString()}`;
+  }
+
   return (
     <Card className='h-full flex-col'>
-      <CardHeader>
+      <CardHeader className='pb-0'>
         <CardTitle>Søknader</CardTitle>
       </CardHeader>
-      <CardContent className=''>
-        <Table className='sticky top-0 z-10 bg-background'>
-          <TableHeader>
-            <TableRow>
-              <TableHead className='border'>Gruppenavn</TableHead>
-              <TableHead className='border'>Skole</TableHead>
-              <TableHead className='border'>Status</TableHead>
-              <TableHead className='border'>Søknadsdato</TableHead>
-              <TableHead className='border'>Sist Oppdatert</TableHead>
-              <TableHead className='border'></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {applications.map((application) => {
-              return (
-                <TableRow key={application.id}>
-                  <TableCell className='border'>{concatGroupName(application.students)}</TableCell>
-                  <TableCell className='border'>{application.school}</TableCell>
-                  <TableCell className='border'>Pågående</TableCell>
-                  <TableCell className='border'>
-                    {application.createdAt?.toLocaleDateString('nb-NO')}
-                  </TableCell>
-                  <TableCell className='border'>
-                    {application.updatedAt?.toLocaleDateString('nb-NO')}
-                  </TableCell>
-                  <TableCell className='border'>
-                    <Link
-                      href={`/applications/${application.id.toString()}`}
-                      className='flex cursor-pointer items-center justify-center hover:text-primary'
-                    >
-                      <ExternalLink />
-                    </Link>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
+      <CardContent>
+        <ApplicationFilters
+          table={table}
+          schoolFilter={schoolFilter}
+          setSchoolFilter={setSchoolFilter}
+          statusFilter={statusFilter}
+          setStatusFilter={setStatusFilter}
+          ratingFilter={ratingFilter}
+          setRatingFilter={setRatingFilter}
+          resetFilters={resetFilters}
+        />
+
+        <ApplicationTableView table={table} columns={columns} isLoading={false} getLink={getLink} />
       </CardContent>
     </Card>
   );
